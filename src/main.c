@@ -39,21 +39,23 @@ int	main(char argc, char *argv[], char *envp[])
 		line = readline("minishell$ ");
 		if (line)
 		{
+			if (ft_strncmp(line, "exit", 4) == 0)
+				break ;
 			if (line[0] == '\0')
 				continue ;
-			pid = fork();
-			if (pid == 0)
+			split = ft_split(line, ' ');
+			cmd_path = get_cmd_path(split[0], path_list);
+			if (cmd_path)
 			{
-				split = ft_split(line, ' ');
-				cmd_path = get_cmd_path(split[0], path_list);
-				if (cmd_path)
-					execve(cmd_path, split, NULL);
-				printf("%s: command not found\n", split[0]);
-				free(cmd_path);
-				ft_freesplit(split);
+				pid = fork();
+				if (pid == 0)
+					execve(cmd_path, split, envp);
+				wait(NULL);
 			}
 			else
-				wait(NULL);
+				printf("%s: command not found\n", split[0]);
+			free(cmd_path);
+			ft_freesplit(split);
 		}
 		else
 			break ;

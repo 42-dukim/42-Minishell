@@ -17,6 +17,8 @@ char	*get_cmd_path(char *cmd, char **env_path)
 	char	*cmd_path;
 	int		i;
 
+	if (cmd[0] == '/')
+		return (ft_strdup(cmd));
 	cmd = ft_strjoin("/", cmd);
 	i = 0;
 	while (env_path[i])
