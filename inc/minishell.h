@@ -21,10 +21,12 @@
 # include <readline/history.h>
 # include <signal.h>
 # include <sys/wait.h>
+# include <termios.h>
 
 # include "../libft/libft.h"
 
 char	*get_cmd_path(char *cmd, char **env_path);
 char	*get_pathvalue(char *envp[]);
+void	enroll_custom_signal();
 
 #endif

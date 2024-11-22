@@ -12,16 +12,6 @@
 
 #include "../inc/minishell.h"
 
-void	sigint_handler(int signum)
-{
-	if (signum != SIGINT)
-		return ;
-	printf("minishell$ \n");
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
-}
-
 int	main(char argc, char *argv[], char *envp[])
 {
 	char	*line;
@@ -31,7 +21,7 @@ int	main(char argc, char *argv[], char *envp[])
 	char	*cmd_path;
 	pid_t	pid;
 
-	signal(SIGINT, sigint_handler);
+	enroll_custom_signal();
 	pathvalue = get_pathvalue(envp);
 	path_list = ft_split(pathvalue + 5, ':');
 	while (1)
@@ -62,5 +52,6 @@ int	main(char argc, char *argv[], char *envp[])
 		add_history(line);
 		free(line);
 	}
+	rl_clear_history();
 	ft_freesplit(path_list);
 }
