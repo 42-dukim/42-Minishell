@@ -22,7 +22,7 @@ int	main(char argc, char *argv[], char *envp[])
 	pid_t	pid;
 
 	enroll_custom_signal();
-	pathvalue = get_pathvalue(envp);
+	pathvalue = get_envvalue(envp, "PATH");
 	path_list = ft_split(pathvalue + 5, ':');
 	while (1)
 	{
@@ -43,7 +43,10 @@ int	main(char argc, char *argv[], char *envp[])
 				wait(NULL);
 			}
 			else
-				printf("%s: command not found\n", split[0]);
+			{
+				if (!builtin_handler(split, envp))
+					printf("%s: command not found\n", split[0]);
+			}
 			free(cmd_path);
 			ft_freesplit(split);
 		}

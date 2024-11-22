@@ -26,7 +26,11 @@
 # include "../libft/libft.h"
 
 char	*get_cmd_path(char *cmd, char **env_path);
-char	*get_pathvalue(char *envp[]);
-void	enroll_custom_signal();
+char	*get_envvalue(char *envp[], const char *env);
+void	enroll_custom_signal(void);
+
+// builtins
+int		builtin_handler(char **cmds, char **env_list);
+void	ft_cd(const char *path, const char *home_path);
 
 #endif

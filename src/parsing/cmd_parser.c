@@ -35,14 +35,16 @@ char	*get_cmd_path(char *cmd, char **env_path)
 	return (cmd_path);
 }
 
-char	*get_pathvalue(char *envp[])
+char	*get_envvalue(char *envp[], const char *env)
 {
-	int	i;
+	int		i;
+	size_t	len;
 
 	i = 0;
+	len = ft_strlen(env);
 	while (envp[i])
 	{
-		if (ft_strncmp("PATH", envp[i], 4) == 0)
+		if (ft_strncmp(envp[i], env, len) == 0)
 			return (envp[i]);
 		i++;
 	}
