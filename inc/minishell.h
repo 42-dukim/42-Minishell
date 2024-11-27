@@ -25,6 +25,12 @@
 
 # include "../libft/libft.h"
 
+typedef enum e_bool
+{
+		false = 0,
+		true
+}		t_bool;
+
 char	*get_cmd_path(char *cmd, char **env_path);
 char	*get_envvalue(char *envp[], const char *env);
 void	enroll_custom_signal(void);
