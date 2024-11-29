@@ -39,7 +39,6 @@ typedef struct s_minishell
 }	t_global;
 
 // utils
-char	*get_envvalue(char *envp[], const char *env);
 void	enroll_custom_signal(void);
 
 // builtins
