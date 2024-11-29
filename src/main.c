@@ -32,7 +32,7 @@ int	main(char argc, char *argv[], char *envp[])
 			if (line[0] == '\0')
 				continue ;
 			split = ft_split(line, ' ');
-			cmd_path = get_cmd_path(split[0], path_list);
+			cmd_path = get_cmd_physpath(split[0], path_list);
 			if (cmd_path)
 			{
 				pid = fork();
