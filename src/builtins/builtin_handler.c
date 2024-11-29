@@ -12,6 +12,8 @@
 
 #include "../../inc/minishell.h"
 
+extern t_global	g_data;
+
 int	builtin_handler(char **cmds, char **env_list)
 {
 	const char	*cmd;
@@ -19,7 +21,7 @@ int	builtin_handler(char **cmds, char **env_list)
 	cmd = cmds[0];
 	if (ft_strncmp(cmd, "cd", 2) == 0)
 	{
-		ft_cd(cmds[1], getenv("HOME"));
+		ft_cd(cmds[1], ft_getenv(g_data.envp, "HOME"));
 		return (1);
 	}
 	if (ft_strncmp(cmd, "exit", 4) == 0)

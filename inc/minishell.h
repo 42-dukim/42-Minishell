@@ -40,6 +40,7 @@ typedef struct s_minishell
 
 // utils
 void	enroll_custom_signal(void);
+char	*ft_getenv(char *envp[], const char *env);
 
 // builtins
 int		builtin_handler(char **cmds, char **env_list);

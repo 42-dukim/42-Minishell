@@ -21,8 +21,8 @@ int	main(char argc, char *argv[], char *envp[])
 	pid_t	pid;
 
 	enroll_custom_signal();
-	g_data.envp = envp;
-	g_data.pathvalue = getenv("PATH");
+	g_data.envp = ft_strarrdup(envp);
+	g_data.pathvalue = ft_getenv(g_data.envp, "PATH");
 	g_data.path_list = ft_split(g_data.pathvalue + 5, ':');
 	while (1)
 	{
@@ -31,5 +31,7 @@ int	main(char argc, char *argv[], char *envp[])
 		free(line);
 	}
 	rl_clear_history();
+	free(g_data.envp);
+	free(g_data.pathvalue);
 	ft_freesplit(g_data.path_list);
 }
