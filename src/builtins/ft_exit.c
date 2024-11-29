@@ -1,7 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_exit.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dukim <dukim@student.42gyeongsan.kr>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/29 21:48:18 by dukim             #+#    #+#             */
+/*   Updated: 2024/11/29 21:48:19 by dukim            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../inc/minishell.h"
 
-void	ft_exit()
+// TODO: memory leak -> exit handler
+void	ft_exit(void)
 {
-	// TODO: memory leak -> exit handler
 	exit(0);
 }

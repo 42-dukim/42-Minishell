@@ -27,8 +27,8 @@
 
 typedef enum e_bool
 {
-		false = 0,
-		true
+	false = 0,
+	true
 }		t_bool;
 
 char	*get_cmd_path(char *cmd, char **env_path);
@@ -38,6 +38,6 @@ void	enroll_custom_signal(void);
 // builtins
 int		builtin_handler(char **cmds, char **env_list);
 void	ft_cd(const char *path, const char *home_path);
-void	ft_exit();
+void	ft_exit(void);
 
 #endif
