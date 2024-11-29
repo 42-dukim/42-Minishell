@@ -46,19 +46,19 @@ void	parser_handler(char	*line)
 	if (!line || line[0] == '\0')
 		return ;
 	split = ft_split(line, ' ');
-	cmd_path = get_cmd_abspath(split[0]);
-	if (cmd_path)
+	if (!builtin_handler(split, g_data.envp))
 	{
-		if (fork() == 0)
-			execve(cmd_path, split, g_data.envp);
-		wait(NULL);
-	}
-	else
-	{
-		if (!builtin_handler(split, g_data.envp))
+		cmd_path = get_cmd_abspath(split[0]);
+		if (cmd_path)
+		{
+			if (fork() == 0)
+				execve(cmd_path, split, g_data.envp);
+			wait(NULL);
+		}
+		else
 			printf("%s: command not found\n", split[0]);
+		free(cmd_path);
 	}
-	free(cmd_path);
 	ft_freesplit(split);
 	add_history(line);
 }
