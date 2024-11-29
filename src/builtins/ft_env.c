@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_handler.c                                  :+:      :+:    :+:   */
+/*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dukim <dukim@student.42gyeongsan.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/23 00:57:02 by dukim             #+#    #+#             */
-/*   Updated: 2024/11/23 00:57:03 by dukim            ###   ########.fr       */
+/*   Created: 2024/11/30 02:12:12 by dukim             #+#    #+#             */
+/*   Updated: 2024/11/30 02:12:16 by dukim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,14 @@
 
 extern t_global	g_data;
 
-int	builtin_handler(char **cmds, char **env_list)
+void	ft_env(void)
 {
-	const char	*cmd;
+	size_t	i;
 
-	cmd = cmds[0];
-	if (ft_strncmp(cmd, "cd", 2) == 0)
+	i = 0;
+	while (g_data.envp[i])
 	{
-		ft_cd(cmds[1], ft_getenv(g_data.envp, "HOME"));
-		return (1);
+		printf("%s\n", g_data.envp[i]);
+		i++;
 	}
-	if (ft_strncmp(cmd, "exit", 4) == 0)
-		ft_exit();
-	if (ft_strncmp(cmd, "env", 3) == 0)
-		ft_env();
-	return (0);
 }
