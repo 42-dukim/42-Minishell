@@ -22,5 +22,7 @@ int	builtin_handler(char **cmds, char **env_list)
 		ft_cd(cmds[1], get_envvalue(env_list, "HOME") + 5);
 		return (1);
 	}
+	if (ft_strncmp(cmd, "exit", 4) == 0)
+		ft_exit();
 	return (0);
 }

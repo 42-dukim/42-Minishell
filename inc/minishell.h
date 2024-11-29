@@ -38,5 +38,6 @@ void	enroll_custom_signal(void);
 // builtins
 int		builtin_handler(char **cmds, char **env_list);
 void	ft_cd(const char *path, const char *home_path);
+void	ft_exit();
 
 #endif

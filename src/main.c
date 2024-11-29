@@ -29,8 +29,6 @@ int	main(char argc, char *argv[], char *envp[])
 		line = readline("minishell$ ");
 		if (line)
 		{
-			if (ft_strncmp(line, "exit", 4) == 0)
-				break ;
 			if (line[0] == '\0')
 				continue ;
 			split = ft_split(line, ' ');
