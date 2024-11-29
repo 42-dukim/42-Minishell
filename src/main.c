@@ -12,47 +12,24 @@
 
 #include "../inc/minishell.h"
 
+t_global	g_data;
+
 int	main(char argc, char *argv[], char *envp[])
 {
 	char	*line;
-	char	**split;
-	char	*pathvalue;
-	char	**path_list;
 	char	*cmd_path;
 	pid_t	pid;
 
 	enroll_custom_signal();
-	pathvalue = get_envvalue(envp, "PATH");
-	path_list = ft_split(pathvalue + 5, ':');
+	g_data.envp = envp;
+	g_data.pathvalue = get_envvalue(envp, "PATH");
+	g_data.path_list = ft_split(g_data.pathvalue + 5, ':');
 	while (1)
 	{
 		line = readline("minishell$ ");
-		if (line)
-		{
-			if (line[0] == '\0')
-				continue ;
-			split = ft_split(line, ' ');
-			cmd_path = get_cmd_physpath(split[0], path_list);
-			if (cmd_path)
-			{
-				pid = fork();
-				if (pid == 0)
-					execve(cmd_path, split, envp);
-				wait(NULL);
-			}
-			else
-			{
-				if (!builtin_handler(split, envp))
-					printf("%s: command not found\n", split[0]);
-			}
-			free(cmd_path);
-			ft_freesplit(split);
-		}
-		else
-			break ;
-		add_history(line);
+		parser_handler(line);
 		free(line);
 	}
 	rl_clear_history();
-	ft_freesplit(path_list);
+	ft_freesplit(g_data.path_list);
 }

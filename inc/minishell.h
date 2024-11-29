@@ -31,7 +31,14 @@ typedef enum e_bool
 	true
 }		t_bool;
 
-char	*get_cmd_physpath(char *cmd, char **env_path);
+typedef struct s_minishell
+{
+	char	**envp;
+	char	*pathvalue;
+	char	**path_list;
+}	t_global;
+
+// utils
 char	*get_envvalue(char *envp[], const char *env);
 void	enroll_custom_signal(void);
 
@@ -39,5 +46,9 @@ void	enroll_custom_signal(void);
 int		builtin_handler(char **cmds, char **env_list);
 void	ft_cd(const char *path, const char *home_path);
 void	ft_exit(void);
+
+// parser
+char	*get_cmd_abspath(char *cmd);
+void	parser_handler(char	*line);
 
 #endif
