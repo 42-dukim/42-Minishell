@@ -30,8 +30,4 @@ int	main(char argc, char *argv[], char *envp[])
 		parser_handler(line);
 		free(line);
 	}
-	rl_clear_history();
-	free(g_data.envp);
-	free(g_data.pathvalue);
-	ft_freesplit(g_data.path_list);
 }

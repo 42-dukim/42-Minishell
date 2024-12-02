@@ -12,8 +12,13 @@
 
 #include "../../inc/minishell.h"
 
-// TODO: memory leak -> exit handler
+extern t_global	g_data;
+
 void	ft_exit(void)
 {
+	rl_clear_history();
+	ft_freesplit(g_data.envp);
+	ft_freesplit(g_data.path_list);
+	printf("exit\n");
 	exit(0);
 }
