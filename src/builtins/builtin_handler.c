@@ -27,6 +27,9 @@ int	builtin_handler(char **cmds, char **env_list)
 	if (ft_strncmp(cmd, "exit", 4) == 0)
 		ft_exit();
 	if (ft_strncmp(cmd, "env", 3) == 0)
+	{
 		ft_env();
+		return (1);
+	}
 	return (0);
 }
