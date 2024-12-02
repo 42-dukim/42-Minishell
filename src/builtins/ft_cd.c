@@ -15,27 +15,22 @@
 void	ft_cd(const char *path, const char *home_path)
 {
 	char	*phys_path;
-	char	*curr_path;
+	char	*old_pwd;
 	char	*pwd;
 
 	if (path == NULL)
 		return ;
-	if (path[0] == '/')
-		phys_path = ft_strdup(path);
-	else if (path[0] == '~')
+	old_pwd = getcwd(NULL, 0);
+	if (path[0] == '~')
 		phys_path = ft_strjoin(home_path, path + 1);
 	else
-	{
-		pwd = getcwd(NULL, 0);
-		curr_path = ft_strjoin(pwd, "/");
-		phys_path = ft_strjoin(curr_path, path);
-		free(curr_path);
-		free(pwd);
-	}
+		phys_path = ft_strdup(path);
 	if (chdir(phys_path) == -1)
 		printf("bash: cd: %s: No such file or directory\n", phys_path);
 	pwd = getcwd(NULL, 0);
+	replace_envvalue("OLDPWD", old_pwd);
 	replace_envvalue("PWD", pwd);
+	free(old_pwd);
 	free(pwd);
 	free(phys_path);
 }
