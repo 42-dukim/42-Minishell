@@ -24,11 +24,7 @@ char	*ft_getenv(char *envp[], const char *env)
 	while (envp[i])
 	{
 		if (ft_strncmp(envp[i], env, len) == 0)
-		{
-			while (*envp[i] != '=')
-				envp[i]++;
-			return (envp[i] + 1);
-		}
+			return (ft_strchr(envp[i], '=') + 1);
 		i++;
 	}	
 	return (NULL);
