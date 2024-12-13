@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_handler.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dukim <dukim@student.42gyeongsan.kr>       +#+  +:+       +#+        */
+/*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 22:32:05 by dukim             #+#    #+#             */
-/*   Updated: 2024/11/29 22:32:06 by dukim            ###   ########.fr       */
+/*   Updated: 2024/12/12 17:22:52 by junkwak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,11 @@ void	parser_handler(char	*line)
 
 	if (!line || line[0] == '\0')
 		return ;
+	//qut
 	split = ft_split(line, ' ');
+	// while (!(*split))
+	// 	printf("%s", *split++);
+	//pipe_inst(*split);
 	if (!builtin_handler(split, g_data.envp))
 	{
 		cmd_path = get_cmd_abspath(split[0]);

@@ -1,0 +1,61 @@
+<<cd>>
+
+cd or cd ~ -> $HOME참조
+cd {file_name} -> file_name이 없으면 "minishell: cd: {file_name}: No such file or directory\n"
+cd - -> $OLDPWD참조 -> 만약 없으면 "minishell: cd: OLDPWD not set\n"
+cd는 상대/절대 경로를 참조할 수 있다.
+cd는 인자로 2개 이상 들어온다면 첫번째 경로로 간다.
+cd로 움직였을경우 PWD, OLDPWD 모두 바뀌어야한다.
+cd로 처음 움직였을 때, OLDPWD가 없다면 생성해주어야 한다.
+성공시 exit_status = 0, 실패시 exit_status = 1
+
+
+<<env>>
+
+env는 입력되는 인자가 없어야한다. -> "env: {첫번째 인자}: No such file or directory"
+env는 node->is_ok가 1인 것만 출력한다. [node->is_ok는 '='의 존재 유무이다. 또한, $?는 -1로 고정]
+성공시 exit_status = 0, 실패시 exit_status = 1
+
+
+<<export>>
+
+export는 인자없이 들어왔을 때, Ascii code 오름차순 출력한다.[출력시 앞에 "declare -x "를 먼저 출력한다.]\
+export는 인자없이 들어왔을 때, node->is_ok가 -1이 아닌 것만 출력한다.[node->is_ok 가 0라면 key만 출력하고 '='는 출력X]
+export는 인자의 첫 문자가  알파벳 혹은 '_'이 아니면 "minishell: export: `인자': not a valid identifier"
+export는 인자의 첫 문자를 제외하고 숫자가 들어갈 수 있다.['_'이외의 특수문자가 들어가면 3번의 오류출력을 따른다.]
+export는 인자가 '_' 혼자 들어왔을 때 무시한다.[환경변수를 나타내지도 추가하지도 않음]
+export는 인자들은 반드시 나눠져있다.[node->command는 'char **' 이다.]
+export는 환경 변수를 추가할때 '='가 있는 인자는 node->is_ok=1 아니라면 node->is_ok=0이다.
+export는 중복되는 변수가 있다면 수정해준다.
+성공시 exit_status = 0, 실패시 exit_status = 1
+
+
+<<unset>>
+
+unset은 인자없이 들어왔을 때 행동없이 끝난다.
+unset은 인자가 여러개 들어올 수 있다.
+unset은 인자가 환경변수에 없다면 행동없이 끝난다.
+unset는 인자의 첫 문자가  알파벳 혹은 '_'이 아니면 "minishell: unset: `인자': not a valid identifier"
+unset는 인자의 첫 문자를 제외하고 숫자가 들어갈 수 있다.['_'이외의 특수문자가 들어가면 3번의 오류출력을 따른다.]
+성공시 exit_status = 0, 실패시 exit_status = 1
+
+
+<<echo>>
+
+echo는 인자없이 들어왔을 때 개행출력.
+echo는 인자가 여러개 들어올 수 있다.
+내 생각엔 그냥 출력하면 될듯?[이미 tokenizing에서 "와 '구분을 전부 해놨음]
+exit_status = 0;
+
+
+<<exit>>
+
+exit는 인자가 없으면 0
+exit는 인자는 256으로 나눈 나머지가 exit_status
+exit {인자} -> 인자가 숫자가 아니면 "minishell: exit: {인자}: numeric argument required" [exit_status = 255]
+exit는 여러개의 인자가 들어오면 "minishell: exit: too many arguments" [exit_status = 1]
+3번이 4번보다 우선순위이다.
+exit는 single command일때 에러가 나도 exit를 출력하고 종료된다.[multi command일때는 에러만 출력한다.]
+음수가 들어올 수 있다. 음수일 땐 256을 뺀 값이다.
+exit는 인자의 범위가 long long의 범위이다.[넘어가면 3번의 결과]
+

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_handler.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dukim <dukim@student.42gyeongsan.kr>       +#+  +:+       +#+        */
+/*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/23 00:57:02 by dukim             #+#    #+#             */
-/*   Updated: 2024/11/23 00:57:03 by dukim            ###   ########.fr       */
+/*   Updated: 2024/12/13 14:36:19 by junkwak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	builtin_handler(char **cmds, char **env_list)
 		ft_exit();
 	if (ft_strncmp(cmd, "env", 3) == 0)
 	{
-		ft_env();
+		ft_env(cmds);
 		return (1);
 	}
 	return (0);
