@@ -21,7 +21,7 @@ int	builtin_handler(char **cmds, char **env_list)
 	cmd = cmds[0];
 	if (ft_strncmp(cmd, "cd", 2) == 0)
 	{
-		ft_cd(cmds[1], ft_getenv(g_data.envp, "HOME"));
+		ft_cd(cmds[1], ft_getenv("HOME"));
 		return (1);
 	}
 	if (ft_strncmp(cmd, "exit", 4) == 0)

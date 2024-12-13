@@ -14,17 +14,17 @@
 
 extern t_global	g_data;
 
-char	*ft_getenv(char *envp[], const char *env)
+char	*ft_getenv(const char *env)
 {
 	int		i;
 	size_t	len;
 
 	i = 0;
 	len = ft_strlen(env);
-	while (envp[i])
+	while (g_data.envp[i])
 	{
-		if (ft_strncmp(envp[i], env, len) == 0)
-			return (ft_strchr(envp[i], '=') + 1);
+		if (ft_strncmp(g_data.envp[i], env, len) == 0)
+			return (ft_strchr(g_data.envp[i], '=') + 1);
 		i++;
 	}	
 	return (NULL);

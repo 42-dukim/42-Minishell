@@ -22,7 +22,7 @@ int	main(char argc, char *argv[], char *envp[])
 
 	enroll_custom_signal();
 	g_data.envp = ft_strarrdup(envp);
-	g_data.pathvalue = ft_getenv(g_data.envp, "PATH");
+	g_data.pathvalue = ft_getenv("PATH");
 	g_data.path_list = ft_split(g_data.pathvalue + 5, ':');
 	while (1)
 	{
