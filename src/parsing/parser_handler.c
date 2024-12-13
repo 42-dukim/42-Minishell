@@ -6,7 +6,7 @@
 /*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 22:32:05 by dukim             #+#    #+#             */
-/*   Updated: 2024/12/12 17:22:52 by junkwak          ###   ########.fr       */
+/*   Updated: 2024/12/13 17:43:01 by junkwak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	parser_handler(char	*line)
 	// while (!(*split))
 	// 	printf("%s", *split++);
 	//pipe_inst(*split);
-	if (!builtin_handler(split, g_data.envp))
+	if (!builtin_handler(split))
 	{
 		cmd_path = get_cmd_abspath(split[0]);
 		if (cmd_path)

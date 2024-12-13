@@ -6,7 +6,7 @@
 /*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/23 00:57:02 by dukim             #+#    #+#             */
-/*   Updated: 2024/12/13 14:36:19 by junkwak          ###   ########.fr       */
+/*   Updated: 2024/12/13 17:53:01 by junkwak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 extern t_global	g_data;
 
-int	builtin_handler(char **cmds, char **env_list)
+int	builtin_handler(char **cmds)
 {
 	const char	*cmd;
 
@@ -29,6 +29,11 @@ int	builtin_handler(char **cmds, char **env_list)
 	if (ft_strncmp(cmd, "env", 3) == 0)
 	{
 		ft_env(cmds);
+		return (1);
+	}
+	if (ft_strncmp(cmd, "export", 6) == 0)
+	{
+		ft_export(cmds);
 		return (1);
 	}
 	return (0);

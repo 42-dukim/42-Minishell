@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dukim <dukim@student.42gyeongsan.kr>       +#+  +:+       +#+        */
+/*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 16:16:01 by dukim             #+#    #+#             */
-/*   Updated: 2024/03/07 03:54:28 by dukim            ###   ########.fr       */
+/*   Updated: 2024/12/13 17:41:11 by junkwak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ typedef struct s_list
 {
 	void			*content;
 	struct s_list	*next;
+	int		size;//연결리스트병합할때 사용
 }					t_list;
 
 int		ft_isalpha(int c);

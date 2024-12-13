@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cmd_parser.c                                       :+:      :+:    :+:   */
+/*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dukim <dukim@student.42gyeongsan.kr>       +#+  +:+       +#+        */
+/*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 21:10:16 by dukim             #+#    #+#             */
-/*   Updated: 2024/11/22 21:10:17 by dukim            ###   ########.fr       */
+/*   Updated: 2024/12/13 17:35:26 by junkwak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,3 +51,17 @@ void	replace_envvalue(const char *env, char	*replace)
 		i++;
 	}	
 }
+
+// t_global	*init_env(char **env)
+// {
+// 	// t_global	*head;
+// 	// int	i;
+
+// 	// head = (t_global *)malloc(sizeof(t_global));
+// 	// if (!head)
+// 	// 	head = NULL;
+	
+// 	g_data.envp = 
+// 	g_data.export = 
+	
+// }
