@@ -20,10 +20,19 @@ char	**ft_strarrdup(char **strarr)
 
 	len = ft_splitlen((const char **)strarr);
 	dup = malloc(sizeof(char *) * (len + 1));
+	if (!dup)
+		return NULL;
 	i = 0;
 	while (i < len)
 	{
 		dup[i] = ft_strdup(strarr[i]);
+		if (!dup[i])
+		{
+			while (i > 0)
+				free(dup[--i]);
+			free(dup);
+			return NULL;
+		}
 		i++;
 	}
 	dup[i] = NULL;

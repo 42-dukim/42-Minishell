@@ -40,25 +40,27 @@ char	*get_cmd_abspath(char *cmd)
 
 void	parser_handler(char	*line)
 {
-	char	**split;
+	t_list	*token_list;
+	char	**cmds;
 	char	*cmd_path;
 
 	if (!line || line[0] == '\0')
 		return ;
-	split = ft_split(line, ' ');
-	if (!builtin_handler(split, g_data.envp))
+	token_list = tokenizer(line);
+	cmds = ft_lstto_array(token_list);
+	if (!builtin_handler(cmds, g_data.envp))
 	{
-		cmd_path = get_cmd_abspath(split[0]);
+		cmd_path = get_cmd_abspath(cmds[0]);
 		if (cmd_path)
 		{
 			if (fork() == 0)
-				execve(cmd_path, split, g_data.envp);
+				execve(cmd_path, cmds, g_data.envp);
 			wait(NULL);
 		}
 		else
-			printf("%s: command not found\n", split[0]);
+			printf("%s: command not found\n", cmds[0]);
 		free(cmd_path);
 	}
-	ft_freesplit(split);
+	ft_freesplit(cmds);
 	add_history(line);
 }
