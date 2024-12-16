@@ -40,9 +40,12 @@ typedef struct s_minishell
 
 // utils
 void	enroll_custom_signal(void);
-char	*ft_getenv(char *envp[], const char *env);
+char	*ft_getenv(const char *env);
 void	replace_envvalue(const char *env, char	*replace);
 
+// ft_utils
+char	**ft_lstto_array(t_list *list);
+t_bool	is_quote_ch(char ch);
 // builtins
 int		builtin_handler(char **cmds, char **env_list);
 void	ft_cd(const char *path, const char *home_path);
@@ -50,7 +53,10 @@ void	ft_exit(void);
 void	ft_env(void);
 
 // parser
-char	*get_cmd_abspath(char *cmd);
 void	parser_handler(char	*line);
+t_list	*tokenizer(char *line);
+char	*get_cmd_abspath(char *cmd);
+char	*quote_parser(char **line, char *token);
+size_t	dollar_parser(char **token, char *new);
 
 #endif
