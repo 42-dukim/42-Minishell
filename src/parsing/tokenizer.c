@@ -31,6 +31,41 @@ static void	extend_str(char **str, size_t *size)
 	*str = extend;
 }
 
+static	char *convert_token(char *token)
+{
+	char	*new;
+	char	*temp;
+	char	quote;
+	size_t	i;
+
+	temp = token;
+	new = ft_calloc(sizeof(char), ft_strlen(token) + 1);
+	quote = 0;
+	i = 0;
+	while(*token)
+	{
+		if (is_quote_ch(*token))
+		{
+			if (quote == 0)
+				quote = *token;
+			else if (quote == *token)
+				quote = 0;
+			else
+				new[i++] = *token;
+			token++;
+			continue ;
+		}
+		if (*token == '$' && quote != '\'')
+		{
+			i += dollar_parser(&token, new + i);
+			continue;
+		}
+		new[i++] = *token++;
+	}
+	free(temp);
+	return (new);
+}
+
 t_list	*tokenizer(char *line)
 {
 	t_list	*token_list;
@@ -39,13 +74,18 @@ t_list	*tokenizer(char *line)
 	size_t	i;
 
 	token_list = NULL;
-	line--;
 	init_token(&token, &i, &token_len);
+	line--;
 	while (*(++line))
 	{
-		if (*line == '\'' || *line == '"')	// qutoe parsing후에 ' ' 만날 때 또 parsing 과정 반복
+		if (is_quote_ch(*line))
 		{
 			token = quote_parser(&line, token);
+			if (!token)
+			{
+				ft_lstclear(&token_list, free);
+				return (NULL);
+			}
 			token_len = ft_strlen(token);
 			i = token_len;
 			continue ;
@@ -54,7 +94,7 @@ t_list	*tokenizer(char *line)
 		{
 			if (i == 0)
 				continue ;
-			ft_lstadd_back(&token_list, ft_lstnew(dollar_parser(token)));
+			ft_lstadd_back(&token_list, ft_lstnew(convert_token(token)));
 			init_token(&token, &i, &token_len);
 			continue ;
 		}
@@ -63,7 +103,7 @@ t_list	*tokenizer(char *line)
 		token[i++] = *line;
 	}
 	if (i > 0)
-		ft_lstadd_back(&token_list, ft_lstnew(dollar_parser(token)));
+		ft_lstadd_back(&token_list, ft_lstnew(convert_token(token)));
 	else
 		free(token);
 	return (token_list);

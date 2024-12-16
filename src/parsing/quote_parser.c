@@ -15,20 +15,18 @@
 static char	*get_quote_token(char **line)
 {
 	char	*quote_token;
-	char	*temp;
 	char	quote;
-	size_t	j;
+	size_t	i;
 
 	quote_token = ft_calloc(sizeof(char), ft_strlen(*line) + 1);
-	quote = '\0';
-	j = 0;
+	quote = 0;
+	i = 0;
 	while (**line)
 	{
-		quote_token[j] = **line;
-		j++;
-		if (**line == '\'' || **line == '"')
+		quote_token[i++] = **line;
+		if (is_quote_ch(**line))
 		{
-			if (!quote)
+			if (quote == 0)
 				quote = **line;
 			else if (quote == **line)
 				break ;
@@ -38,13 +36,8 @@ static char	*get_quote_token(char **line)
 	if (**line != quote)
 	{
 		free(quote_token);
-		if (**line == '\0')
-			(*line)--;
-		return (ft_strdup(""));
+		return (NULL);
 	}
-	temp = quote_token;
-	quote_token = ft_strdup(quote_token);
-	free(temp);
 	return (quote_token);
 }
 
@@ -56,11 +49,11 @@ char	*quote_parser(char **line, char *token)
 
 	quote = **line;
 	quote_token = get_quote_token(line);
-	temp = quote_token;
-	quote_token = ft_substr(quote_token, 1, ft_strlen(quote_token) - 2);
-	free(temp);
-	if (quote == '"')
-		quote_token = dollar_parser(quote_token);
+	if (!quote_token)
+	{
+		free(token);
+		return (NULL);
+	}
 	temp = quote_token;
 	quote_token = ft_strjoin(token, quote_token);
 	free(temp);

@@ -35,20 +35,9 @@ char	**ft_lstto_array(t_list *list)
 	return (array);
 }
 
-char	*ft_strreplace(char *str, size_t start, size_t end, char *replace)
+t_bool	is_quote_ch(char ch)
 {
-	char	*temp1;
-	char	*temp2;
-
-	str[start - 1] = '\0';
-	temp1 = ft_strjoin(str, replace);
-	temp2 = ft_strjoin(temp1, str + end);
-	free(str);
-	free(temp1);
-	return (temp2);
-}
-
-void	ft_strsplice(char *str, size_t start, size_t end)
-{
-	ft_strlcpy(str + start, str + end + 1, ft_strlen(str) - end + 1);
+	if (ch == '\'' || ch == '"')
+		return (true);
+	return (false);
 }

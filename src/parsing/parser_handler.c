@@ -47,6 +47,8 @@ void	parser_handler(char	*line)
 	if (!line || line[0] == '\0')
 		return ;
 	token_list = tokenizer(line);
+	if (!token_list)
+		return ;
 	cmds = ft_lstto_array(token_list);
 	if (!builtin_handler(cmds, g_data.envp))
 	{
