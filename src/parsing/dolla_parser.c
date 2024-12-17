@@ -19,29 +19,29 @@ static t_bool	is_dollar_separator(char ch)
 	return (false);
 }
 
-size_t	dollar_parser(char **token, char *new)
+void	dollar_parser(t_token *token, char *pre, size_t *i)
 {	
-	char	*envvalue;
 	char	*dollar;
-	size_t	i;
+	char	*envvalue;
+	size_t	j;
 
-	(*token)++;
-	dollar = ft_calloc(sizeof(char), ft_strlen(*token) + 1);
-	i = 0;
-	while (!is_dollar_separator(**token) && **token)
+	(*i)++;
+	dollar = ft_calloc(sizeof(char), ft_strlen(pre + *i) + 1);
+	j = 0;
+	while (!is_dollar_separator(pre[*i]) && pre[*i])
 	{
-		dollar[i] = **token;
-		i++;
-		(*token)++;
+		dollar[j] = pre[*i];
+		j++;
+		(*i)++;
 	}
-	if (i == 0)
+	if (j == 0)
 	{
 		free(dollar);
-		return (0);
+		return ;
 	}
 	envvalue = ft_getenv(dollar);
 	free(dollar);
 	if (envvalue)
-		return (ft_strlcpy(new, envvalue, ft_strlen(envvalue) + 1));
-	return (0);
+		append_str_intoken(token, envvalue);
+	(*i)--;
 }

@@ -11,100 +11,85 @@
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
-#define TOKEN_LEN 10
 
-static void	init_token(char **token, size_t *idx, size_t *len)
+static	void	convert_tokencotent(t_token *token)
 {
-	*idx = 0;
-	*len = TOKEN_LEN;
-	*token = ft_calloc(sizeof(char), *len + 1);
-}
-
-static void	extend_str(char **str, size_t *size)
-{
-	char	*extend;
-
-	*size *= 2;
-	extend = ft_calloc(sizeof(char), *size + 1);
-	ft_strlcpy(extend, *str, *size / 2 + 1);
-	free(*str);
-	*str = extend;
-}
-
-static	char *convert_token(char *token)
-{
-	char	*new;
-	char	*temp;
+	char	*pre;
 	char	quote;
 	size_t	i;
 
-	temp = token;
-	new = ft_calloc(sizeof(char), ft_strlen(token) + 1);
+	pre = token->content;
+	init_token(token);
 	quote = 0;
-	i = 0;
-	while(*token)
+	i = -1;
+	while(pre[++i])
 	{
-		if (is_quote_ch(*token))
+		if (is_quote_ch(pre[i]))
 		{
 			if (quote == 0)
-				quote = *token;
-			else if (quote == *token)
+				quote = pre[i];
+			else if (quote == pre[i])
 				quote = 0;
 			else
-				new[i++] = *token;
-			token++;
-			continue ;
+				append_ch_intoken(token, pre[i]);
 		}
-		if (*token == '$' && quote != '\'')
-		{
-			i += dollar_parser(&token, new + i);
-			continue;
-		}
-		new[i++] = *token++;
+		else if (pre[i] == '$' && quote != '\'')
+			dollar_parser(token, pre, &i);
+		else
+			append_ch_intoken(token, pre[i]);
 	}
-	free(temp);
-	return (new);
+	free(pre);
+}
+
+static int	specitalch_handler(t_list **token_list, char **line, t_token *token)
+{
+	if (is_quote_ch(**line))
+	{
+		quote_parser(line, token);
+		if (!token->content)
+			return (-1);
+	}
+	else if (**line == ' ')
+	{
+		if (token->idx == 0)
+			return (true);
+		convert_tokencotent(token);
+		ft_lstadd_back(token_list, ft_lstnew(token->content));
+		init_token(token);
+	}
+	else
+		return (1);
+	return (0);
 }
 
 t_list	*tokenizer(char *line)
 {
 	t_list	*token_list;
-	char	*token;
-	size_t	token_len;
-	size_t	i;
+	t_token	*token;
+	int		res;
 
 	token_list = NULL;
-	init_token(&token, &i, &token_len);
-	line--;
-	while (*(++line))
+	token = malloc(sizeof(t_token) * 1);
+	init_token(token);
+	while (*line)
 	{
-		if (is_quote_ch(*line))
+		res = specitalch_handler(&token_list, &line, token);
+		if (res == -1)
 		{
-			token = quote_parser(&line, token);
-			if (!token)
-			{
-				ft_lstclear(&token_list, free);
-				return (NULL);
-			}
-			token_len = ft_strlen(token);
-			i = token_len;
-			continue ;
+			ft_lstclear(&token_list, free);
+			break ;
 		}
-		if (*line == ' ')
-		{
-			if (i == 0)
-				continue ;
-			ft_lstadd_back(&token_list, ft_lstnew(convert_token(token)));
-			init_token(&token, &i, &token_len);
-			continue ;
-		}
-		if (i == token_len)
-			extend_str(&token, &token_len);
-		token[i++] = *line;
+		if (res == 1)
+			append_ch_intoken(token, *line);
+		line++;
 	}
-	if (i > 0)
-		ft_lstadd_back(&token_list, ft_lstnew(convert_token(token)));
+	if (token->idx > 0)
+	{
+		convert_tokencotent(token);
+		ft_lstadd_back(&token_list, ft_lstnew(token->content));
+	}
 	else
-		free(token);
+		free(token->content);
+	free(token);
 	return (token_list);
 }

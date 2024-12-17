@@ -31,6 +31,13 @@ typedef enum e_bool
 	true
 }		t_bool;
 
+typedef	struct s_token
+{
+	char	*content;
+	size_t	idx;
+	size_t	max_len;
+}	t_token;
+
 typedef struct s_minishell
 {
 	char	**envp;
@@ -43,9 +50,15 @@ void	enroll_custom_signal(void);
 char	*ft_getenv(const char *env);
 void	replace_envvalue(const char *env, char	*replace);
 
+// token utils
+void	init_token(t_token *token);
+void	append_ch_intoken(t_token *token, char ch);
+void	append_str_intoken(t_token *token, char *str);
+
 // ft_utils
 char	**ft_lstto_array(t_list *list);
 t_bool	is_quote_ch(char ch);
+
 // builtins
 int		builtin_handler(char **cmds, char **env_list);
 void	ft_cd(const char *path, const char *home_path);
@@ -56,7 +69,7 @@ void	ft_env(void);
 void	parser_handler(char	*line);
 t_list	*tokenizer(char *line);
 char	*get_cmd_abspath(char *cmd);
-char	*quote_parser(char **line, char *token);
-size_t	dollar_parser(char **token, char *new);
+void	quote_parser(char **line, t_token *token);
+void	dollar_parser(t_token *token, char *pre, size_t *i);
 
 #endif
