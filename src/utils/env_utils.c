@@ -6,7 +6,7 @@
 /*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 21:10:16 by dukim             #+#    #+#             */
-/*   Updated: 2024/12/17 20:40:29 by junkwak          ###   ########.fr       */
+/*   Updated: 2024/12/17 21:19:33 by junkwak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,42 +51,3 @@ void	replace_envvalue(const char *env, char	*replace)
 		i++;
 	}	
 }
-
-// t_global	*init_env(char **env)
-// {
-	// t_global	*head;
-	// int	i;
-
-	// head = (t_global *)malloc(sizeof(t_global));
-	// if (!head)
-	// 	head = NULL;
-// 	return (0);
-// }
-
-// t_list	*env_list(char **envp)
-// {
-// 	t_list	*head;
-// 	t_list	*new_node;
-// 	t_list	*temp;
-// 	int	i;
-
-// 	head = NULL;
-// 	i = 0;
-// 	while (envp[i])
-// 	{
-// 		new_node = (t_list *)malloc(sizeof(t_list));
-// 		new_node->content = envp[i];
-// 		new_node->next = NULL;
-// 		if (!head)
-// 			head = new_node;
-// 		else
-// 		{
-// 			temp = head;
-// 			while (temp->next)
-// 				temp = temp->next;
-// 		}
-// 		temp->next = new_node;
-// 		i++;
-// 	}
-// 	return (head);
-// }

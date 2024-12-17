@@ -6,7 +6,7 @@
 /*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 21:09:47 by dukim             #+#    #+#             */
-/*   Updated: 2024/12/17 21:04:03 by junkwak          ###   ########.fr       */
+/*   Updated: 2024/12/17 21:16:20 by junkwak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,34 +49,6 @@ typedef struct s_minishell
 	// struct s_list	*export;
 	struct s_env	*link_envp;//envp로 받아온걸 리스트로 넣어둠
 }	t_global;
-
-
-//--이거자체가 연결리스트?겸하는건가?
-
-// typedef struct s_node//환경변수에 대한 연결리스트
-// {
-// 	struct s_node	*prev;
-// 	struct s_node	*next;
-// 	char		*value;
-// }	t_node;
-
-// typedef struct s_list_value	//env,export 에 대한 구조체2
-// {
-// 	struct s_node	*head;
-// 	struct s_node	*tail;
-// 	int		size;
-// }	t_list_value;
-
-// typedef struct s_pipe
-// {
-// 	int	fd[2];
-// 	int	p_count;
-// 	int	pid;
-// 	// char	**path;
-// 	// char	*order1;
-// 	// char	*order2;
-// }	t_pipe;
-
 
 // utils
 void	enroll_custom_signal(void);
