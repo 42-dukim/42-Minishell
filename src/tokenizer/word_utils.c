@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/minishell.h"
-#define WORD_LEN 64
+#include "tokenizer.h"
 
 void	init_word(t_word *word)
 {
@@ -44,3 +43,31 @@ void	append_str_inword(t_word *word, char *str)
 	}
 }
 
+void	convert_wordcotent(t_word *word)
+{
+	char	*pre;
+	char	quote;
+	size_t	i;
+
+	pre = word->content;
+	init_word(word);
+	quote = 0;
+	i = -1;
+	while(pre[++i])
+	{
+		if (is_quote_ch(pre[i]))
+		{
+			if (quote == 0)
+				quote = pre[i];
+			else if (quote == pre[i])
+				quote = 0;
+			else
+				append_ch_inword(word, pre[i]);
+		}
+		else if (pre[i] == '$' && quote != '\'')
+			dollar_parser(word, pre, &i);
+		else
+			append_ch_inword(word, pre[i]);
+	}
+	free(pre);
+}

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/minishell.h"
+#include "tokenizer.h"
 
 static char	*get_quote_content(char **line)
 {

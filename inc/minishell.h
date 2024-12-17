@@ -24,20 +24,13 @@
 # include <termios.h>
 
 # include "../libft/libft.h"
+// # include "../src/tokenizer/tokenizer.h"
 
 typedef enum e_bool
 {
 	false = 0,
 	true
 }		t_bool;
-
-typedef enum e_token_type
-{
-	WORD,
-	REDI,
-	HERE,
-	PIPE,
-}	t_token_type;
 
 typedef struct s_env
 {
@@ -47,19 +40,6 @@ typedef struct s_env
 	int	flag_export;
 	struct s_env	*next;
 }	t_env;
-
-typedef	struct s_word
-{
-	char	*content;
-	size_t	idx;
-	size_t	max_len;
-}	t_word;
-
-typedef	struct s_token
-{
-	char			*content;
-	t_token_type	type;
-}	t_token;
 
 typedef struct s_minishell
 {
@@ -85,31 +65,21 @@ int		builtin_handler(char **cmds);
 void	ft_cd(const char *path, const char *home_path);
 void	ft_exit(void);
 void	ft_env(char **cmd);
-int     ft_export(char **cmds);
+int		ft_export(char **cmds);
+
+// export tokenizer
+t_list	*tokenizer(char *line);
+char	**tokenlst_to_array(t_list *list);
 
 // parser
 void	parser_handler(char	*line);
 char	*get_cmd_abspath(char *cmd);
-void	quote_parser(char **line, t_word *word);
-void	dollar_parser(t_word *word, char *pre, size_t *i);
-
-// token
-t_list	*tokenizer(char *line);
-void	append_token_inlist(t_list **token_list, t_word *word, t_token_type type);
-t_token_type	get_tokentype(char ch);
-char	**tokenlst_to_array(t_list *list);
-
-// word utils
-void	init_word(t_word *word);
-void	append_ch_inword(t_word *word, char ch);
-void	append_str_inword(t_word *word, char *str);
-void	convert_wordcotent(t_word *word);
 
 t_list	*env_list(char **envp);
-t_list *arry_list(char **head);
+t_list	*arry_list(char **head);
 t_env	*init_env(char **cmds);
-void    set_env(char **cmds);
-void    node_back(t_list **head, t_list *new);
-void    value_export(char **cmds);
+void	set_env(char **cmds);
+void	node_back(t_list **head, t_list *new);
+void	value_export(char **cmds);
 
 #endif

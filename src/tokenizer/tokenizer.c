@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/minishell.h"
+#include "tokenizer.h"
 
 static int	specitalch_handler(t_list **token_list, char **line, t_word *word)
 {
@@ -34,35 +34,6 @@ static int	specitalch_handler(t_list **token_list, char **line, t_word *word)
 	else
 		return (1);
 	return (0);
-}
-
-void	convert_wordcotent(t_word *word)
-{
-	char	*pre;
-	char	quote;
-	size_t	i;
-
-	pre = word->content;
-	init_word(word);
-	quote = 0;
-	i = -1;
-	while(pre[++i])
-	{
-		if (is_quote_ch(pre[i]))
-		{
-			if (quote == 0)
-				quote = pre[i];
-			else if (quote == pre[i])
-				quote = 0;
-			else
-				append_ch_inword(word, pre[i]);
-		}
-		else if (pre[i] == '$' && quote != '\'')
-			dollar_parser(word, pre, &i);
-		else
-			append_ch_inword(word, pre[i]);
-	}
-	free(pre);
 }
 
 t_list	*tokenizer(char *line)

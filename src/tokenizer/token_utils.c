@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/minishell.h"
+#include "tokenizer.h"
 
 void	append_token_inlist(t_list **token_list, t_word *word, t_token_type type)
 {

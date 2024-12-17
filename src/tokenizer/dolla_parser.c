@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/minishell.h"
+#include "tokenizer.h"
 
 static t_bool	is_dollar_separator(char ch)
 {
