@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_handler.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dukim <dukim@student.42gyeongsan.kr>       +#+  +:+       +#+        */
+/*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 22:32:05 by dukim             #+#    #+#             */
-/*   Updated: 2024/11/29 22:32:06 by dukim            ###   ########.fr       */
+/*   Updated: 2024/12/17 16:51:26 by junkwak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	parser_handler(char	*line)
 	if (!token_list)
 		return ;
 	cmds = ft_lstto_array(token_list);
-	if (!builtin_handler(cmds, g_data.envp))
+	if (!builtin_handler(cmds))
 	{
 		cmd_path = get_cmd_abspath(cmds[0]);
 		if (cmd_path)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dukim <dukim@student.42gyeongsan.kr>       +#+  +:+       +#+        */
+/*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 21:09:47 by dukim             #+#    #+#             */
-/*   Updated: 2024/11/22 21:09:48 by dukim            ###   ########.fr       */
+/*   Updated: 2024/12/17 21:16:20 by junkwak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,15 @@ typedef enum e_bool
 	true
 }		t_bool;
 
+typedef struct s_env
+{
+	struct s_list *var;
+	struct s_list *env;
+	int	flag_env;
+	int	flag_export;
+	struct s_env	*next;
+}	t_env;
+
 typedef enum e_token_type
 {
 	WORD,
@@ -51,6 +60,9 @@ typedef struct s_minishell
 	char	**envp;
 	char	*pathvalue;
 	char	**path_list;
+	// struct s_list	*env;
+	// struct s_list	*export;
+	struct s_env	*link_envp;//envp로 받아온걸 리스트로 넣어둠
 }	t_global;
 
 // utils
@@ -64,10 +76,11 @@ t_bool	is_quote_ch(char ch);
 t_bool	is_specital_ch(char ch);
 
 // builtins
-int		builtin_handler(char **cmds, char **env_list);
+int		builtin_handler(char **cmds);
 void	ft_cd(const char *path, const char *home_path);
 void	ft_exit(void);
-void	ft_env(void);
+void	ft_env(char **cmd);
+int     ft_export(char **cmds);
 
 // parser
 void	parser_handler(char	*line);
@@ -83,5 +96,12 @@ void	init_word(t_word *word);
 void	append_ch_inword(t_word *word, char ch);
 void	append_str_inword(t_word *word, char *str);
 void	append_token_inlist(t_list **token_list, t_word *word);
+
+t_list	*env_list(char **envp);
+t_list *arry_list(char **head);
+t_env	*init_env(char **cmds);
+void    set_env(char **cmds);
+void    node_back(t_list **head, t_list *new);
+void    value_export(char **cmds);
 
 #endif
