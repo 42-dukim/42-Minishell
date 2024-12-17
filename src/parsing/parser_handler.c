@@ -49,7 +49,7 @@ void	parser_handler(char	*line)
 	token_list = tokenizer(line);
 	if (!token_list)
 		return ;
-	cmds = ft_lstto_array(token_list);
+	cmds = tokenlst_to_array(token_list);
 	if (!builtin_handler(cmds))
 	{
 		cmd_path = get_cmd_abspath(cmds[0]);

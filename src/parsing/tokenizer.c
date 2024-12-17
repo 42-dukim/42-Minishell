@@ -20,12 +20,16 @@ static int	specitalch_handler(t_list **token_list, char **line, t_word *word)
 		if (!word->content)
 			return (-1);
 	}
-	else if (**line == ' ')
-		append_token_inlist(token_list, word);
 	else if (is_specital_ch(**line))
 	{
-		append_token_inlist(token_list, word);
-		ft_lstadd_back(token_list, ft_lstnew(ft_substr(*line, 0, 1)));
+		append_token_inlist(token_list, word, WORD);
+		if (**line != ' ')
+		{
+			free(word->content);
+			word->content = ft_substr(*line, 0, 1);
+			word->idx = 1;
+			append_token_inlist(token_list, word, get_tokentype(**line));
+		}
 	}
 	else
 		return (1);
@@ -82,7 +86,7 @@ t_list	*tokenizer(char *line)
 			append_ch_inword(word, *line);
 		line++;
 	}
-	append_token_inlist(&token_list, word);
+	append_token_inlist(&token_list, word, WORD);
 	free(word->content);
 	free(word);
 	return (token_list);

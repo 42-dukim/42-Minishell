@@ -44,11 +44,3 @@ void	append_str_inword(t_word *word, char *str)
 	}
 }
 
-void	append_token_inlist(t_list **token_list, t_word *token)
-{
-	if (token->idx == 0)
-		return ;
-	convert_wordcotent(token);
-	ft_lstadd_back(token_list, ft_lstnew(token->content));
-	init_word(token);
-}
