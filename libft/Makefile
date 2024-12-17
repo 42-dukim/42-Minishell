@@ -3,18 +3,16 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: dukim <dukim@student.42gyeongsan.kr>       +#+  +:+       +#+         #
+#    By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/07 13:04:15 by dukim             #+#    #+#              #
-#    Updated: 2024/03/07 14:07:16 by dukim            ###   ########.fr        #
+#    Updated: 2024/12/15 16:51:51 by junkwak          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC			=	cc
 CFLAGS		=	-Wall -Wextra -Werror
 NAME		=	libft.a
-GNL_DIR		=	gnl
-PRINTF_DIR	=	printf
 
 SRC			= 	ft_memset.c ft_bzero.c ft_memcpy.c ft_memmove.c\
 				ft_memchr.c ft_memcmp.c ft_strlen.c ft_strlcpy.c\
@@ -43,9 +41,7 @@ endif
 all:	$(NAME)
 
 $(NAME):	$(FINAL_OBJS)
-	@make -C $(GNL_DIR)
-	@make -C $(PRINTF_DIR)
-	ar -rc $(NAME) $(FINAL_OBJS) $(GNL_DIR)/*.o $(PRINTF_DIR)/*.o
+	ar -rc $(NAME) $(FINAL_OBJS)
 
 $(OBJS):	$(SRC)
 	$(CC) $(CFLAGS) -c $(SRC)
@@ -57,13 +53,9 @@ bonus:
 	@make BONUS=1 all
 
 clean:
-	@make clean -C $(GNL_DIR)
-	@make clean -C $(PRINTF_DIR)
 	@rm -f $(OBJS) $(LST_OBJS)
 
 fclean:		clean
-	@make fclean -C $(GNL_DIR)
-	@make fclean -C $(PRINTF_DIR)
 	@rm -f $(NAME)
 
 re:			fclean all

@@ -6,7 +6,7 @@
 /*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 16:16:01 by dukim             #+#    #+#             */
-/*   Updated: 2024/12/13 17:41:11 by junkwak          ###   ########.fr       */
+/*   Updated: 2024/12/15 20:26:27 by junkwak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 
 # include <stdlib.h>
 # include <unistd.h>
-# include "gnl/get_next_line.h"
-# include "printf/ft_printf.h"
 
 typedef struct s_list
 {

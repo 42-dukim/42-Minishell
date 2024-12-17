@@ -6,7 +6,7 @@
 /*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 21:09:47 by dukim             #+#    #+#             */
-/*   Updated: 2024/12/13 17:37:44 by junkwak          ###   ########.fr       */
+/*   Updated: 2024/12/17 21:04:03 by junkwak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,27 @@ typedef enum e_bool
 	true
 }		t_bool;
 
+typedef struct s_env
+{
+	struct s_list *var;
+	struct s_list *env;
+	int	flag_env;
+	int	flag_export;
+	struct s_env	*next;
+}	t_env;
+
 typedef struct s_minishell
 {
 	char	**envp;
 	char	*pathvalue;
 	char	**path_list;
-	struct t_list	*env;
-	struct t_list	*export;
+	// struct s_list	*env;
+	// struct s_list	*export;
+	struct s_env	*link_envp;//envp로 받아온걸 리스트로 넣어둠
 }	t_global;
+
+
+//--이거자체가 연결리스트?겸하는건가?
 
 // typedef struct s_node//환경변수에 대한 연결리스트
 // {
@@ -69,6 +82,7 @@ typedef struct s_minishell
 void	enroll_custom_signal(void);
 char	*ft_getenv(char *envp[], const char *env);
 void	replace_envvalue(const char *env, char	*replace);
+int	ft_strcmp(const char *s1, const char *s2);
 
 // builtins
 int		builtin_handler(char **cmds);
@@ -81,6 +95,14 @@ int     ft_export(char **cmds);
 char	*get_cmd_abspath(char *cmd);
 void	parser_handler(char	*line);
 
+
+
+t_list	*env_list(char **envp);
+t_list *arry_list(char **head);
+t_env	*init_env(char **cmds);
+void    set_env(char **cmds);
+void    node_back(t_list **head, t_list *new);
+void    value_export(char **cmds);
 
 //pipe
 // void    pipe_inst(char *line);
