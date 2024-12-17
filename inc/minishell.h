@@ -31,6 +31,14 @@ typedef enum e_bool
 	true
 }		t_bool;
 
+typedef enum e_token_type
+{
+	WORD,
+	REDI,
+	HERE,
+	PIPE,
+}	t_token_type;
+
 typedef struct s_env
 {
 	struct s_list *var;
@@ -40,20 +48,18 @@ typedef struct s_env
 	struct s_env	*next;
 }	t_env;
 
-typedef enum e_token_type
-{
-	WORD,
-	REDI,
-	HERE,
-	PIPE,
-}	t_token_type;
-
 typedef	struct s_word
 {
 	char	*content;
 	size_t	idx;
 	size_t	max_len;
 }	t_word;
+
+typedef	struct s_token
+{
+	char			*content;
+	t_token_type	type;
+}	t_token;
 
 typedef struct s_minishell
 {
@@ -71,7 +77,6 @@ char	*ft_getenv(const char *env);
 void	replace_envvalue(const char *env, char	*replace);
 
 // ft_utils
-char	**ft_lstto_array(t_list *list);
 t_bool	is_quote_ch(char ch);
 t_bool	is_specital_ch(char ch);
 
@@ -90,12 +95,15 @@ void	dollar_parser(t_word *word, char *pre, size_t *i);
 
 // token
 t_list	*tokenizer(char *line);
-void	convert_wordcotent(t_word *word);
+void	append_token_inlist(t_list **token_list, t_word *word, t_token_type type);
+t_token_type	get_tokentype(char ch);
+char	**tokenlst_to_array(t_list *list);
 
+// word utils
 void	init_word(t_word *word);
 void	append_ch_inword(t_word *word, char ch);
 void	append_str_inword(t_word *word, char *str);
-void	append_token_inlist(t_list **token_list, t_word *word);
+void	convert_wordcotent(t_word *word);
 
 t_list	*env_list(char **envp);
 t_list *arry_list(char **head);
