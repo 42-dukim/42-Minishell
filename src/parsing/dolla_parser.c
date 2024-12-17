@@ -19,7 +19,7 @@ static t_bool	is_dollar_separator(char ch)
 	return (false);
 }
 
-void	dollar_parser(t_token *token, char *pre, size_t *i)
+void	dollar_parser(t_word *word, char *pre, size_t *i)
 {	
 	char	*dollar;
 	char	*envvalue;
@@ -42,6 +42,6 @@ void	dollar_parser(t_token *token, char *pre, size_t *i)
 	envvalue = ft_getenv(dollar);
 	free(dollar);
 	if (envvalue)
-		append_str_intoken(token, envvalue);
+		append_str_inword(word, envvalue);
 	(*i)--;
 }

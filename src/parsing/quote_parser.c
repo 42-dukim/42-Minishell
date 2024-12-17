@@ -12,7 +12,7 @@
 
 #include "../../inc/minishell.h"
 
-static char	*get_quotetoken_content(char **line)
+static char	*get_quote_content(char **line)
 {
 	char	*content;
 	char	quote;
@@ -41,23 +41,23 @@ static char	*get_quotetoken_content(char **line)
 	return (content);
 }
 
-void	quote_parser(char **line, t_token *token)
+void	quote_parser(char **line, t_word *word)
 {
 	char	*content;
 	char	*temp;
 
-	content = get_quotetoken_content(line);
+	content = get_quote_content(line);
 	if (!content)
 	{
-		free(token->content);
-		token->content = NULL;
-		token->idx = 0;
+		free(word->content);
+		word->content = NULL;
+		word->idx = 0;
 		return ;
 	}
-	temp = token->content;
-	token->content = ft_strjoin(token->content, content);
-	token->max_len = ft_strlen(token->content);
-	token->idx = token->max_len;
+	temp = word->content;
+	word->content = ft_strjoin(word->content, content);
+	word->max_len = ft_strlen(word->content);
+	word->idx = word->max_len;
 	free(temp);
 	free(content);
 }

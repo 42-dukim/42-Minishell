@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   token_utils.c                                      :+:      :+:    :+:   */
+/*   word_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dukim <dukim@student.42gyeongsan.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -11,35 +11,44 @@
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
-#define TOKEN_LEN 64
+#define WORD_LEN 64
 
-void	init_token(t_token *token)
+void	init_word(t_word *word)
 {
-	token->idx = 0;
-	token->max_len = TOKEN_LEN;
-	token->content = ft_calloc(sizeof(char), TOKEN_LEN + 1);
+	word->idx = 0;
+	word->max_len = WORD_LEN;
+	word->content = ft_calloc(sizeof(char), WORD_LEN + 1);
 }
 
-void	append_ch_intoken(t_token *token, char ch)
+void	append_ch_inword(t_word *word, char ch)
 {
 	char	*extend;
 
-	if (token->idx == token->max_len)
+	if (word->idx == word->max_len)
 	{
-		token->max_len *= 2;
-		extend = ft_calloc(sizeof(char), token->max_len + 1);
-		ft_strlcpy(extend, token->content, token->max_len / 2 + 1);
-		free(token->content);
-		token->content = extend;
+		word->max_len *= 2;
+		extend = ft_calloc(sizeof(char), word->max_len + 1);
+		ft_strlcpy(extend, word->content, word->max_len / 2 + 1);
+		free(word->content);
+		word->content = extend;
 	}
-	token->content[token->idx++] = ch;
+	word->content[word->idx++] = ch;
 }
 
-void	append_str_intoken(t_token *token, char *str)
+void	append_str_inword(t_word *word, char *str)
 {
 	while (*str)
 	{
-		append_ch_intoken(token, *str);
+		append_ch_inword(word, *str);
 		str++;
 	}
+}
+
+void	append_token_inlist(t_list **token_list, t_word *token)
+{
+	if (token->idx == 0)
+		return ;
+	convert_wordcotent(token);
+	ft_lstadd_back(token_list, ft_lstnew(token->content));
+	init_word(token);
 }
