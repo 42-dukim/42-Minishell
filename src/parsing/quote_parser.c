@@ -12,18 +12,18 @@
 
 #include "../../inc/minishell.h"
 
-static char	*get_quote_token(char **line)
+static char	*get_quote_content(char **line)
 {
-	char	*quote_token;
+	char	*content;
 	char	quote;
 	size_t	i;
 
-	quote_token = ft_calloc(sizeof(char), ft_strlen(*line) + 1);
+	content = ft_calloc(sizeof(char), ft_strlen(*line) + 1);
 	quote = 0;
 	i = 0;
 	while (**line)
 	{
-		quote_token[i++] = **line;
+		content[i++] = **line;
 		if (is_quote_ch(**line))
 		{
 			if (quote == 0)
@@ -35,28 +35,29 @@ static char	*get_quote_token(char **line)
 	}
 	if (**line != quote)
 	{
-		free(quote_token);
+		free(content);
 		return (NULL);
 	}
-	return (quote_token);
+	return (content);
 }
 
-char	*quote_parser(char **line, char *token)
+void	quote_parser(char **line, t_word *word)
 {
-	char	*quote_token;
+	char	*content;
 	char	*temp;
-	char	quote;
 
-	quote = **line;
-	quote_token = get_quote_token(line);
-	if (!quote_token)
+	content = get_quote_content(line);
+	if (!content)
 	{
-		free(token);
-		return (NULL);
+		free(word->content);
+		word->content = NULL;
+		word->idx = 0;
+		return ;
 	}
-	temp = quote_token;
-	quote_token = ft_strjoin(token, quote_token);
+	temp = word->content;
+	word->content = ft_strjoin(word->content, content);
+	word->max_len = ft_strlen(word->content);
+	word->idx = word->max_len;
 	free(temp);
-	free(token);
-	return (quote_token);
+	free(content);
 }

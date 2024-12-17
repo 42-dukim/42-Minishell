@@ -17,14 +17,12 @@ char	**ft_lstto_array(t_list *list)
 	char	**array;
 	t_list	*ptr;
 	t_list	*temp;
-	size_t	len;
 	size_t	i;
 
-	len = ft_lstsize(list);
-	array = malloc(sizeof(char *) * (len + 1));
+	array = malloc(sizeof(char *) * (ft_lstsize(list) + 1));
 	ptr = list;
 	i = 0;
-	while (i < len)
+	while (ptr)
 	{
 		array[i++] = ptr->content;
 		temp = ptr->next;
@@ -38,6 +36,13 @@ char	**ft_lstto_array(t_list *list)
 t_bool	is_quote_ch(char ch)
 {
 	if (ch == '\'' || ch == '"')
+		return (true);
+	return (false);
+}
+
+t_bool	is_specital_ch(char ch)
+{
+	if (ch == '|' || ch == '>' || ch == '<')
 		return (true);
 	return (false);
 }
