@@ -1,5 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   command.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dukim <dukim@student.42gyeongsan.kr>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/24 19:12:00 by dukim             #+#    #+#             */
+/*   Updated: 2024/12/24 19:12:04 by dukim            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "command.h"
-# include "../tokenizer/tokenizer.h"
+#include "../tokenizer/tokenizer.h"
 
 static void	append_cmd_inlist(t_list **lst, t_command *command, t_cmd_type type, t_list **arg_list)
 {
@@ -85,48 +97,4 @@ t_list *split_command(t_list *token_list)
 	}
 	append_cmd_inlist(&cmdunit_list, command, CMD, &arg_list);
 	return (cmdunit_list);
-}
-
-// redirection print -> temp function
-static void	print_redirections(t_redirection *redi)
-{
-    printf("Redirections:\n");
-    if (!redi) {
-        printf("  None\n");
-        return;
-    }
-    while (redi) {
-        printf("  %c %s\n", redi->type, redi->file);
-        redi = redi->next;
-    }
-}
-
-void	print_command_list(t_list *list)
-{
-    while (list)
-	{
-        t_cmd_unit *unit = (t_cmd_unit *)list->content;
-
-        if (unit->type == CMD) {
-            printf("Type: CMD\n");
-            t_command *cmd = unit->cmd;
-
-            // Print command arguments
-            if (cmd->args) {
-                printf("Arguments: ");
-                for (int i = 0; cmd->args[i]; i++) {
-                    printf("%s ", cmd->args[i]);
-                }
-                printf("\n");
-            }
-
-            // Print redirections
-            print_redirections(cmd->redi);
-        } else if (unit->type == PIPE) {
-            printf("Type: PIPE\n");
-        }
-
-        printf("----------------------\n");
-        list = list->next;
-    }
 }

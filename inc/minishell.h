@@ -58,7 +58,7 @@ void	replace_envvalue(const char *env, char	*replace);
 // ft_utils
 t_bool	is_quote_ch(char ch);
 t_bool	is_specital_ch(char ch);
-char		**ft_lst_toarray(t_list *lst);
+char	**ft_lst_toarray(t_list *lst);
 
 // builtins
 int		builtin_handler(char **cmds);
@@ -67,13 +67,8 @@ void	ft_exit(void);
 void	ft_env(char **cmd);
 int		ft_export(char **cmds);
 
-// export tokenizer
-t_list	*tokenizer(char *line);
-char	**tokenlst_to_array(t_list *list);
-
 // parser
 void	parser_handler(char	*line);
-char	*get_cmd_abspath(char *cmd);
 
 t_list	*env_list(char **envp);
 t_list	*arry_list(char **head);
@@ -82,7 +77,12 @@ void	set_env(char **cmds);
 void	node_back(t_list **head, t_list *new);
 void	value_export(char **cmds);
 
-t_list *split_command(t_list *token_list);
-void print_command_list(t_list *list);
+// exports module
+t_list	*tokenizer(char *line);
+void	free_token(void *ptr);
+t_list	*split_command(t_list *token_list);
+void	execute_commands(t_list *cmd_list);
+void	free_cmd_unit(void *ptr);
+// void	print_command_list(t_list *list);
 
 #endif
