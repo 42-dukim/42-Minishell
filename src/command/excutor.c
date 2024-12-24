@@ -65,13 +65,13 @@ void	execute_commands(t_list *cmd_list)
 	size_t	i;
 
 	len = ft_lstsize(cmd_list);
-	pids = malloc(sizeof(pid_t) * len);
 	i = 0;
 	if (len == 1)
 	{
 		execute_command(((t_cmd_unit *)cmd_list->content)->cmd, NULL);
 		return ;
 	}
+	pids = malloc(sizeof(pid_t) * len);
 	while (cmd_list)
 	{
 		if (((t_cmd_unit *)cmd_list->content)->type == CMD)

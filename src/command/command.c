@@ -96,5 +96,6 @@ t_list *split_command(t_list *token_list)
 		ptr = ptr->next;
 	}
 	append_cmd_inlist(&cmdunit_list, command, CMD, &arg_list);
+	ft_lstclear(&arg_list, free);
 	return (cmdunit_list);
 }

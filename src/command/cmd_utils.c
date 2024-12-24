@@ -41,15 +41,23 @@ char	*get_cmd_abspath(char *cmd, t_list *env_list)
 
 void	free_cmd_unit(void *ptr)
 {
-	t_cmd_unit	*cmd_unit;
-	size_t	i;
-	
+	t_cmd_unit		*cmd_unit;
+	t_redirection	*redi;
+	size_t			i;
+
 	cmd_unit = (t_cmd_unit *)ptr;
+	redi = cmd_unit->cmd->redi;
 	i = 0;
 	while (cmd_unit->cmd->args[i])
 		free(cmd_unit->cmd->args[i++]);
 	free(cmd_unit->cmd->args);
-	free(cmd_unit->cmd->redi);
+	while (redi)
+	{
+		ptr = redi->next;
+		free(redi->file);
+		free(redi);
+		redi = (t_redirection *)ptr;
+	}
 	free(cmd_unit->cmd);
 	free(cmd_unit);
 }
