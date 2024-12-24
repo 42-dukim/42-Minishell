@@ -20,9 +20,7 @@
 typedef enum e_token_type
 {
 	WORD,
-	REDI,
-	HERE,
-	PIPE,
+	SYMBOL,
 }	t_token_type;
 
 typedef struct s_word
@@ -42,7 +40,6 @@ void			dollar_parser(t_word *word, char *pre, size_t *i);
 void			quote_parser(char **line, t_word *word);
 void			append_token_inlist(t_list **token_list, t_word *word, \
 									t_token_type type);
-t_token_type	get_tokentype(char ch);
 
 // word utils
 void			init_word(t_word *word);

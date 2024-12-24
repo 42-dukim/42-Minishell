@@ -26,14 +26,6 @@ void	append_token_inlist(t_list **token_list, t_word *word, t_token_type type)
 	init_word(word);
 }
 
-t_token_type	get_tokentype(char ch)
-{
-	if (ch == '>' || ch == '<')
-		return (REDI);
-	if (ch == '|')
-		return (PIPE);
-}
-
 char	**tokenlst_to_array(t_list *list)
 {
 	char	**array;
