@@ -24,7 +24,6 @@
 # include <termios.h>
 
 # include "../libft/libft.h"
-// # include "../src/tokenizer/tokenizer.h"
 
 typedef enum e_bool
 {
@@ -59,6 +58,7 @@ void	replace_envvalue(const char *env, char	*replace);
 // ft_utils
 t_bool	is_quote_ch(char ch);
 t_bool	is_specital_ch(char ch);
+char		**ft_lst_toarray(t_list *lst);
 
 // builtins
 int		builtin_handler(char **cmds);
@@ -81,5 +81,8 @@ t_env	*init_env(char **cmds);
 void	set_env(char **cmds);
 void	node_back(t_list **head, t_list *new);
 void	value_export(char **cmds);
+
+t_list *split_command(t_list *token_list);
+void print_command_list(t_list *list);
 
 #endif

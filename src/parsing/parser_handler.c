@@ -41,6 +41,7 @@ char	*get_cmd_abspath(char *cmd)
 void	parser_handler(char	*line)
 {
 	t_list	*token_list;
+	t_list	*cmd_list;
 	char	**cmds;
 	char	*cmd_path;
 
@@ -49,6 +50,8 @@ void	parser_handler(char	*line)
 	token_list = tokenizer(line);
 	if (!token_list)
 		return ;
+	cmd_list = split_command(token_list);
+	print_command_list(cmd_list);
 	cmds = tokenlst_to_array(token_list);
 	if (!builtin_handler(cmds))
 	{
