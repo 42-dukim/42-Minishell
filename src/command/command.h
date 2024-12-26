@@ -45,7 +45,7 @@ void	connect_redirection(t_command *command, char *file, char type);
 void	redirect_io(t_redirection *redi);
 
 // utils
-char	*get_cmd_abspath(char *cmd, t_list *env_list);
+char	*get_cmd_abspath(char *cmd, char **path_list);
 void	append_cmd_inlist(t_list **lst, t_command *command, t_cmd_type type, t_list **arg_list);
 
 #endif

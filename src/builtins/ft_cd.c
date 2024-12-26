@@ -12,14 +12,16 @@
 
 #include "../../inc/minishell.h"
 
-void	ft_cd(const char *path, const char *home_path)
+void	ft_cd(const char *path, t_list *env_list)
 {
+	char	*home_path;
 	char	*phys_path;
 	char	*old_pwd;
 	char	*pwd;
 
 	if (path == NULL)
 		return ;
+	home_path = ft_getenv("HOME", env_list);
 	old_pwd = getcwd(NULL, 0);
 	if (path[0] == '~')
 		phys_path = ft_strjoin(home_path, path + 1);
@@ -28,8 +30,8 @@ void	ft_cd(const char *path, const char *home_path)
 	if (chdir(phys_path) == -1)
 		printf("bash: cd: %s: No such file or directory\n", phys_path);
 	pwd = getcwd(NULL, 0);
-	replace_envvalue("OLDPWD", old_pwd);
-	replace_envvalue("PWD", pwd);
+	replace_envvalue("OLDPWD", old_pwd, env_list);
+	replace_envvalue("PWD", pwd, env_list);
 	free(old_pwd);
 	free(pwd);
 	free(phys_path);

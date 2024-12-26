@@ -12,13 +12,11 @@
 
 #include "../../inc/minishell.h"
 
-extern t_global	g_data;
-
-void	ft_exit(void)
+void	ft_exit(t_envval *env_val)
 {
 	rl_clear_history();
-	ft_freesplit(g_data.envp);
-	ft_freesplit(g_data.path_list);
+	ft_lstclear(&(env_val->lst), free_env);
+	ft_freesplit(env_val->paths);
 	printf("exit\n");
 	exit(0);
 }

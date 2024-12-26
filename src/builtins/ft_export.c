@@ -6,134 +6,131 @@
 /*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 16:12:55 by junkwak           #+#    #+#             */
-/*   Updated: 2024/12/17 21:19:20 by junkwak          ###   ########.fr       */
+/*   Updated: 2024/12/26 18:11:10 by junkwak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-extern t_global	g_data;
-
-
-void	insert_sorted(t_list **sorted_head, t_list *new_node)
+static int	check_exportname(char *name)
 {
-	t_list	*cur;
+	int	p;
 
-	if (*sorted_head == NULL || (ft_strncmp((*sorted_head)->content, new_node->content, ft_strlen(new_node->content)) >= 0))
+	if (ft_isalpha(name[0]) == 0 && name[0] != '_')
 	{
-		new_node->next = *sorted_head;
-		*sorted_head = new_node;
-	}
-	else
-	{
-		cur = *sorted_head;
-		while (cur->next != NULL && (ft_strncmp(cur->next->content, new_node->content, ft_strlen(new_node->content)) < 0))
-			cur = cur->next;
-		new_node->next = cur->next;
-		cur->next = new_node;
-	}
-}
-int     check_exportname(char *name)
-{
-	int	i;
-
-	if (ft_isdigit(name[0]) == 1 && ft_isalpha(name[0]) == 0 && name[0] != '_')
-	{
-		printf("\'%s\' : not valid identifier\n!!", name);
+		printf("\'%s\' : not valid identifier!!\n", name);
 		return (-1);
 	}
-	i = 1;
-	while (name[i])
+	p = 0;
+	while (name[p])
 	{
-		if (ft_isalnum(name[i]) == 0 && name[i] != '_')
+		if ((ft_isalnum(name[p]) == 0 && name[p] != '_') || name[p] == '=')
 		{
+			if ((((name[p] == '+' && name[p + 1] != '='))))
+				;
+			else if (((name[p] == '+' && name[p + 1] == '=')))
+				return (0);
+			else if ((name[p] == '=' && name[p - 1] != '\0'))
+				return (0);
 			printf("\'%s\' : not valid identifier@@\n", name);
 			return (-1);
 		}
-		i++;
+		p++;
 	}
 	return (0);
 }
 
-int	print_export(char **cmds)
+static int	print_export(char **cmds, t_list *env_list)
 {
-	t_list	*export_list;
-	int		i;
+	int     i;
+	t_env  *list;
 
 	i = 0;
-	export_list = g_data.link_envp->var;
-	while (export_list->next)
+	while (env_list)
 	{
-		if (!(ft_strlen(export_list->content) == 1 && ft_strncmp(export_list->content, "_", 1) == 0))
-			printf("declare -x %s\n", (char *)export_list->content);
-		export_list = export_list->next;
-		i++;
+		list = env_list->content;
+		if (!(ft_strlen(list->key) == 1 && ft_strncmp(list->key, "_", 1) == 0))
+		{
+			printf("declare -x %s", list->key);
+			if (list->value != NULL)
+				printf("=\"%s\"", list->value);
+			printf("\n");
+		}
+		env_list = env_list->next;
 	}
 	return (0);
 }
 
-int    check_export(char **cmds, t_list *new)
+static t_env	*add_node(char *envvalue)
 {
-	t_list	*current;
-	char	*temp;
+	t_env	*node;
+	char	**temp;
+	char	*tmp;
 
-	if (g_data.envp == NULL)
-		return (0);
-	current = ft_lstnew(g_data.envp);
-	while (current)
+	node = (t_env *)malloc(sizeof(t_env));
+	tmp = ft_strchr(envvalue, '=');
+	if (tmp)
 	{
-		if (ft_strncmp(current->content, new->content, ft_strlen(new->content)) == 0)
+		temp = ft_split(envvalue, '=');
+		node->key = ft_strdup(temp[0]);
+		node->value = ft_strdup(tmp + 1);
+		ft_freesplit(temp);
+	}
+	else
+	{
+		node->key = ft_strdup(envvalue);
+		node->value = NULL;
+	}
+	return (node);
+}
+
+static int	check_overlap(char *key, char *value, t_list *head)
+{
+	t_env	*cur;
+
+	while (head)
+	{
+		cur = head->content;
+		if (ft_strncmp(key, cur->key, ft_strlen(cur->key)) == 0 && \
+		ft_strncmp(key, cur->key, ft_strlen(key)) == 0)
 		{
-			temp = current->content;
-			current->content = ft_strdup(new->content);
+			free(cur->value);
+			cur->value = value;
 			return (1);
 		}
-		current = current->next;
+		head = head->next;
 	}
 	return (0);
 }
-void	node_back(t_list **head, t_list *new)
-{
-	t_list	*current;
 
-	if (*head == NULL)
-		*head = new;
-	else
-	{
-		current = *head;
-		while (current->next)
-		{
-			current = current->next;
-		}
-		current->next = new;
-	}
-}
-void	value_export(char **cmds)
+static int	append_envvalue(char **cmds, t_list *env_list)
 {
-	t_list	*new;
+	t_env	*cur;
 	int		i;
 
 	i = 0;
-	while (cmds[i])
+	while (cmds[++i])
 	{
-		new = ft_lstnew(cmds[i]);
-		if (check_exportname(new->content) == -1)
+		if (check_exportname(cmds[i]) == -1)
+			continue;
+		cur = add_node(cmds[i]);
+		if (check_overlap(cur->key, cur->value, env_list) == 0)
+			ft_lstadd_back(&env_list, ft_lstnew(cur));
+		else
 		{
-				return ;
+			free(cur->key);
+			free(cur->value);
+			free(cur);
 		}
-		else if (check_export(cmds, new) == 0)
-		{
-			node_back(&g_data.link_envp->var, new);
-		}
-		i++;
 	}
+	return (0);
 }
 
-int	ft_export(char **cmds)
+int	ft_export(char **cmds, t_list *env_list)
 {
 	if (cmds[1] == NULL)
-		print_export(cmds);
+		print_export(cmds, env_list);
 	else
-		value_export(cmds);
+		append_envvalue(cmds,env_list);
 	return (0);
 }

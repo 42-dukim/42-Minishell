@@ -12,42 +12,66 @@
 
 #include "../../inc/minishell.h"
 
-extern t_global	g_data;
-
-char	*ft_getenv(const char *env)
+char	*ft_getenv(const char *env, t_list *env_list)
 {
-	int		i;
 	size_t	len;
 
-	i = 0;
 	len = ft_strlen(env);
-	while (g_data.envp[i])
+	while (env_list)
 	{
-		if (ft_strncmp(g_data.envp[i], env, len) == 0)
-			return (ft_strchr(g_data.envp[i], '=') + 1);
-		i++;
+		if (ft_strncmp(((t_env *)env_list->content)->key, env, len +1) == 0)
+			return (((t_env *)env_list->content)->value);
+		env_list = env_list->next;
 	}	
 	return (NULL);
 }
 
-void	replace_envvalue(const char *env, char	*replace)
+void	replace_envvalue(const char *env, char *replace, t_list *env_list)
 {
-	int		i;
+	t_list	*ptr;
 	size_t	len;
-	char	*temp;
 
-	i = 0;
 	len = ft_strlen(env);
-	while (g_data.envp[i])
+	while (env_list)
 	{
-		if (ft_strncmp(g_data.envp[i], env, len) == 0)
+		if (ft_strncmp(((t_env *)env_list->content)->key, env, len +1) == 0)
 		{
-			temp = g_data.envp[i];
-			temp[len + 1] = '\0';
-			g_data.envp[i] = ft_strjoin(temp, replace);
-			free(temp);
+			free(((t_env *)env_list->content)->value);
+			((t_env *)env_list->content)->value = ft_strdup(replace);
 			return ;
 		}
-		i++;
+		env_list = env_list->next;
 	}	
+}
+
+t_list	*init_env_list(char **envp)
+{
+	t_list  *env_list;
+	t_env	*node;
+	int		i;
+	char	**temp;
+
+	env_list = NULL;
+	i = 0;
+	while (envp && envp[i])
+	{
+		node = (t_env *)malloc(sizeof(t_env));
+		temp = ft_strdivide(envp[i], '=');
+		node->key = temp[0];
+		node->value = temp[1];
+		i++;
+		ft_lstadd_back(&env_list, ft_lstnew(node));
+		free(temp);
+	}
+	return (env_list);
+}
+
+void	free_env(void *ptr)
+{
+	t_env	*env;
+
+	env = (t_env *)ptr;
+	free(env->key);
+	free(env->value);
+	free(env);
 }

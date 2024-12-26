@@ -12,7 +12,7 @@
 
 #include "tokenizer.h"
 
-static int	specitalch_handler(t_list **token_list, char **line, t_word *word)
+static int	specitalch_handler(t_list **token_list, char **line, t_word *word, t_list *env_list)
 {
 	if (is_quote_ch(**line))
 	{
@@ -22,13 +22,13 @@ static int	specitalch_handler(t_list **token_list, char **line, t_word *word)
 	}
 	else if (is_specital_ch(**line))
 	{
-		append_token_inlist(token_list, word, WORD);
+		append_token_inlist(token_list, word, WORD, env_list);
 		if (**line != ' ')
 		{
 			free(word->content);
 			word->content = ft_substr(*line, 0, 1);
 			word->idx = 1;
-			append_token_inlist(token_list, word, SYMBOL);
+			append_token_inlist(token_list, word, SYMBOL, env_list);
 		}
 	}
 	else
@@ -36,7 +36,7 @@ static int	specitalch_handler(t_list **token_list, char **line, t_word *word)
 	return (0);
 }
 
-t_list	*tokenizer(char *line)
+t_list	*tokenizer(char *line, t_list *env_list)
 {
 	t_list	*token_list;
 	t_word	*word;
@@ -47,7 +47,7 @@ t_list	*tokenizer(char *line)
 	init_word(word);
 	while (*line)
 	{
-		res = specitalch_handler(&token_list, &line, word);
+		res = specitalch_handler(&token_list, &line, word, env_list);
 		if (res == -1)
 		{
 			ft_lstclear(&token_list, free);
@@ -57,7 +57,7 @@ t_list	*tokenizer(char *line)
 			append_ch_inword(word, *line);
 		line++;
 	}
-	append_token_inlist(&token_list, word, WORD);
+	append_token_inlist(&token_list, word, WORD, env_list);
 	free(word->content);
 	free(word);
 	return (token_list);

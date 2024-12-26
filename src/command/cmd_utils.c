@@ -13,10 +13,8 @@
 #include "../../inc/minishell.h"
 #include "command.h"
 
-extern t_global	g_data;
-
 // 명령어의 절대 경로 찾기
-char	*get_cmd_abspath(char *cmd, t_list *env_list)
+char	*get_cmd_abspath(char *cmd, char **path_list)
 {
 	char	*cmd_path;
 	int		i;
@@ -25,16 +23,16 @@ char	*get_cmd_abspath(char *cmd, t_list *env_list)
 		return (ft_strdup(cmd));
 	cmd = ft_strjoin("/", cmd);
 	i = 0;
-	while (g_data.path_list[i])
+	while (path_list[i])
 	{
-		cmd_path = ft_strjoin(g_data.path_list[i], cmd);
+		cmd_path = ft_strjoin(path_list[i], cmd);
 		if (access(cmd_path, X_OK) == 0)
 			break ;
 		free(cmd_path);
 		i++;
 	}
 	free(cmd);
-	if (!g_data.path_list[i])
+	if (!path_list[i])
 		return (NULL);
 	return (cmd_path);
 }
@@ -43,9 +41,9 @@ void	append_cmd_inlist(t_list **lst, t_command *command, t_cmd_type type, t_list
 {
 	t_cmd_unit	*cmd_unit;
 
-	if (type == CMD)
+	if (command && type == CMD)
 		command->args = ft_lst_toarray(*arg_list);
-	cmd_unit = malloc(sizeof(t_cmd_unit *) * 1);
+	cmd_unit = malloc(sizeof(t_cmd_unit) * 1);
 	cmd_unit->type = type;
 	cmd_unit->cmd = command;
 	ft_lstadd_back(lst, ft_lstnew(cmd_unit));

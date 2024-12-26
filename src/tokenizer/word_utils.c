@@ -43,7 +43,7 @@ void	append_str_inword(t_word *word, char *str)
 	}
 }
 
-void	convert_wordcotent(t_word *word)
+void	convert_wordcotent(t_word *word, t_list *env_list)
 {
 	char	*pre;
 	char	quote;
@@ -65,7 +65,7 @@ void	convert_wordcotent(t_word *word)
 				append_ch_inword(word, pre[i]);
 		}
 		else if (pre[i] == '$' && quote != '\'')
-			dollar_parser(word, pre, &i);
+			dollar_parser(word, pre, &i, env_list);
 		else
 			append_ch_inword(word, pre[i]);
 	}

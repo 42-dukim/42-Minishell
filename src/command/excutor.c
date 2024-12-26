@@ -12,21 +12,19 @@
 
 #include "command.h"
 
-extern t_global	g_data;
-
-static void	execute_command(t_command *cmd, t_list *env_list)
+static void	execute_command(t_command *cmd, t_envval *env_val)
 {
 	char	*cmd_path;
 
-	if (!builtin_handler(cmd))
+	if (!builtin_handler(cmd, env_val))
 	{
-		cmd_path = get_cmd_abspath(cmd->args[0], env_list);
+		cmd_path = get_cmd_abspath(cmd->args[0], env_val->paths);
 		if (cmd_path)
 		{
 			if (fork() == 0)
 			{
 				redirect_io(cmd->redi);
-				execve(cmd_path, cmd->args, g_data.envp);
+				// execve(cmd_path, cmd->args, env_val->lst);	// list to char **
 			}
 			wait(NULL);
 		}
@@ -36,7 +34,7 @@ static void	execute_command(t_command *cmd, t_list *env_list)
 	}
 }
 
-void	execute_commands(t_list *cmd_list)
+void	execute_commands(t_list *cmd_list, t_envval *env_val)
 {
 	pid_t	*pids;
 	size_t	len;
@@ -46,7 +44,7 @@ void	execute_commands(t_list *cmd_list)
 	i = 0;
 	if (len == 1)
 	{
-		execute_command(((t_cmd_unit *)cmd_list->content)->cmd, NULL);
+		execute_command(((t_cmd_unit *)cmd_list->content)->cmd, env_val);
 		return ;
 	}
 	pids = malloc(sizeof(pid_t) * len);
@@ -57,7 +55,7 @@ void	execute_commands(t_list *cmd_list)
 			pids[i] = fork();
 			if (pids[i++] == 0)
 			{
-				execute_command(((t_cmd_unit *)cmd_list->content)->cmd, NULL);
+				execute_command(((t_cmd_unit *)cmd_list->content)->cmd, env_val);
 				exit(1);
 			}
 		}

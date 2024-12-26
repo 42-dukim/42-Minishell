@@ -36,16 +36,16 @@ typedef struct s_token
 	t_token_type	type;
 }	t_token;
 
-void	dollar_parser(t_word *word, char *pre, size_t *i);
+void	dollar_parser(t_word *word, char *pre, size_t *i, t_list *env_list);
 void	quote_parser(char **line, t_word *word);
 void	append_token_inlist(t_list **token_list, t_word *word, \
-							t_token_type type);
+							t_token_type type, t_list *env_list);
 
 // word utils
 void	init_word(t_word *word);
 void	append_ch_inword(t_word *word, char ch);
 void	append_str_inword(t_word *word, char *str);
-void	convert_wordcotent(t_word *word);
+void	convert_wordcotent(t_word *word, t_list *env_list);
 
 
 #endif

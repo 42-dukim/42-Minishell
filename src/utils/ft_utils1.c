@@ -41,3 +41,26 @@ char	**ft_lst_toarray(t_list *lst)
 	array[i] = NULL;
 	return (array);
 }
+
+char	**ft_strdivide(char *str, int c)
+{
+	char	**divide;
+	size_t	i;
+	size_t	len;
+
+	divide = malloc(sizeof(char *) * 2);
+	i = 0;
+	len = ft_strlen(str);
+	while (i < len)
+	{
+		if (str[i] == c)
+			break ;
+		i++;
+	}
+	divide[0] = ft_substr(str, 0, i);
+	if (i == len)
+		divide[1] = NULL;
+	else
+		divide[1] = ft_substr(str, i, len);
+	return (divide);
+}
