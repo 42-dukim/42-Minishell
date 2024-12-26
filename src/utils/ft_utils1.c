@@ -25,3 +25,19 @@ t_bool	is_specital_ch(char ch)
 		return (true);
 	return (false);
 }
+
+char	**ft_lst_toarray(t_list *lst)
+{
+	char	**array;
+	size_t	i;
+	
+	array = malloc(sizeof(char *) * (ft_lstsize(lst) + 1));
+	i = 0;
+	while (lst)
+	{
+		array[i++] = ft_strdup((const char *)lst->content);
+		lst = lst->next;
+	}
+	array[i] = NULL;
+	return (array);
+}

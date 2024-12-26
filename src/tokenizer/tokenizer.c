@@ -28,7 +28,7 @@ static int	specitalch_handler(t_list **token_list, char **line, t_word *word)
 			free(word->content);
 			word->content = ft_substr(*line, 0, 1);
 			word->idx = 1;
-			append_token_inlist(token_list, word, get_tokentype(**line));
+			append_token_inlist(token_list, word, SYMBOL);
 		}
 	}
 	else

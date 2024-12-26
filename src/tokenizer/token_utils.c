@@ -26,32 +26,11 @@ void	append_token_inlist(t_list **token_list, t_word *word, t_token_type type)
 	init_word(word);
 }
 
-t_token_type	get_tokentype(char ch)
-{
-	if (ch == '>' || ch == '<')
-		return (REDI);
-	if (ch == '|')
-		return (PIPE);
-}
+void	free_token(void *ptr)
+{	
+	t_token	*token;
 
-char	**tokenlst_to_array(t_list *list)
-{
-	char	**array;
-	t_list	*ptr;
-	t_list	*temp;
-	size_t	i;
-
-	array = malloc(sizeof(char *) * (ft_lstsize(list) + 1));
-	ptr = list;
-	i = 0;
-	while (ptr)
-	{
-		array[i++] = ((t_token *)ptr->content)->content;
-		temp = ptr->next;
-		free(ptr->content);
-		free(ptr);
-		ptr = temp;
-	}
-	array[i] = NULL;
-	return (array);
+	token = (t_token *)ptr;
+	free(token->content);
+	free(token);
 }
