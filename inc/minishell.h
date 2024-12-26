@@ -61,11 +61,7 @@ t_bool	is_specital_ch(char ch);
 char	**ft_lst_toarray(t_list *lst);
 
 // builtins
-int		builtin_handler(char **cmds);
-void	ft_cd(const char *path, const char *home_path);
-void	ft_exit(void);
-void	ft_env(char **cmd);
-int		ft_export(char **cmds);
+int		builtin_handler(void *ptr);
 
 // parser
 void	parser_handler(char	*line);

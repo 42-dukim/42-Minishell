@@ -10,31 +10,25 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/minishell.h"
+#include "builtin.h"
+#include "../command/command.h"
 
 extern t_global	g_data;
 
-int	builtin_handler(char **cmds)
+int	builtin_handler(void *ptr)
 {
-	const char	*cmd;
+	t_command	*cmd;
 
-	cmd = cmds[0];
-	if (ft_strncmp(cmd, "cd", 2) == 0)
-	{
-		ft_cd(cmds[1], ft_getenv("HOME"));
-		return (1);
-	}
-	if (ft_strncmp(cmd, "exit", 4) == 0)
+	cmd = (t_command *)ptr;
+	if (ft_strncmp(cmd->args[0], "cd", 3) == 0)
+		ft_cd(cmd->args[1], ft_getenv("HOME"));
+	else if (ft_strncmp(cmd->args[0], "exit", 5) == 0)
 		ft_exit();
-	if (ft_strncmp(cmd, "env", 3) == 0)
-	{
-		ft_env(cmds);
-		return (1);
-	}
-	if (ft_strncmp(cmd, "export", 6) == 0)
-	{
-		ft_export(cmds);
-		return (1);
-	}
-	return (0);
+	else if (ft_strncmp(cmd->args[0], "env", 4) == 0)
+		ft_env(cmd->args);
+	else if (ft_strncmp(cmd->args[0], "export", 7) == 0)
+		ft_export(cmd->args);
+	else
+		return (0);
+	return (1);
 }
