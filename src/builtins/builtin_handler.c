@@ -6,7 +6,7 @@
 /*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/23 00:57:02 by dukim             #+#    #+#             */
-/*   Updated: 2024/12/26 14:01:10 by junkwak          ###   ########.fr       */
+/*   Updated: 2024/12/26 22:19:40 by junkwak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,11 @@ int	builtin_handler(void *ptr, t_envval *env_val)
 		ft_env(cmd->args, env_val->lst);
 	else if (ft_strncmp(cmd->args[0], "export", 7) == 0)
 		ft_export(cmd->args, env_val->lst);
-	else
+	else if (ft_strncmp(cmd->args[0], "pwd", 3) == 0)
+		ft_pwd(cmd->args, env_val->lst);
+	else if (ft_strncmp(cmd->args[0], "unset", 3) == 0)
+		ft_unset(cmd->args, env_val->lst);
+	else	
 		return (0);
 	return (1);
 }
