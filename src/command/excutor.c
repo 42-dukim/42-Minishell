@@ -14,33 +14,11 @@
 
 extern t_global	g_data;
 
-static void	redirect_io(t_redirection *redi)
-{
-	int	fd;
-
-	while (redi)
-	{
-		if (redi->type == '>')
-		{
-			fd = open(redi->file, O_RDWR | O_CREAT | O_TRUNC, 0644);
-			dup2(fd, STDOUT_FILENO);
-		}
-		if (redi->type == '<')
-		{
-			fd = open(redi->file, O_RDONLY);
-			dup2(fd, STDIN_FILENO);
-		}
-		// TODO: >>, <<
-		close(fd);
-		redi = redi->next;
-	}
-}
-
 static void	execute_command(t_command *cmd, t_list *env_list)
 {
 	char	*cmd_path;
 
-	if (!builtin_handler(cmd->args))
+	if (!builtin_handler(cmd))
 	{
 		cmd_path = get_cmd_abspath(cmd->args[0], env_list);
 		if (cmd_path)
@@ -52,7 +30,7 @@ static void	execute_command(t_command *cmd, t_list *env_list)
 			}
 			wait(NULL);
 		}
-		else	
+		else
 			printf("%s: command not found\n", cmd->args[0]);
 		free(cmd_path);
 	}

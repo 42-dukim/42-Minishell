@@ -39,6 +39,18 @@ char	*get_cmd_abspath(char *cmd, t_list *env_list)
 	return (cmd_path);
 }
 
+void	append_cmd_inlist(t_list **lst, t_command *command, t_cmd_type type, t_list **arg_list)
+{
+	t_cmd_unit	*cmd_unit;
+
+	if (type == CMD)
+		command->args = ft_lst_toarray(*arg_list);
+	cmd_unit = malloc(sizeof(t_cmd_unit *) * 1);
+	cmd_unit->type = type;
+	cmd_unit->cmd = command;
+	ft_lstadd_back(lst, ft_lstnew(cmd_unit));
+}
+
 void	free_cmd_unit(void *ptr)
 {
 	t_cmd_unit		*cmd_unit;
