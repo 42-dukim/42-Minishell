@@ -18,6 +18,6 @@
 void	ft_cd(const char *path, t_list *env_list);
 void	ft_exit(t_envval *env_val);
 void	ft_env(char **cmd, t_list *env_list);
-int     ft_export(char **cmds, t_list *env_list);
+void	ft_export(char **cmds, t_envval *env_val);
 
 #endif

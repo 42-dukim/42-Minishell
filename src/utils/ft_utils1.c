@@ -61,6 +61,6 @@ char	**ft_strdivide(char *str, int c)
 	if (i == len)
 		divide[1] = NULL;
 	else
-		divide[1] = ft_substr(str, i, len);
+		divide[1] = ft_substr(str, i + 1, len);
 	return (divide);
 }

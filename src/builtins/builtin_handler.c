@@ -25,7 +25,7 @@ int	builtin_handler(void *ptr, t_envval *env_val)
 	else if (ft_strncmp(cmd->args[0], "env", 4) == 0)
 		ft_env(cmd->args, env_val->lst);
 	else if (ft_strncmp(cmd->args[0], "export", 7) == 0)
-		ft_export(cmd->args, env_val->lst);
+    	ft_export(cmd->args, env_val);
 	else
 		return (0);
 	return (1);

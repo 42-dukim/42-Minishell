@@ -40,6 +40,8 @@ typedef struct s_env
 typedef	struct s_envvalue
 {
 	t_list	*lst;
+	char	**envp;
+	t_bool	is_changed;
 	char	**paths;
 }	t_envval;
 
@@ -57,6 +59,7 @@ t_bool	is_quote_ch(char ch);
 t_bool	is_specital_ch(char ch);
 char	**ft_lst_toarray(t_list *lst);
 char	**ft_strdivide(char *str, int c);
+char	**convert_lst_toenvp(t_envval *env_val);
 
 // builtins
 int		builtin_handler(void *ptr, t_envval *env_val);

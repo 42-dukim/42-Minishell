@@ -24,7 +24,7 @@ static void	execute_command(t_command *cmd, t_envval *env_val)
 			if (fork() == 0)
 			{
 				redirect_io(cmd->redi);
-				// execve(cmd_path, cmd->args, env_val->lst);	// list to char **
+				execve(cmd_path, cmd->args, convert_lst_toenvp(env_val));
 			}
 			wait(NULL);
 		}

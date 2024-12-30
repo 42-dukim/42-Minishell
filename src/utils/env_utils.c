@@ -75,3 +75,28 @@ void	free_env(void *ptr)
 	free(env->value);
 	free(env);
 }
+
+char	**convert_lst_toenvp(t_envval *env_val)
+{
+	size_t	i;
+	char	*temp;
+	t_list	*ptr;
+
+	if (!env_val->is_changed)
+		return (env_val->envp);
+	if (!env_val->envp)
+		ft_freesplit(env_val->envp);
+	env_val->envp = malloc(sizeof(char *) * (ft_lstsize(env_val->lst) + 1));
+	i = 0;
+	ptr = env_val->lst;
+	while (ptr)
+	{
+		temp = ft_strjoin(((t_env *)ptr->content)->key, "=");
+		env_val->envp[i++] = ft_strjoin(temp, ((t_env *)ptr->content)->value);
+		free(temp);
+		ptr = ptr->next;
+	}
+	env_val->envp[i] = NULL;
+	env_val->is_changed = false;
+	return (env_val->envp);
+}

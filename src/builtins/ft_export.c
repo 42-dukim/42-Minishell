@@ -40,7 +40,7 @@ static int	check_exportname(char *name)
 	return (0);
 }
 
-static int	print_export(char **cmds, t_list *env_list)
+static void	print_export(char **cmds, t_list *env_list)
 {
 	int     i;
 	t_env  *list;
@@ -58,7 +58,6 @@ static int	print_export(char **cmds, t_list *env_list)
 		}
 		env_list = env_list->next;
 	}
-	return (0);
 }
 
 static t_env	*add_node(char *envvalue)
@@ -103,7 +102,7 @@ static int	check_overlap(char *key, char *value, t_list *head)
 	return (0);
 }
 
-static int	append_envvalue(char **cmds, t_list *env_list)
+static void	append_envvalue(char **cmds, t_list *env_list, t_bool *is_changed)
 {
 	t_env	*cur;
 	int		i;
@@ -113,6 +112,7 @@ static int	append_envvalue(char **cmds, t_list *env_list)
 	{
 		if (check_exportname(cmds[i]) == -1)
 			continue;
+		*is_changed = true;
 		cur = add_node(cmds[i]);
 		if (check_overlap(cur->key, cur->value, env_list) == 0)
 			ft_lstadd_back(&env_list, ft_lstnew(cur));
@@ -123,14 +123,12 @@ static int	append_envvalue(char **cmds, t_list *env_list)
 			free(cur);
 		}
 	}
-	return (0);
 }
 
-int	ft_export(char **cmds, t_list *env_list)
+void	ft_export(char **cmds, t_envval *env_val)
 {
 	if (cmds[1] == NULL)
-		print_export(cmds, env_list);
+		print_export(cmds, env_val->lst);
 	else
-		append_envvalue(cmds,env_list);
-	return (0);
+		append_envvalue(cmds, env_val->lst, &(env_val->is_changed));
 }
