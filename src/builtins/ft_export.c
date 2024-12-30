@@ -12,123 +12,103 @@
 
 #include "../../inc/minishell.h"
 
-static int	check_exportname(char *name)
+static t_bool	is_valid_exportname(char *name)
 {
 	int	p;
 
 	if (ft_isalpha(name[0]) == 0 && name[0] != '_')
 	{
 		printf("\'%s\' : not valid identifier!!\n", name);
-		return (-1);
+		return (false);
 	}
 	p = 0;
 	while (name[p])
 	{
 		if ((ft_isalnum(name[p]) == 0 && name[p] != '_') || name[p] == '=')
 		{
-			if ((((name[p] == '+' && name[p + 1] != '='))))
-				;
-			else if (((name[p] == '+' && name[p + 1] == '=')))
-				return (0);
-			else if ((name[p] == '=' && name[p - 1] != '\0'))
-				return (0);
+			// if ((((name[p] == '+' && name[p + 1] != '=')))) // TODO: += 연산
+			if (((name[p] == '+' && name[p + 1] == '=')) \
+				|| (name[p] == '=' && name[p - 1] != '\0'))
+				return (true);
 			printf("\'%s\' : not valid identifier@@\n", name);
-			return (-1);
+			return (false);
 		}
 		p++;
 	}
-	return (0);
+	return (true);
 }
 
-static void	print_export(char **cmds, t_list *env_list)
-{
-	int     i;
-	t_env  *list;
-
-	i = 0;
-	while (env_list)
-	{
-		list = env_list->content;
-		if (!(ft_strlen(list->key) == 1 && ft_strncmp(list->key, "_", 1) == 0))
-		{
-			printf("declare -x %s", list->key);
-			if (list->value != NULL)
-				printf("=\"%s\"", list->value);
-			printf("\n");
-		}
-		env_list = env_list->next;
-	}
-}
-
-static t_env	*add_node(char *envvalue)
+static t_env	*create_env_node(char *envvalue)
 {
 	t_env	*node;
 	char	**temp;
-	char	*tmp;
 
 	node = (t_env *)malloc(sizeof(t_env));
-	tmp = ft_strchr(envvalue, '=');
-	if (tmp)
-	{
-		temp = ft_split(envvalue, '=');
-		node->key = ft_strdup(temp[0]);
-		node->value = ft_strdup(tmp + 1);
-		ft_freesplit(temp);
-	}
-	else
-	{
-		node->key = ft_strdup(envvalue);
-		node->value = NULL;
-	}
+	temp = ft_strdivide(envvalue, '=');
+	node->key = temp[0];
+	node->value = temp[1];
+	free(temp);
 	return (node);
 }
 
-static int	check_overlap(char *key, char *value, t_list *head)
+static t_bool	check_overlapname(char *key, char *value, t_list *lst)
 {
-	t_env	*cur;
+	t_env	*env;
 
-	while (head)
+	while (lst)
 	{
-		cur = head->content;
-		if (ft_strncmp(key, cur->key, ft_strlen(cur->key)) == 0 && \
-		ft_strncmp(key, cur->key, ft_strlen(key)) == 0)
+		env = lst->content;
+		if (ft_strncmp(key, env->key, ft_strlen(key) + 1) == 0)
 		{
-			free(cur->value);
-			cur->value = value;
-			return (1);
+			free(env->value);
+			env->value = ft_strdup(value);
+			return (true);
 		}
-		head = head->next;
+		lst = lst->next;
 	}
-	return (0);
+	return (false);
 }
 
 static void	append_envvalue(char **cmds, t_list *env_list, t_bool *is_changed)
 {
-	t_env	*cur;
+	t_env	*node;
 	int		i;
 
 	i = 0;
 	while (cmds[++i])
 	{
-		if (check_exportname(cmds[i]) == -1)
+		if (!is_valid_exportname(cmds[i]))
 			continue;
 		*is_changed = true;
-		cur = add_node(cmds[i]);
-		if (check_overlap(cur->key, cur->value, env_list) == 0)
-			ft_lstadd_back(&env_list, ft_lstnew(cur));
+		node = create_env_node(cmds[i]);
+		if (check_overlapname(node->key, node->value, env_list))
+			free_env(node);
 		else
-		{
-			free(cur->key);
-			free(cur->value);
-			free(cur);
-		}
+			ft_lstadd_back(&env_list, ft_lstnew(node));
 	}
 }
 
 void	ft_export(char **cmds, t_envval *env_val)
 {
+	t_list	*ptr;
+	t_env	*env;
+	
 	if (cmds[1] == NULL)
-		print_export(cmds, env_val->lst);
+	{
+		ptr = env_val->lst;
+		while (ptr)
+		{
+			env = ptr->content;
+			if (!(ft_strlen(env->key) == 1 && ft_strncmp(env->key, "_", 1) == 0))
+			{
+				printf("declare -x %s", env->key);
+				if (env->value != NULL)
+					printf("=\"%s\"", env->value);
+				printf("\n");
+			}
+			ptr = ptr->next;
+		}
+	}
 	else
 		append_envvalue(cmds, env_val->lst, &(env_val->is_changed));
 }
