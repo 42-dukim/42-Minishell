@@ -20,7 +20,8 @@ void	ft_env(char **cmds, t_list *env_list)
 	i = 0;
 	if (cmds[++i])//env 이후 추가명령어 나오면 무조건 에러출력
 	{
-		printf("env : '%s' : No such file or directory\n",cmds[i]);
+		// printf("env : '%s' : No such file or directory\n",cmds[i]);
+		print_stderr("env: ", cmds[i]);
 		return ;
 	}
 	while (env_list)//env 이후 추가명령어 나오면 무조건 에러출력

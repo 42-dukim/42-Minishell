@@ -28,7 +28,7 @@ void	ft_cd(const char *path, t_list *env_list)
 	else
 		phys_path = ft_strdup(path);
 	if (chdir(phys_path) == -1)
-		printf("bash: cd: %s: No such file or directory\n", phys_path);
+		print_stderr("bash: ", "cd");
 	pwd = getcwd(NULL, 0);
 	replace_envvalue("OLDPWD", old_pwd, env_list);
 	replace_envvalue("PWD", pwd, env_list);

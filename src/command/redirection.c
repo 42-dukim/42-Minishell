@@ -12,6 +12,27 @@
 
 #include "command.h"
 
+static t_bool	redirect(const char *file_path, t_bool is_input)
+{
+	int	fd;
+
+	if (is_input)
+		fd = open(file_path, O_RDWR | O_CREAT | O_TRUNC, 0644);
+	else
+		fd = open(file_path, O_RDONLY);
+	if (fd == -1)
+	{
+		print_stderr("bash: ", file_path);
+		return (false);
+	}
+	if (is_input)
+		dup2(fd, STDOUT_FILENO);
+	else
+		dup2(fd, STDIN_FILENO);
+	close(fd);
+	return (true);
+}
+
 void	connect_redirection(t_command *command, char *file, char type)
 {
 	t_redirection	*ptr;
@@ -32,29 +53,28 @@ void	connect_redirection(t_command *command, char *file, char type)
 	}
 }
 
-void	redirect_io(t_redirection *redi)
+t_bool	redirect_io(t_redirection *redi, int stdfd[2])
 {
 	int	fd;
 
+	if (stdfd)
+	{
+		stdfd[0] = dup(0);
+		stdfd[1] = dup(1);
+	}
 	while (redi)
 	{
-		if (redi->type == '>')
-		{
-			fd = open(redi->file, O_RDWR | O_CREAT | O_TRUNC, 0644);
-			dup2(fd, STDOUT_FILENO);
-		}
-		if (redi->type == '<')
-		{
-			fd = open(redi->file, O_RDONLY);
-			dup2(fd, STDIN_FILENO);
-		}
-		// TODO: >>, <<
-		close(fd);
+		if (!redirect(redi->file, redi->type == '>'))
+			return (false);
 		redi = redi->next;
 	}
+	return (true);
 }
 
-void	unredirect_io()
+void	unredirect_io(int fd[2])
 {
-	
+	dup2(fd[0], 0);
+	dup2(fd[1], 1);
+	close(fd[0]);
+	close(fd[1]);
 }

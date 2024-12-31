@@ -42,7 +42,8 @@ typedef struct s_command_unit
 
 // redirection
 void	connect_redirection(t_command *command, char *file, char type);
-void	redirect_io(t_redirection *redi);
+t_bool	redirect_io(t_redirection *redi, int stdfd[2]);
+void	unredirect_io(int fd[2]);
 
 // utils
 char	*get_cmd_abspath(char *cmd, char **path_list);

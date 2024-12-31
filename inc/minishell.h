@@ -50,7 +50,7 @@ void	enroll_custom_signal(void);
 
 // env utils
 char	*ft_getenv(const char *env, t_list *env_list);
-void	replace_envvalue(const char *env, char	*replace, t_list *env_list);
+void	replace_envvalue(const char *env, char *replace, t_list *env_list);
 t_list	*init_env_list(char **envp);
 void	free_env(void *ptr);
 
@@ -60,8 +60,12 @@ t_bool	is_specital_ch(char ch);
 char	**ft_lst_toarray(t_list *lst);
 char	**ft_strdivide(char *str, int c);
 
+// error utils
+void	print_stderr(const char *str1, const char *str2);
+
 // builtins
-int		builtin_handler(void *ptr, t_envval *env_val);
+t_bool	is_builtin_cmd(char *cmd);
+void	builtin_handler(void *ptr, t_envval *env_val);
 
 // parser
 void	parser_handler(char *line, t_envval *env_val);

@@ -39,23 +39,23 @@ static void	execute_command(t_command *cmd, t_envval *env_val)
 {
 	char	*cmd_path;
 
-	if (!builtin_handler(cmd, env_val))
+	if (is_builtin_cmd(cmd->args[0]))
+		return (builtin_handler(cmd, env_val));
+	cmd_path = get_cmd_abspath(cmd->args[0], env_val->paths);
+	if (!cmd_path)
+		cmd_path = ft_strdup(cmd->args[0]);
+	if (fork() == 0)
 	{
-		cmd_path = get_cmd_abspath(cmd->args[0], env_val->paths);
-		if (cmd_path)
+		if (redirect_io(cmd->redi, NULL))
 		{
-			if (fork() == 0)
-			{
-				redirect_io(cmd->redi);
-				convert_lst_toenvp(env_val);
-				execve(cmd_path, cmd->args, env_val->envp);
-			}
-			wait(NULL);
+			convert_lst_toenvp(env_val);
+			execve(cmd_path, cmd->args, env_val->envp);
+			perror(cmd_path);
 		}
-		else
-			printf("%s: command not found\n", cmd->args[0]);
-		free(cmd_path);
+		exit(1);
 	}
+	wait(NULL);
+	free(cmd_path);
 }
 
 void	execute_commands(t_list *cmd_list, t_envval *env_val)
