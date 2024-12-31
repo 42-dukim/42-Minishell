@@ -1,50 +1,73 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_unset.c                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/26 21:02:58 by junkwak           #+#    #+#             */
-/*   Updated: 2024/12/26 22:14:53 by junkwak          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+// /* ************************************************************************** */
+// /*                                                                            */
+// /*                                                        :::      ::::::::   */
+// /*   ft_unset.c                                         :+:      :+:    :+:   */
+// /*                                                    +:+ +:+         +:+     */
+// /*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
+// /*                                                +#+#+#+#+#+   +#+           */
+// /*   Created: 2024/12/31 14:51:09 by junkwak           #+#    #+#             */
+// /*   Updated: 2024/12/31 15:14:30 by junkwak          ###   ########.fr       */
+// /*                                                                            */
+// /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-int	ft_unset(char **cmds, t_list *env_list)//성공시 status: 0,실패 : 1
+void	free_unset(t_list *head, t_env *env)
 {
-	char	*str;
+	free(head);
+	free(env->key);
+	free(env->value);
+}
+
+void	unset_handler(t_list *head, t_list *before_head, t_envval *env_val, t_env *env)
+{
+	if (head->next && !before_head)
+	{
+		env_val->lst = env_val->lst->next;
+		before_head = head->next;
+		free_unset(head, env);
+		return ;
+	}
+	if (head->next)
+		before_head->next = head->next;
+	else
+	{
+		before_head->next = NULL;
+	}
+	free_unset(head, env);
+}
+
+// void	unset_init(t_list *head, t_list *before_head,int i)
+// {
+// 	i = 0;
+// 	before_head = NULL;
+// 	head = NULL;
+// }
+int	ft_unset(char **cmds, t_envval *env_val, int i)//성공시 status: 0,실패 : 1
+{
 	t_env	*env;
-	int	i;
+	t_list	*before_head;
 	t_list	*head;
-	// if (cmds || cmds[1])
-	// 	return (0);
-	i = 1;
-	
-	head = NULL;
-	while (cmds[i])
+	char	*str;
+
+	while (cmds[++i])
 	{
 		str = cmds[i];
-		head = env_list;
+		head = env_val->lst;
 		while (head)
 		{
 			env = head->content;
-			if (env->key == str)
+			if (ft_strncmp(env->key, str, ft_strlen(env->key) + 1) == 0)
 			{
-				if (ft_strchr(str,'=') != 0)
+				if (ft_strchr(cmds[i],'=') != 0)
 					return (0);
-				else
-				{
-					head = NULL;
-					head->next = head->next->content;
-					env->key = NULL;
-					env->value = NULL;
-				}
+				unset_handler(head, before_head, env_val, env);
+				break ;
 			}
+			if (head)
+				before_head = head;
 			head = head->next;
 		}
-		i++;
 	}
 	return (0);
 }

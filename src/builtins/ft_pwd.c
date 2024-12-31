@@ -5,19 +5,19 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/26 20:18:50 by junkwak           #+#    #+#             */
-/*   Updated: 2024/12/26 22:13:44 by junkwak          ###   ########.fr       */
+/*   Created: 2024/12/31 14:50:40 by junkwak           #+#    #+#             */
+/*   Updated: 2024/12/31 18:59:16 by junkwak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
 
-int	ft_pwd(char **cmds, t_list *env_list)
+int	ft_pwd(t_envval *env_val)
 {
 	char	*str;
-	int	i;
-
+	(void)env_val;
+	
 	str = getcwd(NULL,4000);
 	printf("%s\n", str);
 	return (0);

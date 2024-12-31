@@ -6,7 +6,7 @@
 /*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 21:09:47 by dukim             #+#    #+#             */
-/*   Updated: 2024/12/26 18:12:06 by junkwak          ###   ########.fr       */
+/*   Updated: 2024/12/31 18:53:25 by junkwak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ typedef struct s_env
 typedef	struct s_envvalue
 {
 	t_list	*lst;
+	char	**envp;
+	t_bool	is_changed;
 	char	**paths;
 }	t_envval;
 

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils1.c                                           :+:      :+:    :+:   */
+/*   ft_utils1.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dukim <dukim@student.42gyeongsan.kr>       +#+  +:+       +#+        */
+/*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/13 19:48:57 by dukim             #+#    #+#             */
-/*   Updated: 2024/12/13 19:48:59 by dukim            ###   ########.fr       */
+/*   Updated: 2024/12/31 16:12:30 by junkwak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,11 @@ char	**ft_strdivide(char *str, int c)
 		i++;
 	}
 	divide[0] = ft_substr(str, 0, i);
+	// if (str[i] && i == len)
+	// 	divide[1] = NULL;
 	if (i == len)
 		divide[1] = NULL;
 	else
-		divide[1] = ft_substr(str, i, len);
+		divide[1] = ft_substr(str, i + 1, len);
 	return (divide);
 }

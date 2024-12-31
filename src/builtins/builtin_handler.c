@@ -6,7 +6,7 @@
 /*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/23 00:57:02 by dukim             #+#    #+#             */
-/*   Updated: 2024/12/26 22:19:40 by junkwak          ###   ########.fr       */
+/*   Updated: 2024/12/31 18:58:05 by junkwak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,9 @@
 int	builtin_handler(void *ptr, t_envval *env_val)
 {
 	t_command	*cmd;
-
+	int	i;
+	
+	i = 0;
 	cmd = (t_command *)ptr;
 	if (ft_strncmp(cmd->args[0], "cd", 3) == 0)
 		ft_cd(cmd->args[1], env_val->lst);
@@ -25,12 +27,12 @@ int	builtin_handler(void *ptr, t_envval *env_val)
 	else if (ft_strncmp(cmd->args[0], "env", 4) == 0)
 		ft_env(cmd->args, env_val->lst);
 	else if (ft_strncmp(cmd->args[0], "export", 7) == 0)
-		ft_export(cmd->args, env_val->lst);
+		ft_export(cmd->args, env_val);
+	else if (ft_strncmp(cmd->args[0], "unset", 5) == 0)
+		ft_unset(cmd->args, env_val, i);
 	else if (ft_strncmp(cmd->args[0], "pwd", 3) == 0)
-		ft_pwd(cmd->args, env_val->lst);
-	else if (ft_strncmp(cmd->args[0], "unset", 3) == 0)
-		ft_unset(cmd->args, env_val->lst);
-	else	
+		ft_pwd(env_val);
+	else
 		return (0);
 	return (1);
 }
