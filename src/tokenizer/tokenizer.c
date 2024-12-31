@@ -12,22 +12,37 @@
 
 #include "tokenizer.h"
 
+static void	word_tosymbol(char **line, t_word *word, char symbol)
+{
+	free(word->content);
+	if (ft_strncmp(*line, ">>", 2) == 0)
+	{
+		symbol = '+';
+		(*line)++;
+	}
+	word->content = malloc(sizeof(char) * 2);
+	word->content[0] = symbol;
+	word->content[1] = '\0';
+	word->idx = 1;
+}
+
 static int	specitalch_handler(t_list **token_list, char **line, t_word *word, t_list *env_list)
 {
-	if (is_quote_ch(**line))
+	char	ch;
+
+	ch = **line;
+	if (is_quote_ch(ch))
 	{
 		quote_parser(line, word);
 		if (!word->content)
 			return (-1);
 	}
-	else if (is_specital_ch(**line))
+	else if (is_specital_tokench(ch))
 	{
 		append_token_inlist(token_list, word, WORD, env_list);
-		if (**line != ' ')
+		if (ch != ' ')
 		{
-			free(word->content);
-			word->content = ft_substr(*line, 0, 1);
-			word->idx = 1;
+			word_tosymbol(line, word, ch);
 			append_token_inlist(token_list, word, SYMBOL, env_list);
 		}
 	}

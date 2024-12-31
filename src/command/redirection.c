@@ -12,20 +12,22 @@
 
 #include "command.h"
 
-static t_bool	redirect(const char *file_path, t_bool is_input)
+static t_bool	redirect(const char *file_path, char type)
 {
 	int	fd;
 
-	if (is_input)
+	if (type == '>')
 		fd = open(file_path, O_RDWR | O_CREAT | O_TRUNC, 0644);
-	else
+	else if (type == '+')
+		fd = open(file_path, O_RDWR | O_CREAT | O_APPEND, 0644);
+	else if (type == '<')
 		fd = open(file_path, O_RDONLY);
 	if (fd == -1)
 	{
 		print_stderr("bash: ", file_path);
 		return (false);
 	}
-	if (is_input)
+	if (type == '>' || type == '+')
 		dup2(fd, STDOUT_FILENO);
 	else
 		dup2(fd, STDIN_FILENO);
@@ -64,7 +66,7 @@ t_bool	redirect_io(t_redirection *redi, int stdfd[2])
 	}
 	while (redi)
 	{
-		if (!redirect(redi->file, redi->type == '>'))
+		if (!redirect(redi->file, redi->type))
 			return (false);
 		redi = redi->next;
 	}

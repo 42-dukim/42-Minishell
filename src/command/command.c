@@ -27,13 +27,8 @@ static t_bool	token_tocmd_handler(t_command *command, t_token *token, t_list **a
 	}
 	if (token->type == SYMBOL)
 	{
-		if (*(token->content) == '>')
-			type = '>';
-		if (*(token->content) == '>' && token->content[1] == '>')
-			type = '+';
-		if (*(token->content) == '<')
-			type = '<';
-		if (*(token->content) == '|')
+		type = *(token->content);
+		if (type == '|')
 			return (true);
 	}
 	return (false);

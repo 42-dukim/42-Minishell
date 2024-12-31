@@ -19,13 +19,6 @@ t_bool	is_quote_ch(char ch)
 	return (false);
 }
 
-t_bool	is_specital_ch(char ch)
-{
-	if (ch == ' '|| ch == '|' || ch == '>' || ch == '<')
-		return (true);
-	return (false);
-}
-
 char	**ft_lst_toarray(t_list *lst)
 {
 	char	**array;

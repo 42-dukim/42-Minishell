@@ -56,7 +56,6 @@ void	free_env(void *ptr);
 
 // ft_utils
 t_bool	is_quote_ch(char ch);
-t_bool	is_specital_ch(char ch);
 char	**ft_lst_toarray(t_list *lst);
 char	**ft_strdivide(char *str, int c);
 

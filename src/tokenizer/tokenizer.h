@@ -38,6 +38,7 @@ typedef struct s_token
 
 void	dollar_parser(t_word *word, char *pre, size_t *i, t_list *env_list);
 void	quote_parser(char **line, t_word *word);
+t_bool	is_specital_tokench(char ch);
 void	append_token_inlist(t_list **token_list, t_word *word, \
 							t_token_type type, t_list *env_list);
 
