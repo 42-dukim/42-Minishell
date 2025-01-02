@@ -15,9 +15,10 @@
 int	main(int argc, char *argv[], char *envp[])
 {
 	char	*line;
-	char	*cmd_path;
 	t_envval env_val;
 
+	if (!argc || !argv)
+		return (0);
 	enroll_custom_signal();
 	env_val.lst = init_env_list(envp);
 	env_val.paths = ft_split(ft_getenv("PATH", env_val.lst), ':');

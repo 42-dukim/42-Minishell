@@ -28,7 +28,6 @@ char	*ft_getenv(const char *env, t_list *env_list)
 
 void	replace_envvalue(const char *env, char *replace, t_list *env_list)
 {
-	t_list	*ptr;
 	size_t	len;
 
 	len = ft_strlen(env);
