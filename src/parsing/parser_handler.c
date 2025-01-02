@@ -19,7 +19,7 @@ void	parser_handler(char *line, t_envval *env_val)
 
 	if (!line || line[0] == '\0')
 		return ;
-	token_list = tokenizer(line, env_val->lst);
+	token_list = tokenize(line, env_val->lst);
 	if (!token_list)
 		return ;
 	cmd_list = split_command(token_list);

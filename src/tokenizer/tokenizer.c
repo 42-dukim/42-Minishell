@@ -56,7 +56,7 @@ static int	specitalch_handler(t_list **token_list, char **line, t_word *word, t_
 	return (0);
 }
 
-t_list	*tokenizer(char *line, t_list *env_list)
+t_list	*tokenize(char *line, t_list *env_list)
 {
 	t_list	*token_list;
 	t_word	*word;
