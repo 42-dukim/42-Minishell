@@ -14,12 +14,17 @@
 
 static void	word_tosymbol(char **line, t_word *word, char symbol)
 {
-	free(word->content);
 	if (ft_strncmp(*line, ">>", 2) == 0)
 	{
 		symbol = '+';
 		(*line)++;
 	}
+	if (ft_strncmp(*line, "<<", 2) == 0)
+	{
+		symbol = '-';
+		(*line)++;
+	}
+	free(word->content);
 	word->content = malloc(sizeof(char) * 2);
 	word->content[0] = symbol;
 	word->content[1] = '\0';
