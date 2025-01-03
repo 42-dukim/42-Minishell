@@ -41,33 +41,44 @@ void	append_cmd_inlist(t_list **lst, t_command *command, t_cmd_type type, t_list
 {
 	t_cmd_unit	*cmd_unit;
 
-	if (command && type == CMD)
+	if (type == CMD && command == NULL)
+		return ;
+	if (type == CMD)
+	{
 		command->args = ft_lst_toarray(*arg_list);
+		ft_lstclear(arg_list, free);
+	}
 	cmd_unit = malloc(sizeof(t_cmd_unit) * 1);
 	cmd_unit->type = type;
 	cmd_unit->cmd = command;
 	ft_lstadd_back(lst, ft_lstnew(cmd_unit));
 }
 
-void	free_cmd_unit(void *ptr)
+void	free_command(void *ptr)
 {
-	t_cmd_unit		*cmd_unit;
+	t_command		*command;
 	t_redirection	*redi;
-	size_t			i;
 
-	cmd_unit = (t_cmd_unit *)ptr;
-	redi = cmd_unit->cmd->redi;
-	i = 0;
-	while (cmd_unit->cmd->args[i])
-		free(cmd_unit->cmd->args[i++]);
-	free(cmd_unit->cmd->args);
+	if (!ptr)
+		return ;
+	command = (t_command *)ptr;
+	redi = command->redi;
+	ft_freesplit(command->args);
 	while (redi)
 	{
 		ptr = redi->next;
 		free(redi->file);
 		free(redi);
-		redi = (t_redirection *)ptr;
+		redi = ptr;
 	}
-	free(cmd_unit->cmd);
-	free(cmd_unit);
+	command->redi = NULL;
+	free(command);
+	command = NULL;
+}
+
+void	free_cmd_unit(void *ptr)
+{
+	free_command(((t_cmd_unit *)ptr)->cmd);
+	free(ptr);
+	ptr = NULL;
 }

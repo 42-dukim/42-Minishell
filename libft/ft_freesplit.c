@@ -16,6 +16,8 @@ void	ft_freesplit(char **split)
 {
 	char	**temp;
 
+	if (!split)
+		return ;
 	temp = split;
 	while (*split)
 	{
