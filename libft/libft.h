@@ -20,7 +20,6 @@ typedef struct s_list
 {
 	void			*content;
 	struct s_list	*next;
-	int		size;//연결리스트병합할때 사용
 }					t_list;
 
 int		ft_isalpha(int c);
