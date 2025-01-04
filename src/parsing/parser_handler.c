@@ -24,7 +24,8 @@ void	parser_handler(char *line, t_envval *env_val)
 		return ;
 	cmd_list = split_command(token_list);
 	ft_lstclear(&token_list, free_token);
-	// print_command_list(cmd_list);
+	if (!cmd_list)
+		return ;
 	execute_commands(cmd_list, env_val);
 	ft_lstclear(&cmd_list, free_cmd_unit);
 	add_history(line);

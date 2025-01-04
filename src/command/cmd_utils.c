@@ -41,8 +41,6 @@ void	append_cmd_inlist(t_list **lst, t_command *command, t_cmd_type type, t_list
 {
 	t_cmd_unit	*cmd_unit;
 
-	if (type == CMD && command == NULL)
-		return ;
 	if (type == CMD)
 	{
 		command->args = ft_lst_toarray(*arg_list);
@@ -62,8 +60,8 @@ void	free_command(void *ptr)
 	if (!ptr)
 		return ;
 	command = (t_command *)ptr;
-	redi = command->redi;
 	ft_freesplit(command->args);
+	redi = command->redi;
 	while (redi)
 	{
 		ptr = redi->next;
@@ -71,14 +69,13 @@ void	free_command(void *ptr)
 		free(redi);
 		redi = ptr;
 	}
-	command->redi = NULL;
 	free(command);
-	command = NULL;
 }
 
 void	free_cmd_unit(void *ptr)
 {
+	if (!ptr)
+		return;
 	free_command(((t_cmd_unit *)ptr)->cmd);
 	free(ptr);
-	ptr = NULL;
 }
