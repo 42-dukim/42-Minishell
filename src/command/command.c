@@ -48,19 +48,17 @@ static int	handle_token_tocmd(t_list **cmdunit_list, t_command **command, \
 	return (1);
 }
 
-t_list *split_command(t_list *token_list)
+void	token_tocmdunit(t_list *token_list, t_list	**cmdunit_list)
 {
-	t_list		*cmdunit_list;
 	t_command	*command;
 	t_list		*arg_list;
 	int			res;
 
-	cmdunit_list = NULL;
 	command = ft_calloc(sizeof(t_command), 1);
 	arg_list = NULL;
 	while (token_list)
 	{
-		res = handle_token_tocmd(&cmdunit_list, &command, \
+		res = handle_token_tocmd(cmdunit_list, &command, \
 				(t_token *)token_list->content, &arg_list);
 		if (res == -1)
 			break ;
@@ -68,11 +66,10 @@ t_list *split_command(t_list *token_list)
 	}
 	if (res == 0 || res == -1)
 	{
-		ft_lstclear(&cmdunit_list, free_cmd_unit);
+		ft_lstclear(cmdunit_list, free_cmd_unit);
 		ft_lstclear(&arg_list, free);
 		free_command(command);
 	}
 	else
-		append_cmd_inlist(&cmdunit_list, command, CMD, &arg_list);
-	return (cmdunit_list);
+		append_cmd_inlist(cmdunit_list, command, CMD, &arg_list);
 }

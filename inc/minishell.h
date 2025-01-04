@@ -72,7 +72,7 @@ void	parser_handler(char *line, t_envval *env_val);
 // exports module
 t_list	*tokenize(char *line, t_list *env_list);
 void	free_token(void *ptr);
-t_list	*split_command(t_list *token_list);
+void	token_tocmdunit(t_list *token_list, t_list	**cmdunit_list);
 void	execute_commands(t_list *cmd_list, t_envval *env_val);
 void	free_cmd_unit(void *ptr);
 

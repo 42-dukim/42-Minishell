@@ -22,7 +22,8 @@ void	parser_handler(char *line, t_envval *env_val)
 	token_list = tokenize(line, env_val->lst);
 	if (!token_list)
 		return ;
-	cmd_list = split_command(token_list);
+    cmd_list = NULL;
+	token_tocmdunit(token_list, &cmd_list);
 	ft_lstclear(&token_list, free_token);
 	if (!cmd_list)
 		return ;
