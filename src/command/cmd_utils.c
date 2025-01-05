@@ -14,13 +14,17 @@
 #include "command.h"
 
 // 명령어의 절대 경로 찾기
-char	*get_cmd_abspath(char *cmd, char **path_list)
+char	*get_cmd_abspath(char *cmd, t_list *envlst)
 {
 	char	*cmd_path;
 	int		i;
+	char	**path_list;
 
 	if (cmd[0] == '/')
 		return (ft_strdup(cmd));
+	path_list = ft_split(ft_getenv("PATH", envlst), ':');
+	if (!path_list)
+		return (NULL);
 	cmd = ft_strjoin("/", cmd);
 	i = 0;
 	while (path_list[i])
@@ -33,7 +37,8 @@ char	*get_cmd_abspath(char *cmd, char **path_list)
 	}
 	free(cmd);
 	if (!path_list[i])
-		return (NULL);
+		cmd_path = NULL;
+	ft_freesplit(path_list);
 	return (cmd_path);
 }
 

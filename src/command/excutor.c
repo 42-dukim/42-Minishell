@@ -41,18 +41,18 @@ static void	execute_command(t_command *cmd, t_envval *env_val)
 
 	if (is_builtin_cmd(cmd->args[0]))
 		return (builtin_handler(cmd, env_val));
-	cmd_path = get_cmd_abspath(cmd->args[0], env_val->paths);
+	convert_lst_toenvp(env_val);
+	cmd_path = get_cmd_abspath(cmd->args[0], env_val->lst);
 	if (!cmd_path)
-		cmd_path = ft_strdup(cmd->args[0]);
+	{
+		ft_putstr_fd(cmd->args[0], 2);
+		ft_putendl_fd(": command not found", 2);
+		return ;
+	}
 	if (fork() == 0)
 	{
 		if (redirect_io(cmd->redi, NULL))
-		{
-			convert_lst_toenvp(env_val);
 			execve(cmd_path, cmd->args, env_val->envp);
-			perror(cmd_path);
-		}
-		exit(1);
 	}
 	wait(NULL);
 	free(cmd_path);

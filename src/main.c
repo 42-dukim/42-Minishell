@@ -21,7 +21,6 @@ int	main(int argc, char *argv[], char *envp[])
 		return (0);
 	enroll_custom_signal();
 	env_val.lst = init_env_list(envp);
-	env_val.paths = ft_split(ft_getenv("PATH", env_val.lst), ':');
 	env_val.envp = ft_strarrdup(envp);
 	env_val.is_changed = false;
 	while (1)

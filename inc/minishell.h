@@ -43,7 +43,6 @@ typedef	struct s_envvalue
 	t_list	*lst;
 	char	**envp;
 	t_bool	is_changed;
-	char	**paths;
 }	t_envval;
 
 // utils
