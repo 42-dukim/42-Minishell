@@ -63,6 +63,8 @@ void	execute_commands(t_list *cmdlst, t_envval *env_val)
 	pid_t	*pids;
 	size_t	len;
 	size_t	i;
+	int		fd[2];
+	int		input_fd = 0;
 
 	len = ft_lstsize(cmdlst);
 	i = 0;
@@ -74,13 +76,21 @@ void	execute_commands(t_list *cmdlst, t_envval *env_val)
 	pids = malloc(sizeof(pid_t) * len);
 	while (cmdlst)
 	{
+		pipe(fd);
 		pids[i] = fork();
 		if (pids[i++] == 0)
 		{
+			dup2(input_fd, STDIN_FILENO);
+			if (cmdlst->next)
+				dup2(fd[1], STDOUT_FILENO);
+			close(fd[0]);
 			execute_command(cmdlst->content, env_val);
-			exit(1);
+			exit(EXIT_FAILURE);
 		}
+		close(fd[1]);
+		input_fd = fd[0];
 		cmdlst = cmdlst->next;
+		i++;
 	}
 	i = 0;
 	while (i < len)
