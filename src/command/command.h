@@ -35,7 +35,7 @@ void	unredirect_io(int fd[2]);
 
 // utils
 char	*get_cmd_abspath(char *cmd, t_list *envlst);
-void	append_cmd_inlist(t_list **lst, t_command *command, t_cmd_type type, t_list **arg_list);
+void	append_cmd_inlist(t_list **lst, t_command *command, t_list **arg_list);
 void	free_command(void *ptr);
 
 #endif
