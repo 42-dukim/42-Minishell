@@ -19,7 +19,7 @@ t_bool	is_specital_tokench(char ch)
 	return (false);
 }
 
-void	append_token_inlist(t_list **token_list, t_word *word, t_token_type type, t_list *env_list)
+void	append_token_inlist(t_list **tokenlst, t_word *word, t_token_type type, t_list *env_list)
 {
 	t_token	*token;
 
@@ -29,7 +29,7 @@ void	append_token_inlist(t_list **token_list, t_word *word, t_token_type type, t
 	token = malloc(sizeof(t_word) * 1);
 	token->content = word->content;
 	token->type = type;
-	ft_lstadd_back(token_list, ft_lstnew(token));
+	ft_lstadd_back(tokenlst, ft_lstnew(token));
 	init_word(word);
 }
 
