@@ -1,66 +1,77 @@
-// /* ************************************************************************** */
-// /*                                                                            */
-// /*                                                        :::      ::::::::   */
-// /*   ft_echo.c                                          :+:      :+:    :+:   */
-// /*                                                    +:+ +:+         +:+     */
-// /*   By: dukim <dukim@student.42gyeongsan.kr>       +#+  +:+       +#+        */
-// /*                                                +#+#+#+#+#+   +#+           */
-// /*   Created: 2024/12/02 20:50:29 by dukim             #+#    #+#             */
-// /*   Updated: 2024/12/02 20:50:30 by dukim            ###   ########.fr       */
-// /*                                                                            */
-// /* ************************************************************************** */
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_echo.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dukim <dukim@student.42gyeongsan.kr>       +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/02 20:50:29 by dukim             #+#    #+#             */
+/*   Updated: 2024/12/02 20:50:30 by dukim            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-// #include "../../inc/minishell.h"
+#include "../../inc/minishell.h"
 
-// extern  t_global	g_data;
+int	echo_print(char **args, int result, int i)
+{
+	if (result == 1)
+	{
+		while (args[i])
+		{
+			printf("%s", args[i]);
+			if (!args[i + 1])
+				printf(" ");
+			i++;
+		}
+		printf("\n");
+		return (0);
+	}
+	else if (result == 2)
+		return (0);
+	else if (result == 0)
+	{
+		while (args[++i])
+			printf("%s", args[i]);
+		printf("\n");
+		return (0);
+	}
+	printf("\n");
+	return (0);
+}
 
-// void	ft_echo(char **split)
-// {
-// 	char	**sub_split;
-// 	char	**argv;
-// 	char	*temp, *envval;
-// 	size_t	len;
-// 	size_t	i, j;
+int	echo_grammer(char *args)
+{
+	int	result;
+	int	count;
 
-// 	len = ft_splitlen((const char **)split);
-// 	argv = malloc(sizeof(char *) * (len + 1));
-// 	i = 0;
-// 	while (split[i])
-// 	{
-// 		if (!ft_strchr(split[i], '$'))
-// 		{
-// 			argv[i] = ft_strdup(split[i]);
-// 			i ++;
-// 			continue ;
-// 		}
-// 		sub_split = ft_split(split[i], '$');
-// 		j = 0;
-// 		while (sub_split[j])
-// 		{
-// 			envval = ft_getenv(g_data.envp, sub_split[j]);
-// 			if (!envval)
-// 			{
-// 				argv[i] = ft_strdup("");
-// 				j++;
-// 				continue; ;
-// 			}
-// 			if (j == 0)
-// 				argv[i] = ft_strdup(envval);
-// 			else
-// 			{
-// 				temp = argv[i];
-// 				argv[i] = ft_strjoin(argv[i], envval);
-// 				free(temp);
-// 			}
-// 			j++;
-// 		}
-// 		ft_freesplit(sub_split);
-// 		i++;
-// 	}
-// 	argv[i] = NULL;
-// 	for (int i = 0; argv[i]; i++)
-// 		printf("%d: %s\n", i, argv[i]);
-// 	if (fork() == 0)
-// 		execve("/bin/echo", argv, g_data.envp);
-// 	wait(NULL);
-// }
+	count = 0;
+	result = 0;
+	if (*args != '-')
+		return (result);
+	result += 1;
+	args++;
+	while (*args)
+	{
+		if (*args != 'n')
+			return (result);
+		args++;
+		count++;
+	}
+	if (count != 0)
+		result += 1;
+	return (result);
+}
+
+int	ft_echo(char **args)
+{
+	int	i;
+	int	result;
+
+	i = 0;
+	if (args == NULL || args[0] == NULL)
+		return (0);
+	if (args[2] == 0 && args[1] != NULL)
+		result = echo_grammer(args[1]);
+	echo_print(args, result, i);
+	return (0);
+}

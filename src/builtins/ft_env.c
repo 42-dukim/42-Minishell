@@ -12,23 +12,21 @@
 
 #include "../../inc/minishell.h"
 
-void	ft_env(char **cmds, t_list *env_list)
+int	ft_env(char **cmds, t_list *env_list)
 {
-	size_t	i;
 	t_env	*list;
 	
-	i = 0;
-	if (cmds[++i])//env 이후 추가명령어 나오면 무조건 에러출력
+	if (cmds[1])
 	{
-		// printf("env : '%s' : No such file or directory\n",cmds[i]);
-		print_stderr("env: ", cmds[i]);
-		return ;
+		// error 출력 필요
+		return (127);
 	}
-	while (env_list)//env 이후 추가명령어 나오면 무조건 에러출력
+	while (env_list)
 	{
 		list=env_list->content;
 		if (list->value !=NULL)
 			printf("%s=%s\n", list->key, list->value);
 		env_list = env_list->next;
 	}
+	return (0);
 }

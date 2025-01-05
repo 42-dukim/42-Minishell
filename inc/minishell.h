@@ -22,6 +22,7 @@
 # include <signal.h>
 # include <sys/wait.h>
 # include <termios.h>
+# include <errno.h>
 
 # include "../libft/libft.h"
 
@@ -53,6 +54,7 @@ char	*ft_getenv(const char *env, t_list *env_list);
 void	replace_envvalue(const char *env, char *replace, t_list *env_list);
 t_list	*init_env_list(char **envp);
 void	free_env(void *ptr);
+void	export_print(t_list *ptr);
 
 // ft_utils
 t_bool	is_quote_ch(char ch);

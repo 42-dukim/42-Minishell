@@ -18,7 +18,7 @@ static t_bool	is_valid_exportname(char *name)
 
 	if (ft_isalpha(name[0]) == 0 && name[0] != '_')
 	{
-		printf("\'%s\' : not valid identifier!!\n", name);
+		printf("\'%s\' : not valid identifier\n", name);
 		return (false);
 	}
 	p = 0;
@@ -30,7 +30,7 @@ static t_bool	is_valid_exportname(char *name)
 			if (((name[p] == '+' && name[p + 1] == '=')) \
 				|| (name[p] == '=' && name[p - 1] != '\0'))
 				return (true);
-			printf("\'%s\' : not valid identifier@@\n", name);
+			printf("\'%s\' : not valid identifier\n", name);
 			return (false);
 		}
 		p++;
@@ -55,13 +55,19 @@ static t_bool	check_overlapname(char *key, char *value, t_list *lst)
 {
 	t_env	*env;
 
+	if (key == NULL)
+		return (0);
 	while (lst)
 	{
 		env = lst->content;
 		if (ft_strncmp(key, env->key, ft_strlen(key) + 1) == 0)
 		{
-			free(env->value);
-			env->value = ft_strdup(value);
+			if (env->value)
+				free(env->value);
+			if (value)
+				env->value = ft_strdup(value);
+			else
+				env->value = ft_strdup("");
 			return (true);
 		}
 		lst = lst->next;
@@ -69,16 +75,21 @@ static t_bool	check_overlapname(char *key, char *value, t_list *lst)
 	return (false);
 }
 
-static void	append_envvalue(char **cmds, t_list *env_list, t_bool *is_changed)
+static int	append_envvalue(char **cmds, t_list *env_list, t_bool *is_changed)
 {
 	t_env	*node;
 	int		i;
+	int		result;
 
+	result = 0;
 	i = 0;
 	while (cmds[++i])
 	{
 		if (!is_valid_exportname(cmds[i]))
-			continue;
+		{
+			result = 1;
+			continue ;
+		}
 		*is_changed = true;
 		node = create_env_node(cmds[i]);
 		if (check_overlapname(node->key, node->value, env_list))
@@ -86,29 +97,26 @@ static void	append_envvalue(char **cmds, t_list *env_list, t_bool *is_changed)
 		else
 			ft_lstadd_back(&env_list, ft_lstnew(node));
 	}
+	return (result);
 }
 
-void	ft_export(char **cmds, t_envval *env_val)
+int	ft_export(char **cmds, t_envval *env_val)
 {
 	t_list	*ptr;
-	t_env	*env;
-	
+	int		result;
+
+	result = 0;
 	if (cmds[1] == NULL)
 	{
 		ptr = env_val->lst;
 		while (ptr)
 		{
-			env = ptr->content;
-			if (!(ft_strlen(env->key) == 1 && ft_strncmp(env->key, "_", 1) == 0))
-			{
-				printf("declare -x %s", env->key);
-				if (env->value != NULL)
-					printf("=\"%s\"", env->value);
-				printf("\n");
-			}
+			export_print(ptr);
 			ptr = ptr->next;
 		}
+		return (0);
 	}
 	else
-		append_envvalue(cmds, env_val->lst, &(env_val->is_changed));
+		result = append_envvalue(cmds, env_val->lst, &(env_val->is_changed));
+	return (result);
 }

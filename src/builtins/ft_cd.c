@@ -12,27 +12,48 @@
 
 #include "../../inc/minishell.h"
 
-void	ft_cd(const char *path, t_list *env_list)
+static void	chdir_suc(char *pwd, char *old_pwd, t_list *env_list)
 {
-	char	*home_path;
-	char	*phys_path;
-	char	*old_pwd;
-	char	*pwd;
-
-	if (path == NULL)
+	if (getcwd(pwd, sizeof(char) * 1024) == NULL)
 		return ;
-	home_path = ft_getenv("HOME", env_list);
-	old_pwd = getcwd(NULL, 0);
-	if (path[0] == '~')
-		phys_path = ft_strjoin(home_path, path + 1);
-	else
-		phys_path = ft_strdup(path);
-	if (chdir(phys_path) == -1)
-		print_stderr("bash: ", "cd");
-	pwd = getcwd(NULL, 0);
 	replace_envvalue("OLDPWD", old_pwd, env_list);
 	replace_envvalue("PWD", pwd, env_list);
-	free(old_pwd);
-	free(pwd);
-	free(phys_path);
+}
+
+static char	*find_grammer(char **args, t_list *env_list)
+{
+	char	*way;
+
+	way = args[1];
+	if (ft_strncmp(args[1], "~", ft_strlen(args[1])) == 0)
+		way = ft_getenv("HOME", env_list);
+	return (way);
+}
+
+int	ft_cd(char **path, t_list *env_list)
+{
+	char	*phys_path;
+	char	*old_pwd;
+	char	pwd[1024];
+
+	if (path[1] == NULL)
+	{
+		chdir(getenv("HOME"));
+		return (0);
+	}
+	else if (path[2] != NULL)
+	{
+		ft_putendl_fd("cd: too many argument\n", 2);
+		return (1);
+	}
+	old_pwd = ft_getenv("PWD", env_list);
+	phys_path = find_grammer(path, env_list);
+	if (chdir(phys_path) == 0)
+		chdir_suc(pwd, old_pwd, env_list);
+	else
+	{
+		strerror(errno); // 출력으로 수정 필요
+		return (1);
+	}
+	return (0);
 }

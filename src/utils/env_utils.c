@@ -74,3 +74,17 @@ void	free_env(void *ptr)
 	free(env->value);
 	free(env);
 }
+
+void	export_print(t_list *ptr)
+{
+	t_env	*env;
+
+	env = ptr->content;
+	if (!(ft_strlen(env->key) == 1 && ft_strncmp(env->key, "_", 1) == 0))
+	{
+		printf("declare -x %s", env->key);
+		if (env->value != NULL)
+			printf("=\"%s\"", env->value);
+		printf("\n");
+	}
+}

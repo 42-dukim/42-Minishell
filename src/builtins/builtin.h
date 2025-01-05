@@ -15,9 +15,12 @@
 
 # include "../../inc/minishell.h"
 
-void	ft_cd(const char *path, t_list *env_list);
+int		ft_cd(char **path, t_list *env_list);
+int		ft_export(char **cmds, t_envval *env_val);
+int		ft_env(char **cmd, t_list *env_list);
+int		ft_pwd(t_envval *env_val);
+int		ft_unset(char **cmds, t_envval *env_val);
+int		ft_echo(char **args);
 void	ft_exit(t_envval *env_val);
-void	ft_env(char **cmd, t_list *env_list);
-void	ft_export(char **cmds, t_envval *env_val);
 
 #endif
