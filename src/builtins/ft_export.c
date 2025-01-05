@@ -6,7 +6,7 @@
 /*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 16:12:55 by junkwak           #+#    #+#             */
-/*   Updated: 2025/01/03 16:52:38 by junkwak          ###   ########.fr       */
+/*   Updated: 2025/01/05 19:32:49 by junkwak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,10 @@ static t_bool	check_overlapname(char *key, char *value, t_list *lst)
 		{
 			if (env->value)
 				free(env->value);
-			if (value)//export _ 입력할때 오류수정
+			if (value)
 				env->value = ft_strdup(value);
 			else
-				env->value = ft_strdup("");//export 쓰레기갑처리
+				env->value = ft_strdup("");
 			return (true);
 		}
 		lst = lst->next;
@@ -88,7 +88,7 @@ static int	append_envvalue(char **cmds, t_list *env_list, t_bool *is_changed)
 		if (!is_valid_exportname(cmds[i]))
 		{
 			result = 1;
-			continue;
+			continue ;
 		}
 		*is_changed = true;
 		node = create_env_node(cmds[i]);
@@ -112,14 +112,7 @@ int	ft_export(char **cmds, t_envval *env_val)
 		ptr = env_val->lst;
 		while (ptr)
 		{
-			env = ptr->content;
-			if (!(ft_strlen(env->key) == 1 && ft_strncmp(env->key, "_", 1) == 0))
-			{
-				printf("declare -x %s", env->key);
-				if (env->value != NULL)
-					printf("=\"%s\"", env->value);
-				printf("\n");
-			}
+			export_print(ptr, env);
 			ptr = ptr->next;
 		}
 		return (0);

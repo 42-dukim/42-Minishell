@@ -6,7 +6,7 @@
 /*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 21:09:47 by dukim             #+#    #+#             */
-/*   Updated: 2025/01/03 17:15:56 by junkwak          ###   ########.fr       */
+/*   Updated: 2025/01/05 19:30:48 by junkwak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ char	*ft_getenv(const char *env, t_list *env_list);
 void	replace_envvalue(const char *env, char	*replace, t_list *env_list);
 t_list	*init_env_list(char **envp);
 void	free_env(void *ptr);
+void	export_print(t_list *ptr, t_env *env);
 
 // ft_utils
 t_bool	is_quote_ch(char ch);

@@ -6,7 +6,7 @@
 /*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 21:10:16 by dukim             #+#    #+#             */
-/*   Updated: 2025/01/03 15:57:28 by junkwak          ###   ########.fr       */
+/*   Updated: 2025/01/05 19:28:46 by junkwak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,4 +74,16 @@ void	free_env(void *ptr)
 	free(env->key);
 	free(env->value);
 	free(env);
+}
+
+void	export_print(t_list *ptr, t_env *env)
+{
+	env = ptr->content;
+	if (!(ft_strlen(env->key) == 1 && ft_strncmp(env->key, "_", 1) == 0))
+	{
+		printf("declare -x %s", env->key);
+		if (env->value != NULL)
+			printf("=\"%s\"", env->value);
+		printf("\n");
+	}
 }
