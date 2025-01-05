@@ -58,32 +58,29 @@ static void	execute_command(t_command *cmd, t_envval *env_val)
 	free(cmd_path);
 }
 
-void	execute_commands(t_list *cmd_list, t_envval *env_val)
+void	execute_commands(t_list *cmdlst, t_envval *env_val)
 {
 	pid_t	*pids;
 	size_t	len;
 	size_t	i;
 
-	len = ft_lstsize(cmd_list);
+	len = ft_lstsize(cmdlst);
 	i = 0;
 	if (len == 1)
 	{
-		execute_command(((t_cmd_unit *)cmd_list->content)->cmd, env_val);
+		execute_command(cmdlst->content, env_val);
 		return ;
 	}
 	pids = malloc(sizeof(pid_t) * len);
-	while (cmd_list)
+	while (cmdlst)
 	{
-		if (((t_cmd_unit *)cmd_list->content)->type == CMD)
+		pids[i] = fork();
+		if (pids[i++] == 0)
 		{
-			pids[i] = fork();
-			if (pids[i++] == 0)
-			{
-				execute_command(((t_cmd_unit *)cmd_list->content)->cmd, env_val);
-				exit(1);
-			}
+			execute_command(cmdlst->content, env_val);
+			exit(1);
 		}
-		cmd_list = cmd_list->next;
+		cmdlst = cmdlst->next;
 	}
 	i = 0;
 	while (i < len)

@@ -14,20 +14,20 @@
 
 void	parser_handler(char *line, t_envval *env_val)
 {
-	t_list	*token_list;
-	t_list	*cmd_list;
+	t_list	*tokenlst;
+	t_list	*cmdlst;
 
 	if (!line || line[0] == '\0')
 		return ;
-	token_list = tokenize(line, env_val->lst);
-	if (!token_list)
+	tokenlst = tokenize(line, env_val->lst);
+	if (!tokenlst)
 		return ;
-    cmd_list = NULL;
-	token_tocmdunit(token_list, &cmd_list);
-	ft_lstclear(&token_list, free_token);
-	if (!cmd_list)
+    cmdlst = NULL;
+	token_tocmdunit(tokenlst, &cmdlst);
+	ft_lstclear(&tokenlst, free_token);
+	if (!cmdlst)
 		return ;
-	execute_commands(cmd_list, env_val);
-	ft_lstclear(&cmd_list, free_cmd_unit);
+	execute_commands(cmdlst, env_val);
+	ft_lstclear(&cmdlst, free_command);
 	add_history(line);
 }

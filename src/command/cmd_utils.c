@@ -42,19 +42,11 @@ char	*get_cmd_abspath(char *cmd, t_list *envlst)
 	return (cmd_path);
 }
 
-void	append_cmd_inlist(t_list **lst, t_command *command, t_cmd_type type, t_list **arg_list)
+void	append_cmd_inlist(t_list **lst, t_command *command, t_list **arg_list)
 {
-	t_cmd_unit	*cmd_unit;
-
-	if (type == CMD)
-	{
-		command->args = ft_lst_toarray(*arg_list);
-		ft_lstclear(arg_list, free);
-	}
-	cmd_unit = malloc(sizeof(t_cmd_unit) * 1);
-	cmd_unit->type = type;
-	cmd_unit->cmd = command;
-	ft_lstadd_back(lst, ft_lstnew(cmd_unit));
+	command->args = ft_lst_toarray(*arg_list);
+	ft_lstclear(arg_list, free);
+	ft_lstadd_back(lst, ft_lstnew(command));
 }
 
 void	free_command(void *ptr)
@@ -75,12 +67,4 @@ void	free_command(void *ptr)
 		redi = ptr;
 	}
 	free(command);
-}
-
-void	free_cmd_unit(void *ptr)
-{
-	if (!ptr)
-		return;
-	free_command(((t_cmd_unit *)ptr)->cmd);
-	free(ptr);
 }

@@ -31,7 +31,7 @@ static void	word_tosymbol(char **line, t_word *word, char symbol)
 	word->idx = 1;
 }
 
-static int	specitalch_handler(t_list **token_list, char **line, t_word *word, t_list *env_list)
+static int	specitalch_handler(t_list **tokenlst, char **line, t_word *word, t_list *env_list)
 {
 	char	ch;
 
@@ -45,11 +45,11 @@ static int	specitalch_handler(t_list **token_list, char **line, t_word *word, t_
 	}
 	if (is_specital_tokench(ch))
 	{
-		append_token_inlist(token_list, word, WORD, env_list);
+		append_token_inlist(tokenlst, word, WORD, env_list);
 		if (ch != ' ')
 		{
 			word_tosymbol(line, word, ch);
-			append_token_inlist(token_list, word, SYMBOL, env_list);
+			append_token_inlist(tokenlst, word, SYMBOL, env_list);
 		}
 		return (0);
 	}
@@ -58,27 +58,27 @@ static int	specitalch_handler(t_list **token_list, char **line, t_word *word, t_
 
 t_list	*tokenize(char *line, t_list *env_list)
 {
-	t_list	*token_list;
+	t_list	*tokenlst;
 	t_word	*word;
 	int		res;
 
-	token_list = NULL;
+	tokenlst = NULL;
 	word = malloc(sizeof(t_word) * 1);
 	init_word(word);
 	while (*line)
 	{
-		res = specitalch_handler(&token_list, &line, word, env_list);
+		res = specitalch_handler(&tokenlst, &line, word, env_list);
 		if (res == -1)
 		{
-			ft_lstclear(&token_list, free_token);
+			ft_lstclear(&tokenlst, free_token);
 			break ;
 		}
 		if (res == 1)
 			append_ch_inword(word, *line);
 		line++;
 	}
-	append_token_inlist(&token_list, word, WORD, env_list);
+	append_token_inlist(&tokenlst, word, WORD, env_list);
 	free(word->content);
 	free(word);
-	return (token_list);
+	return (tokenlst);
 }
