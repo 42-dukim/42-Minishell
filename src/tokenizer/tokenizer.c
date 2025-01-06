@@ -24,14 +24,13 @@ static void	word_tosymbol(char **line, t_word *word, char symbol)
 		symbol = '-';
 		(*line)++;
 	}
-	free(word->content);
-	word->content = malloc(sizeof(char) * 2);
 	word->content[0] = symbol;
 	word->content[1] = '\0';
 	word->idx = 1;
 }
 
-static int	specitalch_handler(t_list **tokenlst, char **line, t_word *word, t_list *env_list)
+static int	specitalch_handler(t_list **tokenlst, char **line, \
+								t_word *word, t_list *env_list)
 {
 	char	ch;
 
@@ -49,7 +48,10 @@ static int	specitalch_handler(t_list **tokenlst, char **line, t_word *word, t_li
 		if (ch != ' ')
 		{
 			word_tosymbol(line, word, ch);
-			append_token_inlist(tokenlst, word, SYMBOL, env_list);
+			if (*(word->content) == '-')
+				handle_heredoc(tokenlst, line, word, env_list);
+			else
+				append_token_inlist(tokenlst, word, SYMBOL, env_list);
 		}
 		return (0);
 	}
