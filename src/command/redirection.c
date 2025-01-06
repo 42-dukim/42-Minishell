@@ -12,26 +12,6 @@
 
 #include "command.h"
 
-static void	start_heredoc(const char *delimiter)
-{
-	int		fd;
-	char	*line;
-
-	fd = open(".here_doc.tmp", O_RDWR | O_CREAT | O_TRUNC, 0644);
-	while (fd != -1)
-	{
-		line = readline("> ");
-		if (!line || ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0)
-		{
-			free(line);
-			break ;
-		}
-		ft_putendl_fd(line, fd);
-		free(line);
-	}
-	close(fd);
-}
-
 static t_bool	redirect(char *file_path, char type)
 {
 	int	fd;
@@ -40,13 +20,11 @@ static t_bool	redirect(char *file_path, char type)
 		fd = open(file_path, O_RDWR | O_CREAT | O_TRUNC, 0644);
 	else if (type == '+')
 		fd = open(file_path, O_RDWR | O_CREAT | O_APPEND, 0644);
-	else if (type == '<')
-		fd = open(file_path, O_RDONLY);
-	else if (type == '-')
+	else
 	{
-		start_heredoc(file_path);
-		fd = open(".here_doc.tmp", O_RDONLY);
-		unlink(".here_doc.tmp");
+		fd = open(file_path, O_RDONLY);
+		if (type == '-')
+			unlink(file_path);
 	}
 	if (fd == -1)
 	{
