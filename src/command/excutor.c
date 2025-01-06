@@ -37,7 +37,9 @@ static void	convert_lst_toenvp(t_envval *env_val)
 
 static void	handle_externalcmd(t_command *cmd, char *cmd_path, t_bool is_child, char **envp)
 {
-	if (redirect_io(cmd->redi, NULL))	// redirect 실패 시 redirect 닫기
+	int fd[2];
+
+	if (redirect_io(cmd->redi, fd))	// redirect 실패 시 redirect 닫기
 	{
 		if (is_child)
 			execve(cmd_path, cmd->args, envp);
@@ -45,6 +47,7 @@ static void	handle_externalcmd(t_command *cmd, char *cmd_path, t_bool is_child, 
 			execve(cmd_path, cmd->args, envp);
 		wait(NULL);
 	}
+	unredirect_io(fd);
 }
 
 static int	execute_command(t_command *cmd, t_envval *env_val, t_bool is_child)
