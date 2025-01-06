@@ -3,63 +3,72 @@
 /*                                                        :::      ::::::::   */
 /*   ft_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dukim <dukim@student.42gyeongsan.kr>       +#+  +:+       +#+        */
+/*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 20:50:29 by dukim             #+#    #+#             */
-/*   Updated: 2024/12/02 20:50:30 by dukim            ###   ########.fr       */
+/*   Updated: 2025/01/06 18:50:40 by junkwak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-int	echo_print(char **args, int result, int i)
+int	is_newlineoption(char **args, int *i)
 {
-	if (result == 1)
+	int	j;
+	int newline;
+	int flag;
+	
+	flag = 0;
+	newline = 0;
+	while (args[++*i])
 	{
-		while (args[i])
+		if (args[*i][0] != '-')
+			break ;
+		j = 0;
+		while (args[*i][++j])
 		{
-			printf("%s", args[i]);
-			if (!args[i + 1])
-				printf(" ");
-			i++;
+			if (args[*i][j] == 'n')
+				newline = 1;
+			else
+			{
+				newline = 0;
+				*i--;
+				break ;
+			}
 		}
-		printf("\n");
-		return (0);
+		if (newline == 1)
+			flag++;
+		if (newline == 0)
+			break ;
 	}
-	else if (result == 2)
-		return (0);
-	else if (result == 0)
-	{
-		while (args[++i])
-			printf("%s", args[i]);
-		printf("\n");
-		return (0);
-	}
-	printf("\n");
-	return (0);
+	if (flag > 0)
+		newline = 1;
+	return (newline);
 }
 
-int	echo_grammer(char *args)
-{
-	int	result;
-	int	count;
 
-	count = 0;
-	result = 0;
-	if (*args != '-')
-		return (result);
-	result += 1;
-	args++;
-	while (*args)
+int	echo_grammer(char **args)
+{
+	int	newline;
+	int	i;
+
+	if (args == NULL || args[0] == NULL)
+		return (0);
+	i = 0;
+	newline = is_newlineoption(args, &i);
+	while (args[i])
 	{
-		if (*args != 'n')
-			return (result);
-		args++;
-		count++;
+		printf("%s", args[i]);
+		if (args[i + 1])
+			printf(" ");
+		if (!args[i + 1])
+		{
+			if (newline == 0)
+				printf("\n");
+		}
+		i++;
 	}
-	if (count != 0)
-		result += 1;
-	return (result);
+	return (0);
 }
 
 int	ft_echo(char **args)
@@ -70,8 +79,7 @@ int	ft_echo(char **args)
 	i = 0;
 	if (args == NULL || args[0] == NULL)
 		return (0);
-	if (args[2] == 0 && args[1] != NULL)
-		result = echo_grammer(args[1]);
-	echo_print(args, result, i);
+	if (args[1] != NULL)
+		result = echo_grammer(args);
 	return (0);
 }

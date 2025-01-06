@@ -6,7 +6,7 @@
 /*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/23 00:57:02 by dukim             #+#    #+#             */
-/*   Updated: 2024/12/26 14:01:10 by junkwak          ###   ########.fr       */
+/*   Updated: 2025/01/06 21:04:35 by junkwak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,9 @@ void	builtin_handler(void *ptr, t_envval *env_val)
 			res = ft_unset(cmd->args, env_val);
 		else if (ft_strncmp(cmd->args[0], "pwd", 3) == 0)
 			res = ft_pwd(env_val);
-		else if (ft_strncmp(cmd->args[0], "echo", 4) == 0)
+		else if (ft_strncmp(*cmd->args, "echo", 4) == 0)
 			res = ft_echo(cmd->args);
 	}
-	printf("%d\n", res);
+	(void)res;
 	unredirect_io(fd);
 }
