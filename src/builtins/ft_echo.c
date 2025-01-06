@@ -32,7 +32,7 @@ int	is_newlineoption(char **args, int *i)
 			else
 			{
 				newline = 0;
-				*i--;
+				(*i)--;
 				break ;
 			}
 		}
@@ -73,13 +73,9 @@ int	echo_grammer(char **args)
 
 int	ft_echo(char **args)
 {
-	int	i;
-	int	result;
-
-	i = 0;
 	if (args == NULL || args[0] == NULL)
 		return (0);
 	if (args[1] != NULL)
-		result = echo_grammer(args);
+		echo_grammer(args);
 	return (0);
 }

@@ -38,7 +38,7 @@ static void	us_handler(t_list *head, t_list *bf_head, t_envval *env_val, t_env *
 	free_unset(head, env);
 }
 
-int	ft_unset(char **cmds, t_envval *env_val)
+int	ft_unset(char **args, t_envval *env_val)
 {
 	t_env	*env;
 	t_list	*before_head;
@@ -47,16 +47,16 @@ int	ft_unset(char **cmds, t_envval *env_val)
 	int	i;
 
 	i = 0;
-	while (cmds[++i])
+	while (args[++i])
 	{
-		str = cmds[i];
+		str = args[i];
 		head = env_val->lst;
 		while (head)
 		{
 			env = head->content;
 			if (ft_strncmp(env->key, str, ft_strlen(env->key) + 1) == 0)
 			{
-				if (ft_strchr(cmds[i], '=') != 0)
+				if (ft_strchr(args[i], '=') != 0)
 					return (0);
 				us_handler(head, before_head, env_val, env);
 				break ;

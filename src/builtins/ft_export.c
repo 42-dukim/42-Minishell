@@ -100,13 +100,13 @@ static int	append_envvalue(char **cmds, t_list *env_list, t_bool *is_changed)
 	return (result);
 }
 
-int	ft_export(char **cmds, t_envval *env_val)
+int	ft_export(char **args, t_envval *env_val)
 {
 	t_list	*ptr;
 	int		result;
 
 	result = 0;
-	if (cmds[1] == NULL)
+	if (args[1] == NULL)
 	{
 		ptr = env_val->lst;
 		while (ptr)
@@ -117,6 +117,6 @@ int	ft_export(char **cmds, t_envval *env_val)
 		return (0);
 	}
 	else
-		result = append_envvalue(cmds, env_val->lst, &(env_val->is_changed));
+		result = append_envvalue(args, env_val->lst, &(env_val->is_changed));
 	return (result);
 }

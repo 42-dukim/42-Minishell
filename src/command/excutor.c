@@ -35,49 +35,49 @@ static void	convert_lst_toenvp(t_envval *env_val)
 	env_val->is_changed = false;
 }
 
-static void	execute_command(t_command *cmd, t_envval *env_val)
+static void	handle_externalcmd(t_command *cmd, char *cmd_path, t_bool is_child, char **envp)
+{
+	if (redirect_io(cmd->redi, NULL))	// redirect 실패 시 redirect 닫기
+	{
+		if (is_child)
+			execve(cmd_path, cmd->args, envp);
+		if (fork() == 0)
+			execve(cmd_path, cmd->args, envp);
+		wait(NULL);
+	}
+}
+
+static int	execute_command(t_command *cmd, t_envval *env_val, t_bool is_child)
 {
 	char	*cmd_path;
 
 	if (is_builtin_cmd(cmd->args[0]))
-		return (builtin_handler(cmd, env_val));
+		return (builtin_handler(cmd, env_val, is_child));
 	convert_lst_toenvp(env_val);
 	cmd_path = get_cmd_abspath(cmd->args[0], env_val->lst);
 	if (!cmd_path)
 	{
 		ft_putstr_fd(cmd->args[0], 2);
 		ft_putendl_fd(": command not found", 2);
-		return ;
+		return (1);
 	}
-	if (fork() == 0)
-	{
-		if (redirect_io(cmd->redi, NULL))
-			execve(cmd_path, cmd->args, env_val->envp);
-		exit(1);	// 바로 종료가 아닌 main 까지 도달 후에 정상적 종료로 변경?
-	}
-	wait(NULL);
+	handle_externalcmd(cmd, cmd_path, is_child, env_val->envp);
 	free(cmd_path);
+	return (1);
 }
 
-void	execute_commands(t_list *cmdlst, t_envval *env_val)
+static int	execute_pipe(t_list *cmdlst, t_envval *env_val, pid_t *pids, int *fds)
 {
-	pid_t	*pids;
-	size_t	len;
 	size_t	i;
 	int		fd[2];
-	int		input_fd = 0;
+	int		input_fd;
 
-	len = ft_lstsize(cmdlst);
-	if (len == 1)
-	{
-		execute_command(cmdlst->content, env_val);
-		return ;
-	}
-	i = 0;
-	pids = malloc(sizeof(pid_t) * len);
+	i = -1;
+	input_fd = 0;
 	while (cmdlst)
 	{
 		pipe(fd);
+		fds[++i] = fd[0];
 		pids[i] = fork();
 		if (pids[i] == 0)
 		{
@@ -85,16 +85,42 @@ void	execute_commands(t_list *cmdlst, t_envval *env_val)
 			if (cmdlst->next)
 				dup2(fd[1], STDOUT_FILENO);
 			close(fd[0]);
-			execute_command(cmdlst->content, env_val);
-			exit(EXIT_FAILURE);
+			close(fd[1]);
+			execute_command(cmdlst->content, env_val, true);
+			return (EXIT_CODE);
 		}
 		close(fd[1]);
 		input_fd = fd[0];
 		cmdlst = cmdlst->next;
-		i++;
 	}
-	i = 0;
-	while (i < len)
-		waitpid(pids[i++], NULL, 0);
+	return (1);
+}
+
+int	excute_handler(t_list *cmdlst, t_envval *env_val)
+{
+	pid_t	*pids;
+	int		*fds;
+	size_t	i;
+	size_t	cmdlst_len;
+	int		res;
+
+	cmdlst_len = ft_lstsize(cmdlst);
+	if (cmdlst_len == 1)
+		return (execute_command(cmdlst->content, env_val, false));
+	pids = malloc(sizeof(pid_t) * cmdlst_len);
+	fds = malloc(sizeof(int) * cmdlst_len);
+	res = execute_pipe(cmdlst, env_val, pids, fds);
+	if (res)
+	{
+		i = 0;
+		while (i < cmdlst_len)
+		{
+			waitpid(pids[i], NULL, 0);
+			close(fds[i]);
+			i++;
+		}
+	}
+	free(fds);
 	free(pids);
+	return (res);
 }

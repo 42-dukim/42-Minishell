@@ -12,10 +12,45 @@
 
 #include "../../inc/minishell.h"
 
-void	ft_exit(t_envval *env_val)
+static t_bool is_numeric(const char *str)
 {
-	rl_clear_history();
-	ft_lstclear(&(env_val->lst), free_env);
-	ft_putendl_fd("exit", 2);
-	exit(0);
+	if (*str == '+' || *str == '-')
+		str++;
+	while (*str)
+	{
+		if (!ft_isdigit(*str))
+			return (false);
+		str++;
+	}
+	return (true);
+}
+
+int	ft_exit(char **args, t_envval *envval, t_bool is_child)
+{
+	char	exit_code;
+	
+	if (!is_child)
+		ft_putendl_fd("exit", 2);
+	if (!args[1])
+	{
+		envval->exit_code = 0;
+		return (EXIT_CODE);
+	}
+	if (is_numeric(args[1]))
+	{
+		exit_code = ft_atoi(args[1]);
+		if (args[2])
+		{
+			ft_putendl_fd("exit: too many arguments", 2);
+			envval->exit_code = 1;
+			return (1);
+		}
+		envval->exit_code = exit_code;
+	}
+	else
+	{
+		ft_putendl_fd("exit: numeric argument required", 2);
+		envval->exit_code = 2;
+	}
+	return (EXIT_CODE);
 }

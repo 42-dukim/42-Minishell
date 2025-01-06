@@ -12,22 +12,24 @@
 
 #include "../../inc/minishell.h"
 
-void	parser_handler(char *line, t_envval *env_val)
+int	parser_handler(char *line, t_envval *env_val)
 {
 	t_list	*tokenlst;
 	t_list	*cmdlst;
+	int		res;
 
 	if (!line || line[0] == '\0')
-		return ;
+		return (1);
 	tokenlst = tokenize(line, env_val->lst);
 	if (!tokenlst)
-		return ;
+		return (1);
     cmdlst = NULL;
 	token_tocmdunit(tokenlst, &cmdlst);
 	ft_lstclear(&tokenlst, free_token);
 	if (!cmdlst)
-		return ;
-	execute_commands(cmdlst, env_val);
+		return (1);
+	res = excute_handler(cmdlst, env_val);
 	ft_lstclear(&cmdlst, free_command);
 	add_history(line);
+	return (res);
 }

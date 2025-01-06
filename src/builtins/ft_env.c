@@ -12,11 +12,11 @@
 
 #include "../../inc/minishell.h"
 
-int	ft_env(char **cmds, t_list *env_list)
+int	ft_env(char **args, t_list *env_list)
 {
 	t_env	*list;
 	
-	if (cmds[1])
+	if (args[1])
 	{
 		// error 출력 필요
 		return (127);

@@ -26,6 +26,8 @@
 
 # include "../libft/libft.h"
 
+# define EXIT_CODE -1
+
 typedef enum e_bool
 {
 	false = 0,
@@ -43,6 +45,7 @@ typedef	struct s_envvalue
 	t_list	*lst;
 	char	**envp;
 	t_bool	is_changed;
+	char	exit_code;
 }	t_envval;
 
 // utils
@@ -65,16 +68,16 @@ void	print_stderr(const char *str1, const char *str2);
 
 // builtins
 t_bool	is_builtin_cmd(char *cmd);
-void	builtin_handler(void *ptr, t_envval *env_val);
+int		builtin_handler(void *ptr, t_envval *env_val, t_bool is_child);
 
 // parser
-void	parser_handler(char *line, t_envval *env_val);
+int		parser_handler(char *line, t_envval *env_val);
 
 // exports module
 t_list	*tokenize(char *line, t_list *env_list);
 void	free_token(void *ptr);
-void	token_tocmdunit(t_list *tokenlst, t_list	**cmdunit_list);
-void	execute_commands(t_list *cmd_list, t_envval *env_val);
+void	token_tocmdunit(t_list *tokenlst, t_list **cmdunit_list);
+int		excute_handler(t_list *cmdlst, t_envval *env_val);
 void	free_command(void *ptr);
 
 #endif
