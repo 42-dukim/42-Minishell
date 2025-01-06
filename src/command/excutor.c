@@ -53,6 +53,7 @@ static void	execute_command(t_command *cmd, t_envval *env_val)
 	{
 		if (redirect_io(cmd->redi, NULL))
 			execve(cmd_path, cmd->args, env_val->envp);
+		exit(1);	// 바로 종료가 아닌 main 까지 도달 후에 정상적 종료로 변경?
 	}
 	wait(NULL);
 	free(cmd_path);
@@ -67,18 +68,18 @@ void	execute_commands(t_list *cmdlst, t_envval *env_val)
 	int		input_fd = 0;
 
 	len = ft_lstsize(cmdlst);
-	i = 0;
 	if (len == 1)
 	{
 		execute_command(cmdlst->content, env_val);
 		return ;
 	}
+	i = 0;
 	pids = malloc(sizeof(pid_t) * len);
 	while (cmdlst)
 	{
 		pipe(fd);
 		pids[i] = fork();
-		if (pids[i++] == 0)
+		if (pids[i] == 0)
 		{
 			dup2(input_fd, STDIN_FILENO);
 			if (cmdlst->next)
