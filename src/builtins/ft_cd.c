@@ -6,7 +6,7 @@
 /*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/23 00:43:30 by dukim             #+#    #+#             */
-/*   Updated: 2024/12/15 15:21:39 by junkwak          ###   ########.fr       */
+/*   Updated: 2025/01/06 21:10:19 by junkwak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,17 +43,18 @@ int	ft_cd(char **path, t_list *env_list)
 	}
 	else if (path[2] != NULL)
 	{
-		ft_putendl_fd("cd: too many argument\n", 2);
+		ft_putendl_fd("cd: too many argument", 2);
+		return (1);
+	}
+	phys_path = find_grammer(path, env_list);
+	if (chdir(phys_path) == -1)
+	{
+		phys_path = ft_strjoin("cd: ", strerror(errno));
+		ft_putendl_fd(phys_path, 2);
+		free(phys_path);
 		return (1);
 	}
 	old_pwd = ft_getenv("PWD", env_list);
-	phys_path = find_grammer(path, env_list);
-	if (chdir(phys_path) == 0)
-		chdir_suc(pwd, old_pwd, env_list);
-	else
-	{
-		strerror(errno); // 출력으로 수정 필요
-		return (1);
-	}
+	chdir_suc(pwd, old_pwd, env_list);
 	return (0);
 }
