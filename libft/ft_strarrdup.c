@@ -6,7 +6,7 @@
 /*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 00:59:19 by dukim             #+#    #+#             */
-/*   Updated: 2024/12/17 16:50:22 by junkwak          ###   ########.fr       */
+/*   Updated: 2025/01/07 23:04:14 by junkwak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	**ft_strarrdup(char **strarr)
 	len = ft_splitlen((const char **)strarr);
 	dup = malloc(sizeof(char *) * (len + 1));
 	if (!dup)
-		return NULL;
+		return (NULL);
 	i = 0;
 	while (i < len)
 	{
@@ -31,7 +31,7 @@ char	**ft_strarrdup(char **strarr)
 			while (i > 0)
 				free(dup[--i]);
 			free(dup);
-			return NULL;
+			return (NULL);
 		}
 		i++;
 	}

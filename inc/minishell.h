@@ -6,7 +6,7 @@
 /*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 21:09:47 by dukim             #+#    #+#             */
-/*   Updated: 2025/01/07 21:46:50 by junkwak          ###   ########.fr       */
+/*   Updated: 2025/01/07 23:01:46 by junkwak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,11 @@ typedef enum e_bool
 
 typedef struct s_env
 {
-	char *key;
-	char *value;
+	char	*key;
+	char	*value;
 }	t_env;
 
-typedef	struct s_envvalue
+typedef struct s_envvalue
 {
 	t_list	*lst;
 	char	**envp;

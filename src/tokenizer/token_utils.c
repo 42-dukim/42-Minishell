@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dukim <dukim@student.42gyeongsan.kr>       +#+  +:+       +#+        */
+/*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/17 21:45:58 by dukim             #+#    #+#             */
-/*   Updated: 2024/12/17 21:46:00 by dukim            ###   ########.fr       */
+/*   Updated: 2025/01/08 00:27:14 by junkwak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,21 @@
 
 t_bool	is_specital_tokench(char ch)
 {
-	if (ch == ' '|| ch == '|' || ch == '>' || ch == '<')
+	if (ch == ' ' || ch == '|' || ch == '>' || ch == '<')
 		return (true);
 	return (false);
 }
 
-void	append_token_inlist(t_list **tokenlst, t_word *word, t_token_type type, t_envval *env_val)
+void	append_token_inlist(t_list **tokenlst, t_word *word, \
+							t_token_type type, t_envval *env_val)
 {
 	t_token	*token;
+	size_t	i;
 
+	i = -1;
 	if (word->idx == 0)
 		return ;
-	convert_wordcotent(word);
+	convert_wordcotent(word, i);
 	dollar_parser(word, env_val);
 	token = malloc(sizeof(t_word) * 1);
 	token->content = word->content;

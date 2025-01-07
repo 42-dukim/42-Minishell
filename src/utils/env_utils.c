@@ -6,7 +6,7 @@
 /*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 21:10:16 by dukim             #+#    #+#             */
-/*   Updated: 2024/12/17 21:19:33 by junkwak          ###   ########.fr       */
+/*   Updated: 2025/01/07 23:40:10 by junkwak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	replace_envvalue(const char *env, char *replace, t_list *env_list)
 
 t_list	*init_env_list(char **envp)
 {
-	t_list  *env_list;
+	t_list	*env_list;
 	t_env	*node;
 	int		i;
 	char	**temp;
