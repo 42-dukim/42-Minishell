@@ -12,6 +12,14 @@
 
 #include "../inc/minishell.h"
 
+static void	init_envval(t_envval *envval, char *envp[])
+{
+	envval->lst = init_env_list(envp);
+	envval->envp = ft_strarrdup(envp);
+	envval->is_changed = false;
+	envval->exit_code = 0;
+}
+
 int	main(int argc, char *argv[], char *envp[])
 {
 	char		*line;
@@ -20,10 +28,7 @@ int	main(int argc, char *argv[], char *envp[])
 
 	if (!argc || !argv)
 		return (0);
-	env_val.lst = init_env_list(envp);
-	env_val.envp = ft_strarrdup(envp);
-	env_val.is_changed = false;
-	env_val.exit_code = 0;
+	init_envval(&env_val, envp);
 	while (1)
 	{
 		set_terminal(false);

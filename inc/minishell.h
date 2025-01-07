@@ -36,11 +36,11 @@ typedef enum e_bool
 
 typedef struct s_env
 {
-	char *key;
-	char *value;
+	char	*key;
+	char	*value;
 }	t_env;
 
-typedef	struct s_envvalue
+typedef struct s_envvalue
 {
 	t_list			*lst;
 	char			**envp;

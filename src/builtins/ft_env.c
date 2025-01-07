@@ -15,7 +15,7 @@
 int	ft_env(char **args, t_list *env_list)
 {
 	t_env	*list;
-	
+
 	if (args[1])
 	{
 		ft_putstr_fd("env: '", 2);
@@ -26,7 +26,7 @@ int	ft_env(char **args, t_list *env_list)
 	while (env_list)
 	{
 		list = env_list->content;
-		if (list->value !=NULL)
+		if (list->value != NULL)
 			printf("%s=%s\n", list->key, list->value);
 		env_list = env_list->next;
 	}

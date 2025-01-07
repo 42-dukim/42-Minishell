@@ -12,7 +12,7 @@
 
 #include "../../inc/minishell.h"
 
-static t_bool is_numeric(const char *str)
+static t_bool	is_numeric(const char *str)
 {
 	if (*str == '+' || *str == '-')
 		str++;
@@ -28,7 +28,7 @@ static t_bool is_numeric(const char *str)
 int	ft_exit(char **args, t_bool is_child)
 {
 	char	exit_code;
-	
+
 	if (!is_child)
 		ft_putendl_fd("exit", 2);
 	exit_code = 0;

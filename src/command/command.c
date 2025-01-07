@@ -60,7 +60,8 @@ void	token_tocmdunit(t_list *tokenlst, t_list **cmdlst)
 	arg_list = NULL;
 	while (tokenlst)
 	{
-		res = handle_token_tocmd(cmdlst, &command, tokenlst->content, &arg_list);
+		res = handle_token_tocmd(cmdlst, &command, \
+								tokenlst->content, &arg_list);
 		if (res == -1)
 			break ;
 		tokenlst = tokenlst->next;

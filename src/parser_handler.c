@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../inc/minishell.h"
+#include "../inc/minishell.h"
 
 int	parser_handler(char *line, t_envval *env_val)
 {
@@ -24,7 +24,7 @@ int	parser_handler(char *line, t_envval *env_val)
 	tokenlst = tokenize(line, env_val);
 	if (!tokenlst)
 		return (1);
-    cmdlst = NULL;
+	cmdlst = NULL;
 	token_tocmdunit(tokenlst, &cmdlst);
 	ft_lstclear(&tokenlst, free_token);
 	if (!cmdlst)

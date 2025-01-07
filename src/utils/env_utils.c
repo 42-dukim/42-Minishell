@@ -45,7 +45,7 @@ void	replace_envvalue(const char *env, char *replace, t_list *env_list)
 
 t_list	*init_env_list(char **envp)
 {
-	t_list  *env_list;
+	t_list	*env_list;
 	t_env	*node;
 	int		i;
 	char	**temp;

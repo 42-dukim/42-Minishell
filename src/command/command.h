@@ -17,9 +17,9 @@
 
 typedef struct s_redirection
 {
-    char					type;
-    char					*file;
-    struct s_redirection	*next;
+	char					type;
+	char					*file;
+	struct s_redirection	*next;
 }	t_redirection;
 
 typedef struct s_command
@@ -39,7 +39,7 @@ void	append_cmd_inlist(t_list **lst, t_command *command, t_list **arg_list);
 void	free_command(void *ptr);
 
 // excutor utils
-int get_child_exitcode(int status);
+int		get_child_exitcode(int status);
 void	convert_lst_toenvp(t_envval *env_val);
 
 #endif

@@ -47,7 +47,7 @@ void	append_token_inlist(t_list **tokenlst, t_word *word, \
 void	init_word(t_word *word);
 void	append_ch_inword(t_word *word, char ch);
 void	append_str_inword(t_word *word, char *str);
-void	convert_wordcotent(t_word *word);
+void	convert_wordcotent(t_word *word, size_t i);
 
 // heredoc
 void	handle_heredoc(t_list **tokenlst, char **line, \

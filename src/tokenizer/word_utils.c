@@ -44,17 +44,15 @@ void	append_str_inword(t_word *word, char *str)
 	}
 }
 
-void	convert_wordcotent(t_word *word)
+void	convert_wordcotent(t_word *word, size_t i)
 {
 	char	*pre;
 	char	quote;
-	size_t	i;
 
 	pre = word->content;
 	init_word(word);
 	quote = 0;
-	i = -1;
-	while(pre[++i])
+	while (pre[++i])
 	{
 		if (is_quote_ch(pre[i]))
 		{

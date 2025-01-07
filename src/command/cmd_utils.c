@@ -13,7 +13,7 @@
 #include "../../inc/minishell.h"
 #include "command.h"
 
-static char *get_cmd_relativepath(char *cmd)
+static char	*get_cmd_relativepath(char *cmd)
 {
 	char	pwd[1024];
 	char	*path;
@@ -40,14 +40,13 @@ char	*get_cmd_abspath(char *cmd, t_list *envlst)
 	if (!path_list)
 		return (NULL);
 	cmd = ft_strjoin("/", cmd);
-	i = 0;
-	while (path_list[i])
+	i = -1;
+	while (path_list[++i])
 	{
 		cmd_path = ft_strjoin(path_list[i], cmd);
 		if (access(cmd_path, X_OK) == 0)
 			break ;
 		free(cmd_path);
-		i++;
 	}
 	free(cmd);
 	if (!path_list[i])

@@ -12,7 +12,7 @@
 
 #include "command.h"
 
-int get_child_exitcode(int status)
+int	get_child_exitcode(int status)
 {
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));

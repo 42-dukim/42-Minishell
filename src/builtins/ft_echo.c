@@ -12,30 +12,38 @@
 
 #include "../../inc/minishell.h"
 
-int	is_newlineoption(char **args, int *i)
+static int	is_newlineoptions(char **args, int *i, int *newline)
 {
 	int	j;
-	int newline;
-	int flag;
-	
+
+	if (args[*i][0] != '-')
+		return (0);
+	j = 0;
+	while (args[*i][++j])
+	{
+		if (args[*i][j] == 'n')
+			*newline = 1;
+		else
+		{
+			*newline = 0;
+			i -= 1;
+			return (0);
+		}
+	}
+	return (1);
+}
+
+int	is_newlineoption(char **args, int *i)
+{
+	int	newline;
+	int	flag;
+
 	flag = 0;
 	newline = 0;
 	while (args[++*i])
 	{
-		if (args[*i][0] != '-')
+		if (is_newlineoptions(args, i, &newline) == 0)
 			break ;
-		j = 0;
-		while (args[*i][++j])
-		{
-			if (args[*i][j] == 'n')
-				newline = 1;
-			else
-			{
-				newline = 0;
-				i -= 1;
-				break ;
-			}
-		}
 		if (newline == 1)
 			flag++;
 		if (newline == 0)
@@ -45,7 +53,6 @@ int	is_newlineoption(char **args, int *i)
 		newline = 1;
 	return (newline);
 }
-
 
 static void	echo_grammer(char **args)
 {

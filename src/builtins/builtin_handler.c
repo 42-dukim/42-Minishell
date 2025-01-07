@@ -33,7 +33,7 @@ int	builtin_handler(void *ptr, t_envval *env_val)
 	int			res;
 
 	cmd = (t_command *)ptr;
-	res = 0;
+	res = 1;
 	if (redirect_io(cmd->redi, fd))
 	{
 		if (ft_strncmp(cmd->args[0], "cd", 3) == 0)
@@ -51,8 +51,6 @@ int	builtin_handler(void *ptr, t_envval *env_val)
 		else if (ft_strncmp(*cmd->args, "echo", 4) == 0)
 			res = ft_echo(cmd->args);
 	}
-	else
-		res = 1;
 	unredirect_io(fd);
 	return (res);
 }

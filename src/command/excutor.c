@@ -49,7 +49,8 @@ static int	execute_command(t_command *cmd, t_envval *env_val)
 	return (1);
 }
 
-static void	execute_childpipe(t_list *cmdlst, int *fd, int input_fd, t_envval *envval)
+static void	execute_childpipe(t_list *cmdlst, int *fd, \
+								int input_fd, t_envval *envval)
 {
 	dup2(input_fd, STDIN_FILENO);
 	if (cmdlst->next)
@@ -66,6 +67,7 @@ static int	execute_multicmd(t_list *cmdlst, t_envval *envval, \
 	int		fd[2];
 	int		input_fd;
 
+	set_terminal(true);
 	i = -1;
 	input_fd = 0;
 	while (cmdlst)
@@ -99,7 +101,6 @@ int	excute_handler(t_list *cmdlst, t_envval *env_val, size_t cmdlst_len)
 		return (EXIT_CODE);
 	pids = malloc(sizeof(pid_t) * cmdlst_len);
 	fds = malloc(sizeof(int) * cmdlst_len);
-	set_terminal(true);
 	res = execute_multicmd(cmdlst, env_val, pids, fds);
 	if (res > 0)
 	{
