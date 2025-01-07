@@ -28,6 +28,7 @@ typedef struct s_word
 	char	*content;
 	size_t	idx;
 	size_t	max_len;
+	t_bool	is_dollar;
 }	t_word;
 
 typedef struct s_token
@@ -36,20 +37,20 @@ typedef struct s_token
 	t_token_type	type;
 }	t_token;
 
-void	dollar_parser(t_word *word, char *pre, size_t *i, t_list *env_list);
+void	dollar_parser(t_word *word, t_envval *env_val);
 void	quote_parser(char **line, t_word *word);
 t_bool	is_specital_tokench(char ch);
 void	append_token_inlist(t_list **tokenlst, t_word *word, \
-							t_token_type type, t_list *env_list);
+							t_token_type type, t_envval *env_val);
 
 // word utils
 void	init_word(t_word *word);
 void	append_ch_inword(t_word *word, char ch);
 void	append_str_inword(t_word *word, char *str);
-void	convert_wordcotent(t_word *word, t_list *env_list);
+void	convert_wordcotent(t_word *word);
 
 // heredoc
 void	handle_heredoc(t_list **tokenlst, char **line, \
-						t_word *word, t_list *envlst);
+						t_word *word, t_envval *env_val);
 
 #endif

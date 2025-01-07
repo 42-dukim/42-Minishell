@@ -6,7 +6,7 @@
 /*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 20:49:18 by dukim             #+#    #+#             */
-/*   Updated: 2025/01/07 17:37:17 by junkwak          ###   ########.fr       */
+/*   Updated: 2025/01/07 21:49:51 by junkwak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,12 @@ static void	start_heredoc(const char *delimiter, const char *tmpfile)
 	close(fd);
 }
 
-void	handle_heredoc(t_list **tokenlst, char **line, t_word *word, t_list *envlst)
+void	handle_heredoc(t_list **tokenlst, char **line, t_word *word, t_envval *env_val)
 {
 	char	*tmpfile;	
 	t_token	*token;
-	
-	append_token_inlist(tokenlst, word, SYMBOL, envlst);
+
+	append_token_inlist(tokenlst, word, SYMBOL, env_val);
 	(*line)++;
 	if (**line == ' ')
 		(*line)++;
