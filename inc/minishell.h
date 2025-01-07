@@ -6,7 +6,7 @@
 /*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 21:09:47 by dukim             #+#    #+#             */
-/*   Updated: 2024/12/26 18:12:06 by junkwak          ###   ########.fr       */
+/*   Updated: 2025/01/07 17:33:26 by junkwak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,16 @@ typedef	struct s_envvalue
 	t_bool	is_changed;
 }	t_envval;
 
-// utils
+extern int	g_signal;
+
+// utils -signal
+void	sig_int_execve(int signo);
+void	sig_quit_execve(int signo);
 void	enroll_custom_signal(void);
+void	sig_all_dfl(void);
+void	sig_all_ign(void);
+void	signal_handle_execve(void);
+void	disable_ctrl_backslash(void);
 
 // env utils
 char	*ft_getenv(const char *env, t_list *env_list);
@@ -62,6 +70,8 @@ char	**ft_strdivide(char *str, int c);
 
 // error utils
 void	print_stderr(const char *str1, const char *str2);
+void	print_exporterr_ch(char ch);
+void	print_exporterr_str(char *str);
 
 // builtins
 t_bool	is_builtin_cmd(char *cmd);

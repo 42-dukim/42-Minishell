@@ -8,3 +8,17 @@ void	print_stderr(const char *str1, const char *str2)
 	perror(str);
 	free(str);
 }
+
+void	print_exporterr_ch(char ch)
+{
+		ft_putstr_fd("export: '", 2);
+		ft_putchar_fd(ch, 2);
+		ft_putendl_fd("': not valid identifier", 2);
+}
+
+void	print_exporterr_str(char *str)
+{
+		ft_putstr_fd("export: '", 2);
+		ft_putstr_fd(str, 2);
+		ft_putendl_fd("': not valid identifier", 2);
+}

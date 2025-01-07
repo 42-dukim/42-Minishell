@@ -6,7 +6,7 @@
 /*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 20:50:29 by dukim             #+#    #+#             */
-/*   Updated: 2025/01/06 18:50:40 by junkwak          ###   ########.fr       */
+/*   Updated: 2025/01/07 02:46:17 by junkwak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	is_newlineoption(char **args, int *i)
 			else
 			{
 				newline = 0;
-				*i--;
+				i -= 1;
 				break ;
 			}
 		}
@@ -47,13 +47,13 @@ int	is_newlineoption(char **args, int *i)
 }
 
 
-int	echo_grammer(char **args)
+static void	echo_grammer(char **args)
 {
 	int	newline;
 	int	i;
 
 	if (args == NULL || args[0] == NULL)
-		return (0);
+		return ;
 	i = 0;
 	newline = is_newlineoption(args, &i);
 	while (args[i])
@@ -68,18 +68,14 @@ int	echo_grammer(char **args)
 		}
 		i++;
 	}
-	return (0);
+	return ;
 }
 
 int	ft_echo(char **args)
 {
-	int	i;
-	int	result;
-
-	i = 0;
 	if (args == NULL || args[0] == NULL)
 		return (0);
 	if (args[1] != NULL)
-		result = echo_grammer(args);
+		echo_grammer(args);
 	return (0);
 }

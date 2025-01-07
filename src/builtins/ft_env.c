@@ -6,7 +6,7 @@
 /*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/30 02:12:12 by dukim             #+#    #+#             */
-/*   Updated: 2025/01/06 20:30:54 by junkwak          ###   ########.fr       */
+/*   Updated: 2025/01/06 22:29:52 by junkwak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,9 @@ int	ft_env(char **cmds, t_list *env_list)
 	
 	if (cmds[1])
 	{
-		// error 출력 필요
+		ft_putstr_fd("env: '", 2);
+		ft_putstr_fd(cmds[1], 2);
+		ft_putendl_fd("': No Such file or directory", 2);
 		return (127);
 	}	
 	while (env_list)

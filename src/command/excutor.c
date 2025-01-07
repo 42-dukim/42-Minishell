@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor.c                                         :+:      :+:    :+:   */
+/*   excutor.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dukim <dukim@student.42gyeongsan.kr>       +#+  +:+       +#+        */
+/*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/24 19:12:06 by dukim             #+#    #+#             */
-/*   Updated: 2024/12/24 19:12:08 by dukim            ###   ########.fr       */
+/*   Updated: 2025/01/07 17:36:55 by junkwak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ void	execute_commands(t_list *cmdlst, t_envval *env_val)
 	size_t	i;
 	int		fd[2];
 	int		input_fd = 0;
+	int		status;
 
 	len = ft_lstsize(cmdlst);
 	if (len == 1)
@@ -89,12 +90,26 @@ void	execute_commands(t_list *cmdlst, t_envval *env_val)
 			exit(EXIT_FAILURE);
 		}
 		close(fd[1]);
+		sig_all_ign();
 		input_fd = fd[0];
 		cmdlst = cmdlst->next;
 		i++;
 	}
 	i = 0;
 	while (i < len)
-		waitpid(pids[i++], NULL, 0);
+	{
+		waitpid(pids[i++], &status, 0);
+		int	signo = 0;
+
+		if (WIFEXITED(status))
+			g_signal = (WEXITSTATUS(status));
+		else if (WIFSIGNALED(status))
+			g_signal = WTERMSIG(status) + 128;
+		signo = g_signal - 128;
+		if (signo == SIGINT)
+			printf("^C\n");
+		if (signo == SIGQUIT)
+			printf("^Quit (core dumped)\n");
+	}
 	free(pids);
 }
