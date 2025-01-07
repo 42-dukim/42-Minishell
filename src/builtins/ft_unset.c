@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dukim <dukim@student.42gyeongsan.kr>       +#+  +:+       +#+        */
+/*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/05 20:34:51 by dukim             #+#    #+#             */
-/*   Updated: 2025/01/05 20:34:52 by dukim            ###   ########.fr       */
+/*   Updated: 2025/01/07 17:36:27 by junkwak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ static void	free_unset(t_list *head, t_env *env)
 	free(head);
 	free(env->key);
 	free(env->value);
+	free(env);
 }
 
 static void	us_handler(t_list *head, t_list *bf_head, t_envval *env_val, t_env *env)

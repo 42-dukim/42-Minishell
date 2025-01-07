@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dukim <dukim@student.42gyeongsan.kr>       +#+  +:+       +#+        */
+/*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 20:49:18 by dukim             #+#    #+#             */
-/*   Updated: 2025/01/06 20:49:19 by dukim            ###   ########.fr       */
+/*   Updated: 2025/01/07 17:37:17 by junkwak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,9 @@ static void	start_heredoc(const char *delimiter, const char *tmpfile)
 	fd = open(tmpfile, O_RDWR | O_CREAT | O_TRUNC, 0644);
 	while (fd != -1)
 	{
+		sig_all_ign();
 		line = readline("> ");
-		if (!line || ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0)
+		if ((!line || ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0))
 		{
 			free(line);
 			break ;
@@ -36,7 +37,7 @@ void	handle_heredoc(t_list **tokenlst, char **line, t_word *word, t_list *envlst
 {
 	char	*tmpfile;	
 	t_token	*token;
-
+	
 	append_token_inlist(tokenlst, word, SYMBOL, envlst);
 	(*line)++;
 	if (**line == ' ')

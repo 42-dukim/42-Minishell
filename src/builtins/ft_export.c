@@ -6,7 +6,7 @@
 /*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 16:12:55 by junkwak           #+#    #+#             */
-/*   Updated: 2024/12/26 18:11:10 by junkwak          ###   ########.fr       */
+/*   Updated: 2025/01/07 17:35:59 by junkwak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static t_bool	is_valid_exportname(char *name)
 
 	if (ft_isalpha(name[0]) == 0 && name[0] != '_')
 	{
-		printf("\'%s\' : not valid identifier\n", name);
+		print_exporterr_ch(name[0]);
 		return (false);
 	}
 	p = 0;
@@ -26,11 +26,10 @@ static t_bool	is_valid_exportname(char *name)
 	{
 		if ((ft_isalnum(name[p]) == 0 && name[p] != '_') || name[p] == '=')
 		{
-			// if ((((name[p] == '+' && name[p + 1] != '=')))) // TODO: += 연산
 			if (((name[p] == '+' && name[p + 1] == '=')) \
 				|| (name[p] == '=' && name[p - 1] != '\0'))
 				return (true);
-			printf("\'%s\' : not valid identifier\n", name);
+			print_exporterr_str(name);
 			return (false);
 		}
 		p++;

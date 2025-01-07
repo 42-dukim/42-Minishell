@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   executor.c                                         :+:      :+:    :+:   */
+/*   excutor.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dukim <dukim@student.42gyeongsan.kr>       +#+  +:+       +#+        */
+/*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/24 19:12:06 by dukim             #+#    #+#             */
-/*   Updated: 2024/12/24 19:12:08 by dukim            ###   ########.fr       */
+/*   Updated: 2025/01/07 17:36:55 by junkwak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ static int	execute_pipe(t_list *cmdlst, t_envval *env_val, pid_t *pids, int *fds
 			return (EXIT_CODE);
 		}
 		close(fd[1]);
+		sig_all_ign();
 		input_fd = fd[0];
 		cmdlst = cmdlst->next;
 	}
@@ -106,6 +107,7 @@ int	excute_handler(t_list *cmdlst, t_envval *env_val)
 	size_t	i;
 	size_t	cmdlst_len;
 	int		res;
+	int		status;
 
 	cmdlst_len = ft_lstsize(cmdlst);
 	if (cmdlst_len == 1)
@@ -120,6 +122,17 @@ int	excute_handler(t_list *cmdlst, t_envval *env_val)
 		{
 			waitpid(pids[i], NULL, 0);
 			close(fds[i]);
+			int	signo = 0;
+
+			if (WIFEXITED(status))
+				g_signal = (WEXITSTATUS(status));
+			else if (WIFSIGNALED(status))
+				g_signal = WTERMSIG(status) + 128;
+			signo = g_signal - 128;
+			if (signo == SIGINT)
+				printf("^C\n");
+			if (signo == SIGQUIT)
+				printf("^Quit (core dumped)\n");
 			i++;
 		}
 	}
