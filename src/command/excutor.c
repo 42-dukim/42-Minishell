@@ -12,80 +12,55 @@
 
 #include "command.h"
 
-static void	convert_lst_toenvp(t_envval *env_val)
+static t_bool	ms_exit(t_list *cmdlst, size_t cmdlst_len, t_envval *envval)
 {
-	size_t	i;
-	char	*temp;
-	t_list	*ptr;
+	char	**args;
 
-	if (!env_val->is_changed)
-		return ;
-	ft_freesplit(env_val->envp);
-	env_val->envp = malloc(sizeof(char *) * (ft_lstsize(env_val->lst) + 1));
-	i = 0;
-	ptr = env_val->lst;
-	while (ptr)
+	args = ((t_command *)cmdlst->content)->args;
+	if (cmdlst_len == 1 && ft_strncmp("exit", args[0], 5) == 0)
 	{
-		temp = ft_strjoin(((t_env *)ptr->content)->key, "=");
-		env_val->envp[i++] = ft_strjoin(temp, ((t_env *)ptr->content)->value);
-		free(temp);
-		ptr = ptr->next;
+		envval->exit_code = ft_exit(args, false);
+		return (true);
 	}
-	env_val->envp[i] = NULL;
-	env_val->is_changed = false;
+	return (false);
 }
 
-static void	handle_externalcmd(t_command *cmd, char *cmd_path, t_bool is_child, char **envp)
+static int	execute_command(t_command *cmd, t_envval *env_val)
 {
 	int		fd[2];
-	pid_t	pid;
-	int		status;
-
-	if (redirect_io(cmd->redi, fd))
-	{
-		sig_all_dfl();
-		set_terminal(true);
-		if (is_child)
-			execve(cmd_path, cmd->args, envp);
-		pid = fork();
-		if (pid == 0)
-			execve(cmd_path, cmd->args, envp);
-		sig_all_ign();	
-		waitpid(pid, &status, 0);
-		if (WIFEXITED(status))
-			g_signal = (WEXITSTATUS(status));
-		else if (WIFSIGNALED(status))
-			g_signal = WTERMSIG(status) + 128;
-		if (g_signal - 128 == SIGINT)
-			printf("^C\n");
-		if (g_signal - 128 == SIGQUIT)
-			printf("^Quit (core dumped)\n");
-	}
-	unredirect_io(fd);
-}
-
-static int	execute_command(t_command *cmd, t_envval *env_val, t_bool is_child)
-{
 	char	*cmd_path;
 
 	if (!cmd->args || cmd->args[0][0] == '\0')
-		return (1);
+		return (0);
 	if (is_builtin_cmd(cmd->args[0]))
-		return (builtin_handler(cmd, env_val, is_child));
+		return (builtin_handler(cmd, env_val));
 	convert_lst_toenvp(env_val);
 	cmd_path = get_cmd_abspath(cmd->args[0], env_val->lst);
 	if (!cmd_path)
 	{
 		ft_putstr_fd(cmd->args[0], 2);
 		ft_putendl_fd(": command not found", 2);
-		return (1);
+		return (127);
 	}
-	handle_externalcmd(cmd, cmd_path, is_child, env_val->envp);
+	if (redirect_io(cmd->redi, fd))
+		execve(cmd_path, cmd->args, env_val->envp);
+	unredirect_io(fd);
 	free(cmd_path);
 	return (1);
 }
 
-static int	execute_pipe(t_list *cmdlst, t_envval *env_val, pid_t *pids, int *fds)
+static void	execute_childpipe(t_list *cmdlst, int *fd, int input_fd, t_envval *envval)
+{
+	dup2(input_fd, STDIN_FILENO);
+	if (cmdlst->next)
+		dup2(fd[1], STDOUT_FILENO);
+	close(fd[0]);
+	close(fd[1]);
+	envval->exit_code = execute_command(cmdlst->content, envval);
+}
+
+static int	execute_multicmd(t_list *cmdlst, t_envval *envval, \
+								pid_t *pids, int *fds)
 {
 	size_t	i;
 	int		fd[2];
@@ -97,59 +72,45 @@ static int	execute_pipe(t_list *cmdlst, t_envval *env_val, pid_t *pids, int *fds
 	{
 		pipe(fd);
 		fds[++i] = fd[0];
-		sig_all_dfl();
+		set_sigall(false);
 		pids[i] = fork();
 		if (pids[i] == 0)
 		{
-			dup2(input_fd, STDIN_FILENO);
-			if (cmdlst->next)
-				dup2(fd[1], STDOUT_FILENO);
-			close(fd[0]);
-			close(fd[1]);
-			execute_command(cmdlst->content, env_val, true);
+			execute_childpipe(cmdlst, fd, input_fd, envval);
 			return (EXIT_CODE);
 		}
+		set_sigall(true);
 		close(fd[1]);
-		sig_all_ign();
 		input_fd = fd[0];
 		cmdlst = cmdlst->next;
 	}
 	return (1);
 }
 
-int	excute_handler(t_list *cmdlst, t_envval *env_val)
+int	excute_handler(t_list *cmdlst, t_envval *env_val, size_t cmdlst_len)
 {
 	pid_t	*pids;
 	int		*fds;
 	size_t	i;
-	size_t	cmdlst_len;
 	int		res;
 	int		status;
 
-	cmdlst_len = ft_lstsize(cmdlst);
-	if (cmdlst_len == 1)
-		return (execute_command(cmdlst->content, env_val, false));
+	if (ms_exit(cmdlst, cmdlst_len, env_val))
+		return (EXIT_CODE);
 	pids = malloc(sizeof(pid_t) * cmdlst_len);
 	fds = malloc(sizeof(int) * cmdlst_len);
-	res = execute_pipe(cmdlst, env_val, pids, fds);
-	if (res)
+	set_terminal(true);
+	res = execute_multicmd(cmdlst, env_val, pids, fds);
+	if (res > 0)
 	{
-		i = 0;
-		while (i < cmdlst_len)
+		i = -1;
+		while (++i < cmdlst_len)
 		{
 			waitpid(pids[i], &status, 0);
 			close(fds[i]);
-
-			if (WIFEXITED(status))
-				g_signal = (WEXITSTATUS(status));
-			else if (WIFSIGNALED(status))
-				g_signal = WTERMSIG(status) + 128;
-			i++;
+			env_val->exit_code = get_child_exitcode(status);
 		}
-		if (g_signal - 128 == SIGINT)
-			printf("^C\n");
-		if (g_signal - 128 == SIGQUIT)
-			printf("^Quit (core dumped)\n");
+		print_sigmsg(env_val->exit_code);
 	}
 	free(fds);
 	free(pids);

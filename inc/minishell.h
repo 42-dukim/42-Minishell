@@ -42,17 +42,15 @@ typedef struct s_env
 
 typedef	struct s_envvalue
 {
-	t_list	*lst;
-	char	**envp;
-	t_bool	is_changed;
-	char	exit_code;
+	t_list			*lst;
+	char			**envp;
+	t_bool			is_changed;
+	unsigned char	exit_code;
 }	t_envval;
 
-extern int	g_signal;
-
 // utils -signal
-void	sig_all_dfl(void);
-void	sig_all_ign(void);
+void	print_sigmsg(unsigned char exit_code);
+void	set_sigall(t_bool is_ign);
 void	set_terminal(t_bool c_lflag);
 void	enroll_custom_signal(void);
 
@@ -75,7 +73,8 @@ void	print_exporterr_str(char *str);
 
 // builtins
 t_bool	is_builtin_cmd(char *cmd);
-int		builtin_handler(void *ptr, t_envval *env_val, t_bool is_child);
+int		builtin_handler(void *ptr, t_envval *env_val);
+int		ft_exit(char **args, t_bool is_child);
 
 // parser
 int		parser_handler(char *line, t_envval *env_val);
@@ -84,7 +83,7 @@ int		parser_handler(char *line, t_envval *env_val);
 t_list	*tokenize(char *line, t_envval *env_val);
 void	free_token(void *ptr);
 void	token_tocmdunit(t_list *tokenlst, t_list **cmdunit_list);
-int		excute_handler(t_list *cmdlst, t_envval *env_val);
+int		excute_handler(t_list *cmdlst, t_envval *env_val, size_t cmdlst_len);
 void	free_command(void *ptr);
 
 #endif

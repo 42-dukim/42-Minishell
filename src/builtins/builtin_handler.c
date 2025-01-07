@@ -26,31 +26,33 @@ t_bool	is_builtin_cmd(char *cmd)
 	return (false);
 }
 
-int	builtin_handler(void *ptr, t_envval *env_val, t_bool is_child)
+int	builtin_handler(void *ptr, t_envval *env_val)
 {
 	t_command	*cmd;
 	int			fd[2];
 	int			res;
 
 	cmd = (t_command *)ptr;
-	res = 1;
+	res = 0;
 	if (redirect_io(cmd->redi, fd))
 	{
 		if (ft_strncmp(cmd->args[0], "cd", 3) == 0)
-			env_val->exit_code = ft_cd(cmd->args, env_val->lst);
+			res = ft_cd(cmd->args, env_val->lst);
 		else if (ft_strncmp(cmd->args[0], "exit", 5) == 0)
-			res = ft_exit(cmd->args, env_val, is_child);
+			res = ft_exit(cmd->args, true);
 		else if (ft_strncmp(cmd->args[0], "env", 4) == 0)
-			env_val->exit_code = ft_env(cmd->args, env_val->lst);
+			res = ft_env(cmd->args, env_val->lst);
 		else if (ft_strncmp(cmd->args[0], "export", 7) == 0)
-			env_val->exit_code = ft_export(cmd->args, env_val);
+			res = ft_export(cmd->args, env_val);
 		else if (ft_strncmp(cmd->args[0], "unset", 5) == 0)
-			env_val->exit_code = ft_unset(cmd->args, env_val);
+			res = ft_unset(cmd->args, env_val);
 		else if (ft_strncmp(cmd->args[0], "pwd", 3) == 0)
-			env_val->exit_code = ft_pwd(env_val);
+			res = ft_pwd(env_val);
 		else if (ft_strncmp(*cmd->args, "echo", 4) == 0)
-			env_val->exit_code = ft_echo(cmd->args);
+			res = ft_echo(cmd->args);
 	}
+	else
+		res = 1;
 	unredirect_io(fd);
 	return (res);
 }

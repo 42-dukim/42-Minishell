@@ -12,8 +12,6 @@
 
 #include "../inc/minishell.h"
 
-int	g_signal;
-
 int	main(int argc, char *argv[], char *envp[])
 {
 	char		*line;
@@ -30,7 +28,6 @@ int	main(int argc, char *argv[], char *envp[])
 	{
 		set_terminal(false);
 		enroll_custom_signal();
-		g_signal = 0;
 		line = readline("minishell$ ");
 		if (!line)
 			break ;

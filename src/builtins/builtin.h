@@ -21,6 +21,5 @@ int		ft_env(char **args, t_list *env_list);
 int		ft_pwd(t_envval *env_val);
 int		ft_unset(char **args, t_envval *env_val);
 int		ft_echo(char **args);
-int 	ft_exit(char **args, t_envval *env_val, t_bool is_child);
 
 #endif

@@ -14,7 +14,6 @@
 
 static void	sigint_handler(int signum)
 {
-	g_signal = signum;
 	if (signum != SIGINT)
 		return ;
 	write(2, "\n", 1);
@@ -23,16 +22,24 @@ static void	sigint_handler(int signum)
 	rl_redisplay();
 }
 
-void	sig_all_dfl(void)
+void	print_sigmsg(unsigned char exit_code)
 {
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
+	if (exit_code - 128 == SIGINT)
+		printf("^C\n");
+	if (exit_code - 128 == SIGQUIT)
+		printf("^Quit (core dumped)\n");
 }
 
-void	sig_all_ign(void)
+void	set_sigall(t_bool is_ign)
 {
-	signal(SIGINT, SIG_IGN);
-	signal(SIGQUIT, SIG_IGN);
+	if (is_ign)
+	{
+		signal(SIGINT, SIG_IGN);
+		signal(SIGQUIT, SIG_IGN);
+		return ;
+	}
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 }
 
 void	set_terminal(t_bool c_lflag)

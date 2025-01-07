@@ -16,6 +16,7 @@ int	parser_handler(char *line, t_envval *env_val)
 {
 	t_list	*tokenlst;
 	t_list	*cmdlst;
+	size_t	cmdlst_len;
 	int		res;
 
 	if (!line || line[0] == '\0')
@@ -28,7 +29,8 @@ int	parser_handler(char *line, t_envval *env_val)
 	ft_lstclear(&tokenlst, free_token);
 	if (!cmdlst)
 		return (1);
-	res = excute_handler(cmdlst, env_val);
+	cmdlst_len = ft_lstsize(cmdlst);
+	res = excute_handler(cmdlst, env_val, cmdlst_len);
 	ft_lstclear(&cmdlst, free_command);
 	add_history(line);
 	return (res);

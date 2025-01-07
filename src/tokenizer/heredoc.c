@@ -20,7 +20,7 @@ static void	start_heredoc(const char *delimiter, const char *tmpfile)
 	fd = open(tmpfile, O_RDWR | O_CREAT | O_TRUNC, 0644);
 	while (fd != -1)
 	{
-		sig_all_ign();
+		set_sigall(true);
 		line = readline("> ");
 		if ((!line || ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0))
 		{

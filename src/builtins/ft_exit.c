@@ -25,32 +25,28 @@ static t_bool is_numeric(const char *str)
 	return (true);
 }
 
-int	ft_exit(char **args, t_envval *envval, t_bool is_child)
+int	ft_exit(char **args, t_bool is_child)
 {
 	char	exit_code;
 	
 	if (!is_child)
 		ft_putendl_fd("exit", 2);
+	exit_code = 0;
 	if (!args[1])
-	{
-		envval->exit_code = 0;
-		return (EXIT_CODE);
-	}
+		return (exit_code);
 	if (is_numeric(args[1]))
 	{
 		exit_code = ft_atoi(args[1]);
 		if (args[2])
 		{
 			ft_putendl_fd("exit: too many arguments", 2);
-			envval->exit_code = 1;
 			return (1);
 		}
-		envval->exit_code = exit_code;
 	}
 	else
 	{
 		ft_putendl_fd("exit: numeric argument required", 2);
-		envval->exit_code = 2;
+		exit_code = 2;
 	}
-	return (EXIT_CODE);
+	return (exit_code);
 }

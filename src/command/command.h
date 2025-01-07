@@ -33,9 +33,13 @@ void	connect_redirection(t_command *command, char *file, char type);
 t_bool	redirect_io(t_redirection *redi, int stdfd[2]);
 void	unredirect_io(int fd[2]);
 
-// utils
+// cmd utils
 char	*get_cmd_abspath(char *cmd, t_list *envlst);
 void	append_cmd_inlist(t_list **lst, t_command *command, t_list **arg_list);
 void	free_command(void *ptr);
+
+// excutor utils
+int get_child_exitcode(int status);
+void	convert_lst_toenvp(t_envval *env_val);
 
 #endif
