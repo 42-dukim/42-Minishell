@@ -61,11 +61,8 @@ void	connect_redirection(t_command *command, char *file, char type)
 
 t_bool	redirect_io(t_redirection *redi, int stdfd[2])
 {
-	if (stdfd)
-	{
-		stdfd[0] = dup(0);
-		stdfd[1] = dup(1);
-	}
+	stdfd[0] = dup(0);
+	stdfd[1] = dup(1);
 	while (redi)
 	{
 		if (!redirect(redi->file, redi->type))

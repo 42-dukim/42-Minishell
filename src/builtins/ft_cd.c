@@ -30,23 +30,23 @@ static char	*find_grammer(char **args, t_list *env_list)
 	return (way);
 }
 
-int	ft_cd(char **path, t_list *env_list)
+int	ft_cd(char **args, t_list *env_list)
 {
 	char	*phys_path;
 	char	*old_pwd;
 	char	pwd[1024];
 
-	if (path[1] == NULL)
+	if (args[1] == NULL)
 	{
 		chdir(getenv("HOME"));
 		return (0);
 	}
-	else if (path[2] != NULL)
+	else if (args[2] != NULL)
 	{
 		ft_putendl_fd("cd: too many argument", 2);
 		return (1);
 	}
-	phys_path = find_grammer(path, env_list);
+	phys_path = find_grammer(args, env_list);
 	if (chdir(phys_path) == -1)
 	{
 		phys_path = ft_strjoin("cd: ", strerror(errno));
