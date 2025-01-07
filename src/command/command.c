@@ -25,8 +25,11 @@ static int	handle_token_tocmd(t_list **cmdlst, t_command **command, \
 {
 	static char	type;
 
-	if (!(*cmdlst) && !(*arg_list))
+	if (!cmdlst)
+	{
 		type = 0;
+		return (0);
+	}
 	if (token->type == SYMBOL)
 	{
 		if (type)
@@ -70,4 +73,5 @@ void	token_tocmdunit(t_list *tokenlst, t_list **cmdlst)
 	}
 	else
 		append_cmd_inlist(cmdlst, command, &arg_list);
+	handle_token_tocmd(NULL, NULL, NULL, NULL);
 }

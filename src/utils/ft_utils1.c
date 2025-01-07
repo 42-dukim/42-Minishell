@@ -24,6 +24,8 @@ char	**ft_lst_toarray(t_list *lst)
 	char	**array;
 	size_t	i;
 	
+	if (!lst)
+		return (0);
 	array = malloc(sizeof(char *) * (ft_lstsize(lst) + 1));
 	i = 0;
 	while (lst)

@@ -54,6 +54,8 @@ static int	execute_command(t_command *cmd, t_envval *env_val, t_bool is_child)
 {
 	char	*cmd_path;
 
+	if (!cmd->args || cmd->args[0][0] == '\0')
+		return (1);
 	if (is_builtin_cmd(cmd->args[0]))
 		return (builtin_handler(cmd, env_val, is_child));
 	convert_lst_toenvp(env_val);
