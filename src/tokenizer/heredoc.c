@@ -32,12 +32,12 @@ static void	start_heredoc(const char *delimiter, const char *tmpfile)
 	close(fd);
 }
 
-void	handle_heredoc(t_list **tokenlst, char **line, t_word *word, t_list *envlst)
+void	handle_heredoc(t_list **tokenlst, char **line, t_word *word, t_envval *env_val)
 {
 	char	*tmpfile;	
 	t_token	*token;
 
-	append_token_inlist(tokenlst, word, SYMBOL, envlst);
+	append_token_inlist(tokenlst, word, SYMBOL, env_val);
 	(*line)++;
 	if (**line == ' ')
 		(*line)++;

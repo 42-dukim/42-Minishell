@@ -47,7 +47,7 @@ static int	handle_token_tocmd(t_list **cmdlst, t_command **command, \
 	return (1);
 }
 
-void	token_tocmdunit(t_list *tokenlst, t_list	**cmdlst)
+void	token_tocmdunit(t_list *tokenlst, t_list **cmdlst)
 {
 	t_command	*command;
 	t_list		*arg_list;

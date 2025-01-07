@@ -19,29 +19,51 @@ static t_bool	is_dollar_separator(char ch)
 	return (false);
 }
 
-void	dollar_parser(t_word *word, char *pre, size_t *i, t_list *env_list)
-{	
+static	size_t	get_dollarvalue(t_word *word, char *pre, t_envval *env_val)
+{
 	char	*dollar;
 	char	*envvalue;
-	size_t	j;
+	size_t	i;
 
-	(*i)++;
-	dollar = ft_calloc(sizeof(char), ft_strlen(pre + *i) + 1);
-	j = 0;
-	while (!is_dollar_separator(pre[*i]) && pre[*i])
+	if (*pre == '?')
 	{
-		dollar[j] = pre[*i];
-		j++;
-		(*i)++;
+		envvalue = ft_itoa(env_val->exit_code);
+		append_str_inword(word, envvalue);
+		free(envvalue);
+		return (0);
 	}
-	if (j == 0)
-	{
-		free(dollar);
-		return ;
-	}
-	envvalue = ft_getenv(dollar, env_list);
-	free(dollar);
+	dollar = ft_calloc(sizeof(char), ft_strlen(pre) + 1);
+	i = 0;
+	while (!is_dollar_separator(*pre) && *pre)
+		dollar[i++] = *pre++;
+	if (i == 0)
+		return (0);
+	envvalue = ft_getenv(dollar, env_val->lst);
 	if (envvalue)
 		append_str_inword(word, envvalue);
-	(*i)--;
+	free(dollar);
+	return (i - 1);
+}
+
+void	dollar_parser(t_word *word, t_envval *env_val)
+{	
+	char	*pre;
+	size_t	i;
+
+	if (!word->is_dollar)
+		return ;
+	pre = word->content;
+	init_word(word);
+	i = -1;
+	while (pre[++i])
+	{
+		if (pre[i] == '$')
+		{
+			i++;
+			i += get_dollarvalue(word, pre + i, env_val);
+			continue ;
+		}
+		append_ch_inword(word, pre[i]);
+	}
+	free(pre);
 }

@@ -19,13 +19,14 @@ t_bool	is_specital_tokench(char ch)
 	return (false);
 }
 
-void	append_token_inlist(t_list **tokenlst, t_word *word, t_token_type type, t_list *env_list)
+void	append_token_inlist(t_list **tokenlst, t_word *word, t_token_type type, t_envval *env_val)
 {
 	t_token	*token;
 
 	if (word->idx == 0)
 		return ;
-	convert_wordcotent(word, env_list);
+	convert_wordcotent(word);
+	dollar_parser(word, env_val);
 	token = malloc(sizeof(t_word) * 1);
 	token->content = word->content;
 	token->type = type;

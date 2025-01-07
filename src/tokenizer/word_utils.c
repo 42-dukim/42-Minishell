@@ -17,6 +17,7 @@ void	init_word(t_word *word)
 	word->idx = 0;
 	word->max_len = WORD_LEN;
 	word->content = ft_calloc(sizeof(char), WORD_LEN + 1);
+	word->is_dollar = 1;
 }
 
 void	append_ch_inword(t_word *word, char ch)
@@ -43,7 +44,7 @@ void	append_str_inword(t_word *word, char *str)
 	}
 }
 
-void	convert_wordcotent(t_word *word, t_list *env_list)
+void	convert_wordcotent(t_word *word)
 {
 	char	*pre;
 	char	quote;
@@ -60,12 +61,13 @@ void	convert_wordcotent(t_word *word, t_list *env_list)
 			if (quote == 0)
 				quote = pre[i];
 			else if (quote == pre[i])
+			{
+				word->is_dollar = quote != '\'';
 				quote = 0;
+			}
 			else
 				append_ch_inword(word, pre[i]);
 		}
-		else if (pre[i] == '$' && quote != '\'')
-			dollar_parser(word, pre, &i, env_list);
 		else
 			append_ch_inword(word, pre[i]);
 	}
