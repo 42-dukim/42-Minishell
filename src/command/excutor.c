@@ -6,7 +6,7 @@
 /*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/24 19:12:06 by dukim             #+#    #+#             */
-/*   Updated: 2025/01/07 17:36:55 by junkwak          ###   ########.fr       */
+/*   Updated: 2025/01/07 21:39:53 by junkwak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,15 +37,29 @@ static void	convert_lst_toenvp(t_envval *env_val)
 
 static void	handle_externalcmd(t_command *cmd, char *cmd_path, t_bool is_child, char **envp)
 {
-	int fd[2];
+	int		fd[2];
+	pid_t	pid;
+	int		status;
 
-	if (redirect_io(cmd->redi, fd))	// redirect 실패 시 redirect 닫기
+	if (redirect_io(cmd->redi, fd))
 	{
+		sig_all_dfl();
+		set_terminal(true);
 		if (is_child)
 			execve(cmd_path, cmd->args, envp);
-		if (fork() == 0)
+		pid = fork();
+		if (pid == 0)
 			execve(cmd_path, cmd->args, envp);
-		wait(NULL);
+		sig_all_ign();	
+		waitpid(pid, &status, 0);
+		if (WIFEXITED(status))
+			g_signal = (WEXITSTATUS(status));
+		else if (WIFSIGNALED(status))
+			g_signal = WTERMSIG(status) + 128;
+		if (g_signal - 128 == SIGINT)
+			printf("^C\n");
+		if (g_signal - 128 == SIGQUIT)
+			printf("^Quit (core dumped)\n");
 	}
 	unredirect_io(fd);
 }
@@ -81,6 +95,7 @@ static int	execute_pipe(t_list *cmdlst, t_envval *env_val, pid_t *pids, int *fds
 	{
 		pipe(fd);
 		fds[++i] = fd[0];
+		sig_all_dfl();
 		pids[i] = fork();
 		if (pids[i] == 0)
 		{
@@ -120,21 +135,19 @@ int	excute_handler(t_list *cmdlst, t_envval *env_val)
 		i = 0;
 		while (i < cmdlst_len)
 		{
-			waitpid(pids[i], NULL, 0);
+			waitpid(pids[i], &status, 0);
 			close(fds[i]);
-			int	signo = 0;
 
 			if (WIFEXITED(status))
 				g_signal = (WEXITSTATUS(status));
 			else if (WIFSIGNALED(status))
 				g_signal = WTERMSIG(status) + 128;
-			signo = g_signal - 128;
-			if (signo == SIGINT)
-				printf("^C\n");
-			if (signo == SIGQUIT)
-				printf("^Quit (core dumped)\n");
 			i++;
 		}
+		if (g_signal - 128 == SIGINT)
+			printf("^C\n");
+		if (g_signal - 128 == SIGQUIT)
+			printf("^Quit (core dumped)\n");
 	}
 	free(fds);
 	free(pids);
