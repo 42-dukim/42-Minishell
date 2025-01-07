@@ -13,7 +13,19 @@
 #include "../../inc/minishell.h"
 #include "command.h"
 
-// 명령어의 절대 경로 찾기
+static char *get_cmd_relativepath(char *cmd)
+{
+	char	pwd[1024];
+	char	*path;
+	char	*temp;
+
+	getcwd(pwd, sizeof(char) * 1024);
+	temp = ft_strjoin(pwd, "/");
+	path = ft_strjoin(temp, cmd);
+	free(temp);
+	return (path);
+}
+
 char	*get_cmd_abspath(char *cmd, t_list *envlst)
 {
 	char	*cmd_path;
@@ -22,6 +34,8 @@ char	*get_cmd_abspath(char *cmd, t_list *envlst)
 
 	if (cmd[0] == '/')
 		return (ft_strdup(cmd));
+	if (cmd[0] == '.')
+		return (get_cmd_relativepath(cmd));
 	path_list = ft_split(ft_getenv("PATH", envlst), ':');
 	if (!path_list)
 		return (NULL);
