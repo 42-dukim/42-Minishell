@@ -81,7 +81,7 @@ int		builtin_handler(void *ptr, t_envval *env_val, t_bool is_child);
 int		parser_handler(char *line, t_envval *env_val);
 
 // exports module
-t_list	*tokenize(char *line, t_list *env_list);
+t_list	*tokenize(char *line, t_envval *env_val);
 void	free_token(void *ptr);
 void	token_tocmdunit(t_list *tokenlst, t_list **cmdunit_list);
 int		excute_handler(t_list *cmdlst, t_envval *env_val);

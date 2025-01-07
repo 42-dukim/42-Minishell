@@ -20,7 +20,7 @@ int	parser_handler(char *line, t_envval *env_val)
 
 	if (!line || line[0] == '\0')
 		return (1);
-	tokenlst = tokenize(line, env_val->lst);
+	tokenlst = tokenize(line, env_val);
 	if (!tokenlst)
 		return (1);
     cmdlst = NULL;
