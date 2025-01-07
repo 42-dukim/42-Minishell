@@ -6,7 +6,7 @@
 /*   By: junkwak <junkwak@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 21:09:47 by dukim             #+#    #+#             */
-/*   Updated: 2025/01/07 17:33:26 by junkwak          ###   ########.fr       */
+/*   Updated: 2025/01/07 21:46:50 by junkwak          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,10 @@ typedef	struct s_envvalue
 extern int	g_signal;
 
 // utils -signal
-void	sig_int_execve(int signo);
-void	sig_quit_execve(int signo);
-void	enroll_custom_signal(void);
 void	sig_all_dfl(void);
 void	sig_all_ign(void);
-void	signal_handle_execve(void);
-void	disable_ctrl_backslash(void);
+void	set_terminal(t_bool c_lflag);
+void	enroll_custom_signal(void);
 
 // env utils
 char	*ft_getenv(const char *env, t_list *env_list);
