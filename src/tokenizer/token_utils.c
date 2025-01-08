@@ -30,7 +30,7 @@ static	size_t	get_dollarvalue(t_word *word, char *pre, t_envval *env_val)
 		envvalue = ft_itoa(env_val->exit_code);
 		append_str_inword(word, envvalue);
 		free(envvalue);
-		return (0);
+		return (1);
 	}
 	dollar = ft_calloc(sizeof(char), ft_strlen(pre) + 1);
 	i = 0;
