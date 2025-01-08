@@ -45,8 +45,4 @@ void	init_word(t_word *word);
 void	append_ch_inword(t_word *word, char ch);
 void	append_str_inword(t_word *word, char *str);
 
-// heredoc
-void	handle_heredoc(t_list **tokenlst, char **line, \
-						t_word *word, t_envval *env_val);
-
 #endif

@@ -33,6 +33,9 @@ void	connect_redirection(t_command *command, char *file, char type);
 t_bool	redirect_io(t_redirection *redi, int stdfd[2]);
 void	unredirect_io(int fd[2]);
 
+// heredoc
+char	*heredoc_handler(const char *delimiter);
+
 // cmd utils
 char	*get_cmd_abspath(char *cmd, t_list *envlst);
 void	append_cmd_inlist(t_list **lst, t_command *command, t_list **arg_list);

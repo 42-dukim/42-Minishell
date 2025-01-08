@@ -45,7 +45,10 @@ void	connect_redirection(t_command *command, char *file, char type)
 	t_redirection	*redi;
 
 	redi = malloc(sizeof(t_redirection) * 1);
-	redi->file = ft_strdup(file);
+	if (type == '-')
+		redi->file = heredoc_handler(file);
+	else
+		redi->file = ft_strdup(file);
 	redi->type = type;
 	redi->next = NULL;
 	if (command->redi == NULL)

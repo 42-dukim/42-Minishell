@@ -17,6 +17,8 @@ static t_bool	ms_exit(t_list *cmdlst, size_t cmdlst_len, t_envval *envval)
 	char	**args;
 
 	args = ((t_command *)cmdlst->content)->args;
+	if (!args)
+		return (false);
 	if (cmdlst_len == 1 && ft_strncmp("exit", args[0], 5) == 0)
 	{
 		envval->exit_code = ft_exit(args, false);
@@ -30,6 +32,11 @@ static int	execute_command(t_command *cmd, t_envval *env_val)
 	int		fd[2];
 	char	*cmd_path;
 
+	if (!redirect_io(cmd->redi, fd))
+	{
+		unredirect_io(fd);
+		return (1);
+	}
 	if (!cmd->args || cmd->args[0][0] == '\0')
 		return (0);
 	if (is_builtin_cmd(cmd->args[0]))
@@ -42,11 +49,9 @@ static int	execute_command(t_command *cmd, t_envval *env_val)
 		ft_putendl_fd(": command not found", 2);
 		return (127);
 	}
-	if (redirect_io(cmd->redi, fd))
-		execve(cmd_path, cmd->args, env_val->envp);
-	unredirect_io(fd);
+	execve(cmd_path, cmd->args, env_val->envp);
 	free(cmd_path);
-	return (1);
+	return (1);		// exeve 실패일 때 exit code?
 }
 
 static void	execute_childpipe(t_list *cmdlst, int *fd, \
