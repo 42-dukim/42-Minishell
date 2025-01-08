@@ -12,11 +12,66 @@
 
 #include "tokenizer.h"
 
-t_bool	is_specital_tokench(char ch)
+static t_bool	is_dollar_separator(char ch)
 {
-	if (ch == ' ' || ch == '|' || ch == '>' || ch == '<')
+	if (ch == ' ' || ch == '\'' || ch == '"' || ch == '$')
 		return (true);
 	return (false);
+}
+
+static	size_t	get_dollarvalue(t_word *word, char *pre, t_envval *env_val)
+{
+	char	*dollar;
+	char	*envvalue;
+	size_t	i;
+
+	if (*pre == '?')
+	{
+		envvalue = ft_itoa(env_val->exit_code);
+		append_str_inword(word, envvalue);
+		free(envvalue);
+		return (0);
+	}
+	dollar = ft_calloc(sizeof(char), ft_strlen(pre) + 1);
+	i = 0;
+	while (!is_dollar_separator(*pre) && *pre)
+		dollar[i++] = *pre++;
+	if (i == 0)
+		return (0);
+	envvalue = ft_getenv(dollar, env_val->lst);
+	if (envvalue)
+		append_str_inword(word, envvalue);
+	free(dollar);
+	return (i);
+}
+
+static void	convert_wordcotent(t_word *word, t_envval *envval)
+{
+	char	*pre;
+	char	quote;
+	size_t	i;
+
+	pre = word->content;
+	init_word(word);
+	quote = 0;
+	i = -1;
+	while (pre[++i])
+	{
+		if (is_quote_ch(pre[i]))
+		{
+			if (quote == 0)
+				quote = pre[i];
+			else if (quote == pre[i])
+				quote = 0;
+			else
+				append_ch_inword(word, pre[i]);
+		}
+		else if (pre[i] == '$' && pre[i + 1] && quote != '\'')
+			i += get_dollarvalue(word, pre + i + 1, envval);
+		else
+			append_ch_inword(word, pre[i]);
+	}
+	free(pre);
 }
 
 void	append_token_inlist(t_list **tokenlst, t_word *word, \
@@ -26,8 +81,9 @@ void	append_token_inlist(t_list **tokenlst, t_word *word, \
 
 	if (word->idx == 0)
 		return ;
-	convert_wordcotent(word, -1);
-	dollar_parser(word, env_val);
+	convert_wordcotent(word, env_val);
+	if (word->content[0] == '\0')
+		return ;
 	token = malloc(sizeof(t_word) * 1);
 	token->content = word->content;
 	token->type = type;

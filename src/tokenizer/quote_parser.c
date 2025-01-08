@@ -12,42 +12,34 @@
 
 #include "tokenizer.h"
 
-static char	*get_quote_content(char **line)
+static t_word	*get_quoteword(char **line, char quote)
 {
-	char	*content;
-	char	quote;
-	size_t	i;
+	t_word	*word;
+	t_bool	flag;
 
-	content = ft_calloc(sizeof(char), ft_strlen(*line) + 1);
-	quote = 0;
-	i = 0;
+	word = malloc(sizeof(t_word) * 1);
+	init_word(word);
+	flag = 0;
 	while (**line)
 	{
-		content[i++] = **line;
-		if (is_quote_ch(**line))
-		{
-			if (quote == 0)
-				quote = **line;
-			else if (quote == **line)
-				break ;
-		}
+		append_ch_inword(word, **line);
+		if (flag && quote == **line)
+			return (word);
 		(*line)++;
+		flag = true;
 	}
-	if (**line != quote)
-	{
-		free(content);
-		return (NULL);
-	}
-	return (content);
+	free(word->content);
+	free(word);
+	return (NULL);
 }
 
 void	quote_parser(char **line, t_word *word)
 {
-	char	*content;
+	t_word	*qutoeword;
 	char	*temp;
 
-	content = get_quote_content(line);
-	if (!content)
+	qutoeword = get_quoteword(line, **line);
+	if (!qutoeword)
 	{
 		free(word->content);
 		word->content = NULL;
@@ -55,9 +47,10 @@ void	quote_parser(char **line, t_word *word)
 		return ;
 	}
 	temp = word->content;
-	word->content = ft_strjoin(word->content, content);
+	word->content = ft_strjoin(word->content, qutoeword->content);
 	word->max_len = ft_strlen(word->content);
 	word->idx = word->max_len;
 	free(temp);
-	free(content);
+	free(qutoeword->content);
+	free(qutoeword);
 }

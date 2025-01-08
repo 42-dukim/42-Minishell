@@ -26,7 +26,6 @@ SRC		= 	src/builtins/builtin_handler.c \
 			src/command/command.c \
 			src/command/excutor.c \
 			src/command/redirection.c \
-			src/tokenizer/dolla_parser.c \
 			src/tokenizer/heredoc.c \
 			src/tokenizer/quote_parser.c \
 			src/tokenizer/tokenizer.c \

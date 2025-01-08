@@ -12,6 +12,13 @@
 
 #include "tokenizer.h"
 
+static t_bool	is_specital_tokench(char ch)
+{
+	if (ch == ' ' || ch == '|' || ch == '>' || ch == '<')
+		return (true);
+	return (false);
+}
+
 static void	word_tosymbol(char **line, t_word *word, char symbol)
 {
 	if (ft_strncmp(*line, ">>", 2) == 0)
@@ -48,10 +55,10 @@ static int	specitalch_handler(t_list **tokenlst, char **line, \
 		if (ch != ' ')
 		{
 			word_tosymbol(line, word, ch);
-			if (*(word->content) == '-')
-				handle_heredoc(tokenlst, line, word, env_val);
-			else
-				append_token_inlist(tokenlst, word, SYMBOL, env_val);
+			// if (*(word->content) == '-')
+			// 	handle_heredoc(tokenlst, line, word, env_val);
+			// else
+			append_token_inlist(tokenlst, word, SYMBOL, env_val);
 		}
 		return (0);
 	}
