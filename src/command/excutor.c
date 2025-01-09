@@ -12,19 +12,26 @@
 
 #include "command.h"
 
-static t_bool	ms_exit(t_list *cmdlst, size_t cmdlst_len, t_envval *envval)
+static int	singlecmd_handler(t_list *cmdlst, size_t cmdlst_len, \
+								int *res, t_envval *envval)
 {
-	char	**args;
+	t_command	*cmd;
 
-	args = ((t_command *)cmdlst->content)->args;
-	if (!args)
-		return (false);
-	if (cmdlst_len == 1 && ft_strncmp("exit", args[0], 5) == 0)
+	cmd = (t_command *)cmdlst->content;
+	if (!cmd->args)
+		return (0);
+	if (cmdlst_len == 1 && ft_strncmp("exit", cmd->args[0], 5) == 0)
 	{
-		envval->exit_code = ft_exit(args, false);
-		return (true);
+		envval->exit_code = ft_exit(cmd->args, false);
+		*res = EXIT_CODE;
+		return (1);
 	}
-	return (false);
+	if (cmdlst_len == 1 && is_builtin_cmd(cmd->args[0]))
+	{
+		*res = builtin_handler(cmd, envval);
+		return (1);
+	}
+	return (0);
 }
 
 static int	execute_command(t_command *cmd, t_envval *env_val)
@@ -33,10 +40,7 @@ static int	execute_command(t_command *cmd, t_envval *env_val)
 	char	*cmd_path;
 
 	if (!redirect_io(cmd->redi, fd))
-	{
-		unredirect_io(fd);
 		return (1);
-	}
 	if (!cmd->args || cmd->args[0][0] == '\0')
 		return (0);
 	if (is_builtin_cmd(cmd->args[0]))
@@ -50,8 +54,9 @@ static int	execute_command(t_command *cmd, t_envval *env_val)
 		return (127);
 	}
 	execve(cmd_path, cmd->args, env_val->envp);
+	unredirect_io(cmd->redi, fd);
 	free(cmd_path);
-	return (1);		// exeve 실패일 때 exit code?
+	return (1);
 }
 
 static void	execute_childpipe(t_list *cmdlst, int *fd, \
@@ -102,8 +107,8 @@ int	excute_handler(t_list *cmdlst, t_envval *env_val, size_t cmdlst_len)
 	int		res;
 	int		status;
 
-	if (ms_exit(cmdlst, cmdlst_len, env_val))
-		return (EXIT_CODE);
+	if (singlecmd_handler(cmdlst, cmdlst_len, &res, env_val))
+		return (res);
 	pids = malloc(sizeof(pid_t) * cmdlst_len);
 	fds = malloc(sizeof(int) * cmdlst_len);
 	res = execute_multicmd(cmdlst, env_val, pids, fds);

@@ -62,21 +62,28 @@ void	connect_redirection(t_command *command, char *file, char type)
 	}
 }
 
-t_bool	redirect_io(t_redirection *redi, int stdfd[2])
+t_bool	redirect_io(t_redirection *redi, int fd[2])
 {
-	stdfd[0] = dup(0);
-	stdfd[1] = dup(1);
+	if (!redi)
+		return (true);
+	fd[0] = dup(0);
+	fd[1] = dup(1);
 	while (redi)
 	{
 		if (!redirect(redi->file, redi->type))
+		{
+			unredirect_io(redi, fd);
 			return (false);
+		}
 		redi = redi->next;
 	}
 	return (true);
 }
 
-void	unredirect_io(int fd[2])
+void	unredirect_io(t_redirection *redi, int fd[2])
 {
+	if (!redi)
+		return ;
 	dup2(fd[0], 0);
 	dup2(fd[1], 1);
 	close(fd[0]);

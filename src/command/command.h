@@ -30,8 +30,8 @@ typedef struct s_command
 
 // redirection
 void	connect_redirection(t_command *command, char *file, char type);
-t_bool	redirect_io(t_redirection *redi, int stdfd[2]);
-void	unredirect_io(int fd[2]);
+t_bool	redirect_io(t_redirection *redi, int fd[2]);
+void	unredirect_io(t_redirection *redi, int fd[2]);
 
 // heredoc
 char	*heredoc_handler(const char *delimiter);

@@ -17,7 +17,7 @@ char	*heredoc_handler(const char *delimiter)
 	int		fd;
 	char	*line;
 	char	*tmpfile;
-	
+
 	tmpfile = ft_strjoin(".heredoc_", delimiter);
 	fd = open(tmpfile, O_RDWR | O_CREAT | O_TRUNC, 0644);
 	while (fd != -1)

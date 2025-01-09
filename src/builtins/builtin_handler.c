@@ -34,23 +34,22 @@ int	builtin_handler(void *ptr, t_envval *env_val)
 
 	cmd = (t_command *)ptr;
 	res = 1;
-	if (redirect_io(cmd->redi, fd))
-	{
-		if (ft_strncmp(cmd->args[0], "cd", 3) == 0)
-			res = ft_cd(cmd->args, env_val->lst);
-		else if (ft_strncmp(cmd->args[0], "exit", 5) == 0)
-			res = ft_exit(cmd->args, true);
-		else if (ft_strncmp(cmd->args[0], "env", 4) == 0)
-			res = ft_env(cmd->args, env_val->lst);
-		else if (ft_strncmp(cmd->args[0], "export", 7) == 0)
-			res = ft_export(cmd->args, env_val);
-		else if (ft_strncmp(cmd->args[0], "unset", 5) == 0)
-			res = ft_unset(cmd->args, env_val);
-		else if (ft_strncmp(cmd->args[0], "pwd", 3) == 0)
-			res = ft_pwd(env_val);
-		else if (ft_strncmp(*cmd->args, "echo", 4) == 0)
-			res = ft_echo(cmd->args);
-	}
-	unredirect_io(fd);
+	if (!redirect_io(cmd->redi, fd))
+		return (1);
+	if (ft_strncmp(cmd->args[0], "cd", 3) == 0)
+		res = ft_cd(cmd->args, env_val->lst);
+	else if (ft_strncmp(cmd->args[0], "exit", 5) == 0)
+		res = ft_exit(cmd->args, true);
+	else if (ft_strncmp(cmd->args[0], "env", 4) == 0)
+		res = ft_env(cmd->args, env_val->lst);
+	else if (ft_strncmp(cmd->args[0], "export", 7) == 0)
+		res = ft_export(cmd->args, env_val);
+	else if (ft_strncmp(cmd->args[0], "unset", 5) == 0)
+		res = ft_unset(cmd->args, env_val);
+	else if (ft_strncmp(cmd->args[0], "pwd", 3) == 0)
+		res = ft_pwd(env_val);
+	else if (ft_strncmp(*cmd->args, "echo", 4) == 0)
+		res = ft_echo(cmd->args);
+	unredirect_io(cmd->redi, fd);
 	return (res);
 }
