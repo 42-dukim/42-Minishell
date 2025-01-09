@@ -21,7 +21,7 @@ char	**ft_strarrdup(char **strarr)
 	len = ft_splitlen((const char **)strarr);
 	dup = malloc(sizeof(char *) * (len + 1));
 	if (!dup)
-		return NULL;
+		return (NULL);
 	i = 0;
 	while (i < len)
 	{
@@ -31,7 +31,7 @@ char	**ft_strarrdup(char **strarr)
 			while (i > 0)
 				free(dup[--i]);
 			free(dup);
-			return NULL;
+			return (NULL);
 		}
 		i++;
 	}
