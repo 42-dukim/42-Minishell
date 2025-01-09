@@ -13,7 +13,7 @@
 #include "command.h"
 
 static int	singlecmd_handler(t_list *cmdlst, size_t cmdlst_len, \
-								int *res, t_envval *envval)
+								t_envval *envval)
 {
 	t_command	*cmd;
 
@@ -23,12 +23,11 @@ static int	singlecmd_handler(t_list *cmdlst, size_t cmdlst_len, \
 	if (cmdlst_len == 1 && ft_strncmp("exit", cmd->args[0], 5) == 0)
 	{
 		envval->exit_code = ft_exit(cmd->args, false);
-		*res = EXIT_CODE;
-		return (1);
+		return (EXIT_CODE);
 	}
 	if (cmdlst_len == 1 && is_builtin_cmd(cmd->args[0]))
 	{
-		*res = builtin_handler(cmd, envval);
+		envval->exit_code = builtin_handler(cmd, envval);
 		return (1);
 	}
 	return (0);
@@ -99,20 +98,21 @@ static int	execute_multicmd(t_list *cmdlst, t_envval *envval, \
 	return (1);
 }
 
-int	excute_handler(t_list *cmdlst, t_envval *env_val, size_t cmdlst_len)
+void	excute_handler(t_list *cmdlst, size_t cmdlst_len, \
+					int *res, t_envval *env_val)
 {
 	pid_t	*pids;
 	int		*fds;
 	size_t	i;
-	int		res;
 	int		status;
 
-	if (singlecmd_handler(cmdlst, cmdlst_len, &res, env_val))
-		return (res);
+	*res = singlecmd_handler(cmdlst, cmdlst_len, env_val);
+	if (*res)
+		return ;
 	pids = malloc(sizeof(pid_t) * cmdlst_len);
 	fds = malloc(sizeof(int) * cmdlst_len);
-	res = execute_multicmd(cmdlst, env_val, pids, fds);
-	if (res > 0)
+	*res = execute_multicmd(cmdlst, env_val, pids, fds);
+	if (*res > 0)
 	{
 		i = -1;
 		while (++i < cmdlst_len)
@@ -125,5 +125,4 @@ int	excute_handler(t_list *cmdlst, t_envval *env_val, size_t cmdlst_len)
 	}
 	free(fds);
 	free(pids);
-	return (res);
 }

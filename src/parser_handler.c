@@ -30,7 +30,7 @@ int	parser_handler(char *line, t_envval *env_val)
 	if (!cmdlst)
 		return (1);
 	cmdlst_len = ft_lstsize(cmdlst);
-	res = excute_handler(cmdlst, env_val, cmdlst_len);
+	excute_handler(cmdlst, cmdlst_len, &res, env_val);
 	ft_lstclear(&cmdlst, free_command);
 	add_history(line);
 	return (res);

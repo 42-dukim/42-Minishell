@@ -44,7 +44,7 @@ all : $(NAME)
 		
 $(NAME): $(OBJS)
 	@make bonus -C libft/
-	@$(CC) $(OBJS) -L libft/ -lft -o $(NAME) -lreadline
+	@$(CC) $(CFLAGS) $(OBJS) -L libft/ -lft -o $(NAME) -lreadline
 
 clean :
 	@make clean -C libft/
