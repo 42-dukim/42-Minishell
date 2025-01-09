@@ -12,8 +12,10 @@
 
 #include "tokenizer.h"
 
-static t_bool	is_dollar_separator(char ch)
+static t_bool	is_dollarsep(char ch)
 {
+	if (ch == '\0')
+		return (true);
 	if (ch == ' ' || ch == '\'' || ch == '"' || ch == '$')
 		return (true);
 	return (false);
@@ -34,10 +36,10 @@ static	size_t	get_dollarvalue(t_word *word, char *pre, t_envval *env_val)
 	}
 	dollar = ft_calloc(sizeof(char), ft_strlen(pre) + 1);
 	i = 0;
-	while (!is_dollar_separator(*pre) && *pre)
+	while (!is_dollarsep(*pre))
 		dollar[i++] = *pre++;
 	if (i == 0)
-		return (0);
+		return (1);
 	envvalue = ft_getenv(dollar, env_val->lst);
 	if (envvalue)
 		append_str_inword(word, envvalue);
@@ -66,7 +68,7 @@ static void	convert_wordcotent(t_word *word, t_envval *envval)
 			else
 				append_ch_inword(word, pre[i]);
 		}
-		else if (pre[i] == '$' && pre[i + 1] && quote != '\'')
+		else if (pre[i] == '$' && !is_dollarsep(pre[i + 1]) && quote != '\'')
 			i += get_dollarvalue(word, pre + i + 1, envval);
 		else
 			append_ch_inword(word, pre[i]);

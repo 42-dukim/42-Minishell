@@ -80,8 +80,11 @@ static void	echo_grammer(char **args)
 
 int	ft_echo(char **args)
 {
-	if (args == NULL || args[0] == NULL)
+	if (args == NULL || args[1] == NULL)
+	{
+		printf("\n");
 		return (0);
+	}
 	if (args[1] != NULL)
 		echo_grammer(args);
 	return (0);

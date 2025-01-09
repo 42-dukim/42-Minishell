@@ -83,7 +83,7 @@ int		parser_handler(char *line, t_envval *env_val);
 t_list	*tokenize(char *line, t_envval *env_val);
 void	free_token(void *ptr);
 void	token_tocmdunit(t_list *tokenlst, t_list **cmdunit_list);
-void		excute_handler(t_list *cmdlst, size_t cmdlst_len, \
+void	excute_handler(t_list *cmdlst, size_t cmdlst_len, \
 							int *res, t_envval *env_val);
 void	free_command(void *ptr);
 
