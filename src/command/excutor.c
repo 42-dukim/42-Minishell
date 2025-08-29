@@ -38,18 +38,19 @@ static int	execute_command(t_command *cmd, t_envval *env_val)
 	int		fd[2];
 	char	*cmd_path;
 
-	if (!redirect_io(cmd->redi, fd))
-		return (1);
 	if (!cmd->args || cmd->args[0][0] == '\0')
 		return (0);
 	if (is_builtin_cmd(cmd->args[0]))
 		return (builtin_handler(cmd, env_val));
+	if (!redirect_io(cmd->redi, fd))
+		return (1);
 	convert_lst_toenvp(env_val);
 	cmd_path = get_cmd_abspath(cmd->args[0], env_val->lst);
 	if (!cmd_path)
 	{
 		ft_putstr_fd(cmd->args[0], 2);
 		ft_putendl_fd(": command not found", 2);
+		unredirect_io(cmd->redi, fd);
 		return (127);
 	}
 	execve(cmd_path, cmd->args, env_val->envp);
@@ -61,15 +62,18 @@ static int	execute_command(t_command *cmd, t_envval *env_val)
 static void	execute_childpipe(t_list *cmdlst, int *fd, \
 								int input_fd, t_envval *envval)
 {
+	int	exit_code;
+
 	dup2(input_fd, STDIN_FILENO);
 	if (cmdlst->next)
 		dup2(fd[1], STDOUT_FILENO);
 	close(fd[0]);
 	close(fd[1]);
-	envval->exit_code = execute_command(cmdlst->content, envval);
+	exit_code = execute_command(cmdlst->content, envval);
+	exit(exit_code);
 }
 
-static int	execute_multicmd(t_list *cmdlst, t_envval *envval, \
+static void	execute_multicmd(t_list *cmdlst, t_envval *envval, \
 								pid_t *pids, int *fds)
 {
 	size_t	i;
@@ -86,16 +90,12 @@ static int	execute_multicmd(t_list *cmdlst, t_envval *envval, \
 		set_sigall(false);
 		pids[i] = fork();
 		if (pids[i] == 0)
-		{
 			execute_childpipe(cmdlst, fd, input_fd, envval);
-			return (EXIT_CODE);
-		}
 		set_sigall(true);
 		close(fd[1]);
 		input_fd = fd[0];
 		cmdlst = cmdlst->next;
 	}
-	return (1);
 }
 
 void	excute_handler(t_list *cmdlst, size_t cmdlst_len, \
@@ -111,18 +111,15 @@ void	excute_handler(t_list *cmdlst, size_t cmdlst_len, \
 		return ;
 	pids = malloc(sizeof(pid_t) * cmdlst_len);
 	fds = malloc(sizeof(int) * cmdlst_len);
-	*res = execute_multicmd(cmdlst, env_val, pids, fds);
-	if (*res > 0)
+	execute_multicmd(cmdlst, env_val, pids, fds);
+	i = -1;
+	while (++i < cmdlst_len)
 	{
-		i = -1;
-		while (++i < cmdlst_len)
-		{
-			waitpid(pids[i], &status, 0);
-			close(fds[i]);
-			env_val->exit_code = get_child_exitcode(status);
-		}
-		print_sigmsg(env_val->exit_code);
+		waitpid(pids[i], &status, 0);
+		close(fds[i]);
+		env_val->exit_code = get_child_exitcode(status);
 	}
+	print_sigmsg(env_val->exit_code);
 	free(fds);
 	free(pids);
 }
