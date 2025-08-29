@@ -45,26 +45,27 @@ NAME = minishell
 all : $(NAME)
 		
 $(NAME): $(OBJS)
-	@make bonus -C libft/
+	@$(MAKE) -C libft bonus CFLAGS="$(CFLAGS)"
 	@$(CC) $(CFLAGS) $(OBJS) -L libft/ -lft -o $(NAME) -lreadline
 
 $(OBJ_DIR)/%.o: src/%.c
 	@mkdir -p $(dir $@)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
-dev: CFLAGS := $(DEV_CFLAGS)
-dev: re
+dev:
+	@$(MAKE) fclean CFLAGS="$(DEV_CFLAGS)"
+	@$(MAKE) all    CFLAGS="$(DEV_CFLAGS)"
 
 clean :
-	@make clean -C libft/
+	@$(MAKE) -C libft/ clean
 	@$(RM) $(OBJ_DIR)
 	
 fclean :
-	@make fclean -C libft/
+	@$(MAKE) -C libft/ fclean
 	@$(RM) $(OBJ_DIR) $(NAME)
 
 re :
-	@make fclean
-	@make all
+	@$(MAKE) fclean CFLAGS="$(CFLAGS)"
+	@$(MAKE) all    CFLAGS="$(CFLAGS)"
 
 .PHONY: all clean fclean re dev
