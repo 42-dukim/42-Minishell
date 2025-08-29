@@ -65,35 +65,47 @@ static void	execute_childpipe(t_list *cmdlst, int *fd, \
 	int	exit_code;
 
 	dup2(input_fd, STDIN_FILENO);
+	if (input_fd != STDIN_FILENO)
+		close(input_fd);
 	if (cmdlst->next)
+	{
 		dup2(fd[1], STDOUT_FILENO);
-	close(fd[0]);
-	close(fd[1]);
+		close(fd[0]);
+		close(fd[1]);
+	}
 	exit_code = execute_command(cmdlst->content, envval);
 	exit(exit_code);
 }
 
 static void	execute_multicmd(t_list *cmdlst, t_envval *envval, \
-								pid_t *pids, int *fds)
+								pid_t *pids)
 {
-	size_t	i;
+	size_t	idx;
 	int		fd[2];
 	int		input_fd;
 
 	set_terminal(true);
-	i = -1;
+	idx = 0;
 	input_fd = 0;
 	while (cmdlst)
 	{
-		pipe(fd);
-		fds[++i] = fd[0];
+		if (cmdlst->next)
+			pipe(fd);
 		set_sigall(false);
-		pids[i] = fork();
-		if (pids[i] == 0)
+		pids[idx] = fork();
+		if (pids[idx] == 0)
 			execute_childpipe(cmdlst, fd, input_fd, envval);
 		set_sigall(true);
-		close(fd[1]);
-		input_fd = fd[0];
+		if (input_fd != 0)
+			close(input_fd);
+		if (cmdlst->next)
+		{
+			close(fd[1]);
+			input_fd = fd[0];
+		}
+		else
+			input_fd = 0;
+		idx++;
 		cmdlst = cmdlst->next;
 	}
 }
@@ -102,7 +114,6 @@ void	excute_handler(t_list *cmdlst, size_t cmdlst_len, \
 					int *res, t_envval *env_val)
 {
 	pid_t	*pids;
-	int		*fds;
 	size_t	i;
 	int		status;
 
@@ -110,16 +121,13 @@ void	excute_handler(t_list *cmdlst, size_t cmdlst_len, \
 	if (*res)
 		return ;
 	pids = malloc(sizeof(pid_t) * cmdlst_len);
-	fds = malloc(sizeof(int) * cmdlst_len);
-	execute_multicmd(cmdlst, env_val, pids, fds);
+	execute_multicmd(cmdlst, env_val, pids);
 	i = -1;
 	while (++i < cmdlst_len)
 	{
 		waitpid(pids[i], &status, 0);
-		close(fds[i]);
 		env_val->exit_code = get_child_exitcode(status);
 	}
 	print_sigmsg(env_val->exit_code);
-	free(fds);
 	free(pids);
 }
