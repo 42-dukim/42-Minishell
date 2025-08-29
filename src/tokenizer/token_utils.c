@@ -86,7 +86,7 @@ void	append_token_inlist(t_list **tokenlst, t_word *word, \
 	convert_wordcotent(word, env_val);
 	if (word->content[0] == '\0')
 		return ;
-	token = malloc(sizeof(t_word) * 1);
+	token = malloc(sizeof(t_token) * 1);
 	token->content = word->content;
 	token->type = type;
 	ft_lstadd_back(tokenlst, ft_lstnew(token));
