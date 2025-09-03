@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef BUILTIN_H
+#ifndef BULITIN_H
 # define BULITIN_H
 
 # include "../../inc/minishell.h"
